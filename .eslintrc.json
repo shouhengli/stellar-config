@@ -2,9 +2,10 @@
   "plugins": ["react"],
   "extends": ["eslint:recommended", "google", "plugin:react/recommended"],
   "rules": {
-    "max-len": [1, { "code": 100 }],
-    "new-cap": [2, { "capIsNew": false }],
-    "no-console": 0
+    "max-len": ["warn", { "code": 100 }],
+    "new-cap": ["error", { "capIsNew": false }],
+    "no-console": "off",
+    "react/display-name": "warn"
   },
   "env": {
     "es6": true,

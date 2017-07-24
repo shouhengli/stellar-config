@@ -1,4 +1,5 @@
-const test = ([a, b]) => a + b;
+const React = require('react');
+const ReactDOM = require('react-dom');
+const Main = require('./components/main.jsx');
 
-console.log('change!');
-console.log(test([1, 2]));
+ReactDOM.render(React.createElement(Main), document.getElementById('seaweed-app'));
