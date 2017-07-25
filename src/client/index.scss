@@ -1,6 +1,28 @@
 @import '../../node_modules/bulma/sass/utilities/initial-variables';
 
-$primary: #20cebe;
-$primary-invert: $white;
+// Customize the initial variables here
 
 @import '../../node_modules/bulma/sass/utilities/_all';
+@import '../../node_modules/bulma/sass/base/_all';
+@import '../../node_modules/bulma/sass/components/navbar';
+@import '../../node_modules/bulma/sass/components/tabs';
+
+.tabs {
+  a {
+    border-bottom-color: $white;
+  }
+}
+
+nav.is-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  min-width: 100vw;
+}
+
+div.pane {
+  height: calc(100vh - #{$navbar-height});
+  width: 50vw;
+  overflow: scroll;
+  margin-top: $navbar-height;
+}
