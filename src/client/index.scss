@@ -4,8 +4,12 @@
 
 @import '../../node_modules/bulma/sass/utilities/_all';
 @import '../../node_modules/bulma/sass/base/_all';
+@import '../../node_modules/bulma/sass/elements/form';
+@import '../../node_modules/bulma/sass/elements/icon';
+@import '../../node_modules/bulma/sass/elements/tag';
 @import '../../node_modules/bulma/sass/components/navbar';
 @import '../../node_modules/bulma/sass/components/tabs';
+@import '../../node_modules/bulma/sass/components/panel';
 
 .tabs {
   a {
@@ -13,11 +17,26 @@
   }
 }
 
-nav.is-fixed {
-  position: fixed;
-  top: 0;
-  left: 0;
-  min-width: 100vw;
+nav {
+  &.is-fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-width: 100vw;
+  }
+}
+
+.field {
+  &.is-relative {
+    position: relative;
+  }
+
+  .panel.is-absolute {
+    position: absolute;
+    top: 2.25rem;
+    width: 100%;
+    background-color: $white;
+  }
 }
 
 div.pane {

@@ -39,18 +39,37 @@ class Main extends React.Component {
           <div className="navbar-menu">
             <div className="navbar-start">
               <div className="navbar-item">
-                <div className="tabs">
-                  <ul>
-                    <li className="is-active">
-                      <a>Columns</a>
-                    </li>
-                    <li>
-                      <a>Ontology</a>
-                    </li>
-                    <li>
-                      <a>Mapping</a>
-                    </li>
-                  </ul>
+                Filename
+              </div>
+              <div className="navbar-item">
+                <span className="tag">
+                  mode
+                </span>
+              </div>
+            </div>
+            <div className="navbar-end">
+              <div className="navbar-item">
+                <div className="field is-relative">
+                  <nav className="panel is-absolute">
+                    <div className="panel-block">
+                      <span className="panel-icon">
+                        <i className="fa fa-book"></i>
+                      </span>
+                      file1
+                    </div>
+                    <div className="panel-block">
+                      <span className="panel-icon">
+                        <i className="fa fa-book"></i>
+                      </span>
+                      file2
+                    </div>
+                  </nav>
+                  <div className="control has-icons-right">
+                    <input className="input" type="text" />
+                    <span className="icon is-small is-right">
+                      <i className="fa fa-search"></i>
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
