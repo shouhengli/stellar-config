@@ -29,6 +29,7 @@ const paths = {
     },
   },
   dest: {
+    root: 'dist/',
     client: {
       js: 'dist/public/',
       sass: 'dist/public/',
@@ -37,28 +38,6 @@ const paths = {
     server: {
       js: 'dist/',
       staticFiles: 'dist/',
-    },
-  },
-  clean: {
-    root: 'dist/',
-    client: {
-      js: 'dist/public/**/*.js',
-      sass: [
-        'dist/public/**/*.css',
-        '!dist/public/font-awesome.min.css',
-      ],
-      staticFiles: [
-        'dist/public/**/*.html',
-        'dist/public/**/*.woff2',
-        'dist/public/font-awesome.min.css',
-      ],
-    },
-    server: {
-      js: 'dist/**/*.js',
-      staticFiles: [
-        'dist/**/*.json',
-        'dist/yarn.lock',
-      ],
     },
   },
 };
@@ -71,44 +50,40 @@ gulp.task('client-js-lint', () =>
 );
 
 gulp.task('client-js', ['client-js-lint'], () =>
-  del(paths.clean.client.js).then(() =>
-    gulp.src(paths.src.client.jsEntries)
-        .pipe(named())
-        .pipe(gulpWebpack(
-          {
-            module: {
-              rules: [
-                {
-                  test: /\.jsx?$/,
-                  use: {
-                    loader: 'babel-loader',
-                    options: {
-                      presets: ['env', 'react'],
-                    },
+  gulp.src(paths.src.client.jsEntries)
+      .pipe(named())
+      .pipe(gulpWebpack(
+        {
+          module: {
+            rules: [
+              {
+                test: /\.jsx?$/,
+                use: {
+                  loader: 'babel-loader',
+                  options: {
+                    presets: ['env', 'react'],
+                    plugins: ['transform-object-rest-spread'],
+                    compact: true,
                   },
                 },
-              ],
-            },
+              },
+            ],
           },
-          webpack
-        ))
-        .pipe(gulp.dest(paths.dest.client.js))
-  )
+        },
+        webpack
+      ))
+      .pipe(gulp.dest(paths.dest.client.js))
 );
 
 gulp.task('client-sass', () =>
-  del(paths.clean.client.sass).then(() =>
-    gulp.src(paths.src.client.sass)
-        .pipe(sass().on('error', sass.logError))
-        .pipe(gulp.dest(paths.dest.client.sass))
-  )
+  gulp.src(paths.src.client.sass)
+      .pipe(sass().on('error', sass.logError))
+      .pipe(gulp.dest(paths.dest.client.sass))
 );
 
 gulp.task('client-static-files', () =>
-  del(paths.clean.client.staticFiles).then(() =>
-    gulp.src(paths.src.client.staticFiles)
-        .pipe(gulp.dest(paths.dest.client.staticFiles))
-  )
+  gulp.src(paths.src.client.staticFiles)
+      .pipe(gulp.dest(paths.dest.client.staticFiles))
 );
 
 gulp.task('server-js-lint', () =>
@@ -119,24 +94,20 @@ gulp.task('server-js-lint', () =>
 );
 
 gulp.task('server-js', ['server-js-lint'], () =>
-  del(paths.clean.server.js).then(() =>
-    gulp.src(paths.src.server.js)
-        .pipe(gulp.dest(paths.dest.server.js))
-  )
+  gulp.src(paths.src.server.js)
+      .pipe(gulp.dest(paths.dest.server.js))
 );
 
 gulp.task('server-static-files', () =>
-  del(paths.clean.server.staticFiles).then(() =>
-    gulp.src(paths.src.server.staticFiles)
-        .pipe(gulp.dest(paths.dest.server.staticFiles))
-  )
+  gulp.src(paths.src.server.staticFiles)
+      .pipe(gulp.dest(paths.dest.server.staticFiles))
 );
 
 gulp.task('server', ['server-static-files', 'server-js']);
 gulp.task('client', ['client-static-files', 'client-js', 'client-sass']);
 gulp.task('default', ['client', 'server']);
 
-gulp.task('clean', () => del(paths.clean.root));
+gulp.task('clean', () => del(paths.dest.root));
 
 gulp.task('watch', () => {
   gulp.watch(paths.src.client.js, ['client-js']);

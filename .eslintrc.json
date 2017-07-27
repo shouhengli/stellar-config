@@ -5,7 +5,8 @@
     "max-len": ["warn", { "code": 100 }],
     "new-cap": ["error", { "capIsNew": false }],
     "no-console": "off",
-    "react/display-name": "warn"
+    "require-jsdoc": "off",
+    "react/display-name": "off"
   },
   "env": {
     "es6": true,
