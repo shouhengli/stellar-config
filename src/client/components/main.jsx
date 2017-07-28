@@ -49,15 +49,16 @@ class Main extends React.Component {
           <div className="navbar-menu">
             <div className="navbar-start">
               <div className="navbar-item">
-                Filename
-              </div>
-              <div className="navbar-item">
                 <span className="tag">
                   mode
                 </span>
+                Filename
               </div>
-            </div>
-            <div className="navbar-end">
+              <div className="navbar-item">
+                <span className="icon is-small">
+                  <i className="fa fa-search"></i>
+                </span>
+              </div>
               <div className="navbar-item">
                 <div className="field is-relative">
                   <nav className="panel is-absolute">
@@ -81,6 +82,15 @@ class Main extends React.Component {
                     </span>
                   </div>
                 </div>
+              </div>
+              <div className="navbar-item">
+                <a className="button">Save</a>
+              </div>
+              <div className="navbar-item">
+                <a className="button is-loading">Save</a>
+              </div>
+              <div className="navbar-item">
+                <a className="button is-success">Save</a>
               </div>
             </div>
           </div>

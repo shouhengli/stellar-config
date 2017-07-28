@@ -4,6 +4,7 @@
 
 @import '../../node_modules/bulma/sass/utilities/_all';
 @import '../../node_modules/bulma/sass/base/_all';
+@import '../../node_modules/bulma/sass/elements/button';
 @import '../../node_modules/bulma/sass/elements/form';
 @import '../../node_modules/bulma/sass/elements/icon';
 @import '../../node_modules/bulma/sass/elements/tag';
@@ -23,6 +24,7 @@ nav {
     top: 0;
     left: 0;
     min-width: 100vw;
+    z-index: 100;
   }
 }
 
