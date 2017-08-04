@@ -102,8 +102,8 @@ class Main extends React.Component {
             theme="github"
             width="100%"
             height="100%"
-            fontSize="16"
-            tabSize="2"
+            fontSize={16}
+            tabSize={2}
             showPrintMargin={false}
             setOptions={{scrollPastEnd: false}}
             value={this.state.editorContent}
