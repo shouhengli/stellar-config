@@ -1,0 +1,5 @@
+{
+  "sourceKeyPrefix": "config:source:",
+  "mappingKeyPrefix": "config:mapping:",
+  "graphSchemaKeyPrefix": "config:graphSchema:"
+}
