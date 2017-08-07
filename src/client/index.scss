@@ -1,0 +1,57 @@
+@import '../../node_modules/bulma/sass/utilities/initial-variables';
+
+// Customize the initial variables here
+
+@import '../../node_modules/bulma/sass/utilities/_all';
+@import '../../node_modules/bulma/sass/base/_all';
+@import '../../node_modules/bulma/sass/elements/button';
+@import '../../node_modules/bulma/sass/elements/form';
+@import '../../node_modules/bulma/sass/elements/icon';
+@import '../../node_modules/bulma/sass/elements/tag';
+@import '../../node_modules/bulma/sass/components/navbar';
+@import '../../node_modules/bulma/sass/components/tabs';
+@import '../../node_modules/bulma/sass/components/panel';
+
+.tabs {
+  a {
+    border-bottom-color: $white;
+  }
+}
+
+nav {
+  &.is-fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-width: 100vw;
+    z-index: 100;
+  }
+}
+
+.field {
+  &.is-relative {
+    position: relative;
+  }
+
+  .panel.is-absolute {
+    position: absolute;
+    top: 2.25rem;
+    width: 100%;
+    background-color: $white;
+  }
+}
+
+div.pane {
+  height: calc(100vh - #{$navbar-height});
+  width: 50vw;
+  margin-top: $navbar-height;
+  border-top: 1px solid $border;
+
+  &:first-of-type {
+    border-right: 1px solid $border;
+  }
+
+  &.is-scrollable {
+    overflow: scroll;
+  }
+}
