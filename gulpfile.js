@@ -49,6 +49,11 @@ gulp.task('client-js-lint', () =>
       .pipe(eslint.failAfterError())
 );
 
+const fs = require('fs');
+const babelrc = JSON.parse(
+  fs.readFileSync('.babelrc', {encoding: 'utf8'})
+);
+
 gulp.task('client-js', ['client-js-lint'], () =>
   gulp.src(paths.src.client.jsEntries)
       .pipe(named())
@@ -60,11 +65,7 @@ gulp.task('client-js', ['client-js-lint'], () =>
                 test: /\.jsx?$/,
                 use: {
                   loader: 'babel-loader',
-                  options: {
-                    presets: ['env', 'react'],
-                    plugins: ['transform-object-rest-spread'],
-                    compact: true,
-                  },
+                  options: babelrc,
                 },
               },
             ],

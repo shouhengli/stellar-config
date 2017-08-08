@@ -5,22 +5,58 @@ const redis = require('redis');
 P.promisifyAll(redis.RedisClient.prototype);
 P.promisifyAll(redis.Multi.prototype);
 
-const redisClient = redis.createClient();
+/**
+ * Connects to Redis server.
+ * @function
+ */
+const connect = (() => {
+  // TODO: May need to redesign the connection logic to avoid too much queueing when connection
+  // status is bad.
 
-redisClient.on('error', (error) => {
-  console.log(`Redis error caught by the global error handler: ${error}`);
-});
+  let redisClient = null;
+
+  return () => {
+    if (redisClient === null) {
+      redisClient = redis.createClient();
+
+      redisClient
+        .on('connect', () => {
+          console.log('Connection to Redis has been established');
+        })
+        .on('reconnecting', (delay, attempt) => {
+          console.log(`Reconnecting to Redis: attempt=${attempt}, delay=${delay}.`);
+        })
+        .on('error', (error) => {
+          console.log(`Redis error caught by the global error handler: ${error}`);
+        });
+    }
+
+    return redisClient;
+  };
+})();
+
+
+function swallow() {}
 
 function logRedisErrorAndThrow(error) {
   console.log(`Redis error caught by the failure handler: ${error}`);
   throw error;
 }
 
-function swallow() {}
+function resolveName(namespace, name) {
+  return `${namespace}:${name}`;
+}
+
+function getDef(namespace, name) {
+  return connect()
+    .get(resolveName(namespace, name))
+    .catch(logRedisErrorAndThrow);
+}
 
 function setDef(namespace, name, content, defSetKey) {
-  const defKey = `${namespace}:${name}`;
-  return redisClient
+  const defKey = resolveName(namespace, name);
+
+  return connect()
     .multi()
     .set(defKey, content)
     .sadd(defSetKey, defKey)
@@ -38,9 +74,9 @@ class NonexistentKeyError extends Error {
 }
 
 function delDef(namespace, name, defSetKey) {
-  const defKey = `${namespace}:${name}`;
+  const defKey = resolveName(namespace, name);
 
-  return redisClient
+  return connect()
     .multi()
     .srem(defSetKey, defKey)
     .del(defKey)
@@ -55,13 +91,23 @@ function delDef(namespace, name, defSetKey) {
 }
 
 function listDefNames(defSetKey) {
-  return redisClient
+  return connect()
     .smembersAsync(defSetKey)
     .catch(logRedisErrorAndThrow);
 }
 
 /**
- * Set a source definition.
+ * Retrieves a source definition.
+ * @param {string} name
+ * @return {Promise<string>} Will be resolved with the definition content if the requeted operation
+ *                           is successful.
+ */
+function getSourceDef(name) {
+  return getDef(config.namespaces.source, name);
+}
+
+/**
+ * Sets a source definition.
  * @param {string} name
  * @param {string} content
  * @return {Promise} Will be resolved if the requested operation is successful.
@@ -71,7 +117,7 @@ function setSourceDef(name, content) {
 }
 
 /**
- * Delete a source definition.
+ * Deletes a source definition.
  * @param {string} name
  * @return {Promise} Will be resolved if the requested operation is successful. Can be rejected with
  *                   a {@link NonexistentKeyError} object.
@@ -90,7 +136,17 @@ function listSourceDefNames() {
 }
 
 /**
- * Set a mapping definition.
+ * Retrieves a mapping definition.
+ * @param {string} name
+ * @return {Promise<string>} Will be resolved with the definition content if the requeted operation
+ *                           is successful.
+ */
+function getMappingDef(name) {
+  return getDef(config.namespaces.mapping, name);
+}
+
+/**
+ * Sets a mapping definition.
  * @param {string} name
  * @param {string} content
  * @return {Promise} Will be resolved if the requested operation is successful.
@@ -100,7 +156,7 @@ function setMappingDef(name, content) {
 }
 
 /**
- * Delete a mapping definition.
+ * Deletes a mapping definition.
  * @param {string} name
  * @return {Promise} Will be resolved if the requested operation is successful. Can be rejected with
  *                   a {@link NonexistentKeyError} object.
@@ -119,7 +175,17 @@ function listMappingDefNames() {
 }
 
 /**
- * Set a graph schema definition.
+ * Retrieves a graph schema definition.
+ * @param {string} name
+ * @return {Promise<string>} Will be resolved with the definition content if the requeted operation
+ *                           is successful.
+ */
+function getGraphSchemaDef(name) {
+  return getDef(config.namespaces.graphSchema, name);
+}
+
+/**
+ * Sets a graph schema definition.
  * @param {string} name
  * @param {string} content
  * @return {Promise} Will be resolved if the requested operation is successful.
@@ -129,7 +195,7 @@ function setGraphSchemaDef(name, content) {
 }
 
 /**
- * Delete a graph schema definition.
+ * Deletes a graph schema definition.
  * @param {string} name
  * @return {Promise} Will be resolved if the requested operation is successful. Can be rejected with
  *                   a {@link NonexistentKeyError} object.
@@ -148,13 +214,17 @@ function listGraphSchemaDefNames() {
 }
 
 module.exports = {
+  getSourceDef,
   setSourceDef,
   delSourceDef,
   listSourceDefNames,
+  getMappingDef,
   setMappingDef,
   delMappingDef,
   listMappingDefNames,
+  getGraphSchemaDef,
   setGraphSchemaDef,
   delGraphSchemaDef,
   listGraphSchemaDefNames,
+  connect,
 };
