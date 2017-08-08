@@ -1,5 +1,14 @@
 {
-  "sourceKeyPrefix": "config:source:",
-  "mappingKeyPrefix": "config:mapping:",
-  "graphSchemaKeyPrefix": "config:graphSchema:"
+  "redis": {
+    "namespaces": {
+      "source": "config:source",
+      "mapping": "config:mapping",
+      "graphSchema": "config:graphSchema"
+    },
+    "keys": {
+      "sources": "config:sources",
+      "mappings": "config:mappings",
+      "graphSchema": "config:graphSchemas"
+    }
+  }
 }
