@@ -1,0 +1,53 @@
+# Only alphanumeric characters are allowed in keys.
+
+# This is the configuration descriptor.
+$config:
+  # For now supported types are source, graph schema and mapping.
+  type: source
+  name: people
+
+# Used to reference things defined in other configurations.
+# This can be a single object or a list of objects for multi-imports.
+$import:
+  # This is the identifier that will be used only in this configuration.
+  # It will be treated as a top level key.
+  - places:
+      configType: source
+      configName: places
+      # This is referencing a top level key from the imported configuration.
+      name: places
+  - vehicles:
+      configType: source
+      configName: vehicles
+      name: vehicles
+
+# Top level keys are source names.
+people:
+  # All the contained keys are column names of tabular data
+  # or property paths of hierarchical data.
+  # This is used to override its containing object's key.
+  $source: http://somewhere/people.csv
+  # The acceptable types should be predefined.
+  driverLicense: string
+  name: string
+  age: integer
+  height: float
+  # Just an example of property path of some JSON source.
+  # height.unit: cm
+  # This is the primary keys for cross-source joining.
+  # It can be a string for a single key or a list of keys.
+  $keys:
+    - driverLicense
+  # These are references to the places configuration.
+  livesAtName: {$link: places.name}
+  livesAtLongitude: {$link: places.longitude}
+  livesAtLatitude: {$link: places.latitude}
+  drives: {$link: vehicles.registrationNumber}
+  # Self-referencing column.
+  isFriendOf: {$link: people.driverLicense}
+
+# Multiple sources can be defined in a single configuration.
+# In this case, it is null and will be ignored.
+morePeople:
+  $source: http://somewhere/more-people.csv
+  name: string

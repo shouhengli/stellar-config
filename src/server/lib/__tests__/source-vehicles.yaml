@@ -1,0 +1,10 @@
+$config:
+  type: source
+  name: vehicles
+
+vehicles:
+  $source: http://somewhere/vehicles.csv
+  registrationNumber: string
+  brand: string
+  model: string
+  $keys: registrationNumber

@@ -1,0 +1,26 @@
+$config:
+  type: graph schema
+  name: default
+
+# Top level keys are classes.
+Person:
+  # The acceptable types should be predefined.
+  name: string
+  age: integer
+  height: float
+  driverLicense: string
+  livesAt: {$link: Place}
+  drives: {$link: Vehicle}
+  isFriendOf: {$link: Person}
+  isEnemyOf: {$link: Person}
+
+Place:
+  name: string
+  longitude: float
+  latitude: float
+  type: string
+
+Vehicle:
+  registrationNumber: string
+  brand: string
+  model: string

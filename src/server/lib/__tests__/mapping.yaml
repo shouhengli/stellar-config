@@ -1,0 +1,62 @@
+$config:
+  type: mapping
+  name: default
+
+$import:
+  - sPeople:
+      configType: source
+      configName: people
+      name: people
+  - sPlaces:
+      configType: source
+      configName: places
+      name: places
+  - sVehicles:
+      configType: source
+      configName: vehicles
+      name: vehicles
+  - gPerson:
+      configType: graph schema
+      configName: default
+      name: Person
+  - gPlace:
+      configType: graph schema
+      configName: default
+      name: Place
+  - gVehicle:
+      configType: graph schema
+      configName: default
+      name: Vehicle
+
+# Top level keys are class instances.
+Person1:
+  # The value must be a class of graph schema.
+  $class: gPerson
+  # Mapping from class property to column.
+  name: sPeople.name
+  age: sPeople.age
+  height: sPeople.height
+  driverLicense: sPeople.driverLicense
+  # This references a top level key of current configuration.
+  livesAt: {$link: Place}
+  drives: {$link: Vehicle}
+  isFriendOf: {$link: Person1}
+  isEnemyOf: {$link: Person2}
+
+Person2:
+  $class: gPerson
+  name: sPeople.name
+  isEnemyOf: {$link: Person1}
+
+Place:
+  $class: gPlace
+  name: sPlaces.name
+  longitude: sPlaces.longitude
+  latitude: sPlaces.latitude
+  type: sPlaces.type
+
+Vehicle:
+  $class: gVehicle
+  registrationNumber: sVehicles.registrationNumber
+  brand: sVehicles.brand
+  model: sVehicles.model

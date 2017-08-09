@@ -1,0 +1,11 @@
+$config:
+  type: source
+  name: places
+
+places:
+  $source: http://somewhere/places.csv
+  name: string
+  longitude: float
+  latitude: float
+  type: string
+  $keys: [name, longitude, latitude]
