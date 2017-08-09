@@ -9,6 +9,7 @@ let redisClient = null;
 
 /**
  * Connects to Redis server.
+ * @return {RedisClient} Only for internal and testing use.
  */
 function connect() {
   // TODO: May need to redesign the connection logic to avoid too much queueing when connection
