@@ -5,36 +5,42 @@ const redis = require('redis');
 P.promisifyAll(redis.RedisClient.prototype);
 P.promisifyAll(redis.Multi.prototype);
 
+let redisClient = null;
+
 /**
  * Connects to Redis server.
- * @function
  */
-const connect = (() => {
+function connect() {
   // TODO: May need to redesign the connection logic to avoid too much queueing when connection
   // status is bad.
 
-  let redisClient = null;
+  if (redisClient === null) {
+    redisClient = redis.createClient();
 
-  return () => {
-    if (redisClient === null) {
-      redisClient = redis.createClient();
+    redisClient
+      .on('connect', () => {
+        console.log('Connection to Redis has been established');
+      })
+      .on('reconnecting', (delay, attempt) => {
+        console.log(`Reconnecting to Redis: attempt=${attempt}, delay=${delay}.`);
+      })
+      .on('error', (error) => {
+        console.log(`Redis error caught by the global error handler: ${error}`);
+      });
+  }
 
-      redisClient
-        .on('connect', () => {
-          console.log('Connection to Redis has been established');
-        })
-        .on('reconnecting', (delay, attempt) => {
-          console.log(`Reconnecting to Redis: attempt=${attempt}, delay=${delay}.`);
-        })
-        .on('error', (error) => {
-          console.log(`Redis error caught by the global error handler: ${error}`);
-        });
-    }
+  return redisClient;
+}
 
-    return redisClient;
-  };
-})();
-
+/**
+ * Disconnects from Redis server.
+ */
+function disconnect() {
+  if (redisClient !== null) {
+    redisClient.quit();
+    redisClient = null;
+  }
+}
 
 function swallow() {}
 
@@ -49,7 +55,7 @@ function resolveName(namespace, name) {
 
 function getDef(namespace, name) {
   return connect()
-    .get(resolveName(namespace, name))
+    .getAsync(resolveName(namespace, name))
     .catch(logRedisErrorAndThrow);
 }
 
@@ -70,6 +76,7 @@ function setDef(namespace, name, content, defSetKey) {
 class NonexistentKeyError extends Error {
   constructor(key) {
     super(`Failed to delete nonexistent definition with key "${key}".`);
+    this.key = key;
   }
 }
 
@@ -80,6 +87,7 @@ function delDef(namespace, name, defSetKey) {
     .multi()
     .srem(defSetKey, defKey)
     .del(defKey)
+    .execAsync()
     .then(
       ([defSetMemberDeleted, defKeyDeleted]) => {
         if (defSetMemberDeleted === 0 || defKeyDeleted === 0) {
@@ -103,7 +111,7 @@ function listDefNames(defSetKey) {
  *                           is successful.
  */
 function getSourceDef(name) {
-  return getDef(config.namespaces.source, name);
+  return getDef(config.redis.namespaces.source, name);
 }
 
 /**
@@ -113,7 +121,7 @@ function getSourceDef(name) {
  * @return {Promise} Will be resolved if the requested operation is successful.
  */
 function setSourceDef(name, content) {
-  return setDef(config.namespaces.source, name, content, config.keys.sources);
+  return setDef(config.redis.namespaces.source, name, content, config.redis.keys.sources);
 }
 
 /**
@@ -123,7 +131,7 @@ function setSourceDef(name, content) {
  *                   a {@link NonexistentKeyError} object.
  */
 function delSourceDef(name) {
-  return delDef(config.namespaces.source, name, config.keys.sources);
+  return delDef(config.redis.namespaces.source, name, config.redis.keys.sources);
 }
 
 /**
@@ -132,7 +140,7 @@ function delSourceDef(name) {
  *                             operation is successful.
  */
 function listSourceDefNames() {
-  return listDefNames(config.keys.sources);
+  return listDefNames(config.redis.keys.sources);
 }
 
 /**
@@ -142,7 +150,7 @@ function listSourceDefNames() {
  *                           is successful.
  */
 function getMappingDef(name) {
-  return getDef(config.namespaces.mapping, name);
+  return getDef(config.redis.namespaces.mapping, name);
 }
 
 /**
@@ -152,7 +160,7 @@ function getMappingDef(name) {
  * @return {Promise} Will be resolved if the requested operation is successful.
  */
 function setMappingDef(name, content) {
-  return setDef(config.namespaces.mapping, name, content, config.keys.mappings);
+  return setDef(config.redis.namespaces.mapping, name, content, config.redis.keys.mappings);
 }
 
 /**
@@ -162,7 +170,7 @@ function setMappingDef(name, content) {
  *                   a {@link NonexistentKeyError} object.
  */
 function delMappingDef(name) {
-  return delDef(config.namespaces.mapping, name, config.keys.mappings);
+  return delDef(config.redis.namespaces.mapping, name, config.redis.keys.mappings);
 }
 
 /**
@@ -171,7 +179,7 @@ function delMappingDef(name) {
  *                             operation is successful.
  */
 function listMappingDefNames() {
-  return listDefNames(config.keys.mappings);
+  return listDefNames(config.redis.keys.mappings);
 }
 
 /**
@@ -181,7 +189,7 @@ function listMappingDefNames() {
  *                           is successful.
  */
 function getGraphSchemaDef(name) {
-  return getDef(config.namespaces.graphSchema, name);
+  return getDef(config.redis.namespaces.graphSchema, name);
 }
 
 /**
@@ -191,7 +199,7 @@ function getGraphSchemaDef(name) {
  * @return {Promise} Will be resolved if the requested operation is successful.
  */
 function setGraphSchemaDef(name, content) {
-  return setDef(config.namespaces.graphSchema, name, content, config.keys.graphSchemas);
+  return setDef(config.redis.namespaces.graphSchema, name, content, config.redis.keys.graphSchemas);
 }
 
 /**
@@ -201,7 +209,7 @@ function setGraphSchemaDef(name, content) {
  *                   a {@link NonexistentKeyError} object.
  */
 function delGraphSchemaDef(name) {
-  return delDef(config.namespaces.graphSchema, name, config.keys.graphSchemas);
+  return delDef(config.redis.namespaces.graphSchema, name, config.redis.keys.graphSchemas);
 }
 
 /**
@@ -210,7 +218,7 @@ function delGraphSchemaDef(name) {
  *                             operation is successful.
  */
 function listGraphSchemaDefNames() {
-  return listDefNames(config.keys.graphSchemas);
+  return listDefNames(config.redis.keys.graphSchemas);
 }
 
 module.exports = {
@@ -227,4 +235,6 @@ module.exports = {
   delGraphSchemaDef,
   listGraphSchemaDefNames,
   connect,
+  disconnect,
+  NonexistentKeyError,
 };
