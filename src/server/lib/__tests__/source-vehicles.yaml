@@ -1,0 +1,10 @@
+__config__:
+  type: source
+  name: source_config_vehicles
+
+vehicles:
+  __source__: http://somewhere/vehicles.csv
+  __keys__: registrationNumber
+  registrationNumber: string
+  brand: string
+  model: string

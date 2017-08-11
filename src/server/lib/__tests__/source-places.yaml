@@ -1,0 +1,14 @@
+__config__:
+  type: source
+  name: source_config_places
+
+places:
+  __source__: http://somewhere/places.csv
+  __keys__:
+    - name
+    - longitude
+    - latitude
+  name: string
+  longitude: float
+  latitude: float
+  type: string

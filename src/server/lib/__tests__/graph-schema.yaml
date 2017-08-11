@@ -1,0 +1,25 @@
+__config__:
+  type: graph schema
+  name: graph_schema_config_all
+
+# Top level YAML keys denote classes.
+Person:
+  name: string
+  age: integer
+  height: float
+  driverLicense: string
+  livesAt: Place # This links to "Place" class.
+  drives: Vehicle
+  isFriendOf: Person # This is a self-link.
+  isEnemyOf: Person
+
+Place:
+  name: string
+  longitude: float
+  latitude: float
+  type: string
+
+Vehicle:
+  registrationNumber: string
+  brand: string
+  model: string

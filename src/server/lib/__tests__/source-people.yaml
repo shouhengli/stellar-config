@@ -1,0 +1,64 @@
+# For identifiers used in configuration, like YAML keys and configuration names,
+# please use only alphanumeric characters and underscore. This makes converting
+# of the configuration into other formats easier.
+
+# The __config__ special key is used to describe the current configuration.
+__config__:
+  type: source # The type can be source, mapping or graph schema.
+  name: source_config_people
+
+# The __import__ special key is used to reference things defined in other
+# configurations. Its value can be a single YAML mapping or a sequence of YAML
+# mappings.
+__import__:
+  # The key "places" here is an alias that will be used only in current
+  # configuration. It cannot be conflicting with source names.
+  - places_config: source_config_places
+  - vehicles_config: source_config_vehicles
+
+# Top level YAML keys denote source names.
+people:
+  # The __source__ special key specifies the location of the data source.
+  __source__: http://somewhere/people.csv
+
+  # The __keys__ special key denote the primary keys for cross-source joining.
+  # Its value can be a string or a sequence of strings.
+  __keys__: driverLicense
+
+  # Normal YAML keys denote column names in the data source.
+  driverLicense: string
+  name: string
+  age: integer
+  height: float
+
+  # The "livesAtName" column of current source "people" links to the column
+  # "name" of source "places" in imported configuration "places_config".
+  livesAtName:
+    __type__: string
+    __link__: places_config.places.name
+
+  livesAtLongitude:
+    __type__: float
+    __link__: places_config.places.longitude
+
+  livesAtLatitude:
+    __type__: float
+    __link__: places_config.places.latitude
+
+  drives:
+    __type__: string
+    __link__: vehicles_config.vehicles.registrationNumber
+
+  # This is a self-referencing column.
+  isFriendOf:
+    __type__: string
+    __link__: driverLicense
+
+# Multiple sources can be defined in a single configuration.
+enemies:
+  __source__: http://somewhere/more-people.csv
+  driverLicense: string
+  name: string
+  isEnemyOf:
+    __type__: string
+    __link__: people.driverLicense
