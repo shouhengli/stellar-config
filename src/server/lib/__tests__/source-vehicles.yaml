@@ -1,10 +1,10 @@
-$config:
+__config__:
   type: source
-  name: vehicles
+  name: source_config_vehicles
 
 vehicles:
-  $source: http://somewhere/vehicles.csv
+  __source__: http://somewhere/vehicles.csv
+  __keys__: registrationNumber
   registrationNumber: string
   brand: string
   model: string
-  $keys: registrationNumber

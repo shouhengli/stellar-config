@@ -1,62 +1,60 @@
-$config:
+__config__:
   type: mapping
-  name: default
+  name: config_mapping_all
 
-$import:
-  - sPeople:
-      configType: source
-      configName: people
-      name: people
-  - sPlaces:
-      configType: source
-      configName: places
-      name: places
-  - sVehicles:
-      configType: source
-      configName: vehicles
-      name: vehicles
-  - gPerson:
-      configType: graph schema
-      configName: default
-      name: Person
-  - gPlace:
-      configType: graph schema
-      configName: default
-      name: Place
-  - gVehicle:
-      configType: graph schema
-      configName: default
-      name: Vehicle
+__import__:
+  - people_config: source_config_people
+  - places_config: source_config_places
+  - vehicles_config: source_config_vehicles
+  - graph_config: graph_schema_config_all
 
-# Top level keys are class instances.
+# Top level keys denote class instances.
 Person1:
-  # The value must be a class of graph schema.
-  $class: gPerson
-  # Mapping from class property to column.
-  name: sPeople.name
-  age: sPeople.age
-  height: sPeople.height
-  driverLicense: sPeople.driverLicense
-  # This references a top level key of current configuration.
-  livesAt: {$link: Place}
-  drives: {$link: Vehicle}
-  isFriendOf: {$link: Person1}
-  isEnemyOf: {$link: Person2}
+  # The __class__ special key specifies a class in the graph schema that current
+  # class instance realizes.
+  __class__: graph_config.Person
+
+  # Normal YAML mappings denote mappings from class property to column.
+  name: people_config.people.name
+  age: people_config.people.age
+  height: people_config.people.height
+  driverLicense: people_config.people.driverLicense
+
+  # The "livesAt" property maps to three columns "livesAtName",
+  # "livesAtLongitude" and "livesAtLatitude of source "people" in imported
+  # configuration "people_config"
+  livesAt:
+    __to__:
+      - people_config.people.livesAtName
+      - people_config.people.livesAtLongitude
+      - people_config.people.livesAtLatitude
+    __link__: Place # Links to "Place" class instance in current configuration.
+
+  drives:
+    __to__: people_config.people.drives
+    __link: Vehicle
+
+  isFriendOf:
+    __to__: people_config.people.isFriendOf
+    __link__: Person1
 
 Person2:
-  $class: gPerson
-  name: sPeople.name
-  isEnemyOf: {$link: Person1}
+  __class__: graph_config.Person
+  name: people_config.enemies.name
+  driverLicense: people_config.enemies.driverLicens
+  isEnemyOf:
+    __to__: people_config.enemies.isEnemyOf
+    __link__: Person1
 
 Place:
-  $class: gPlace
-  name: sPlaces.name
-  longitude: sPlaces.longitude
-  latitude: sPlaces.latitude
-  type: sPlaces.type
+  __class__: graph_config.Place
+  name: places_config.places.name
+  longitude: places_config.places.longitude
+  latitude: places_config.places.latitude
+  type: places_config.places.type
 
 Vehicle:
-  $class: gVehicle
-  registrationNumber: sVehicles.registrationNumber
-  brand: sVehicles.brand
-  model: sVehicles.model
+  __class__: graph_config.Vehicle
+  registrationNumber: vehicles_config.vehicles.registrationNumber
+  brand: vehicles_config.vehicles.brand
+  model: vehicles_config.vehicles.model

@@ -1,11 +1,14 @@
-$config:
+__config__:
   type: source
-  name: places
+  name: source_config_places
 
 places:
-  $source: http://somewhere/places.csv
+  __source__: http://somewhere/places.csv
+  __keys__:
+    - name
+    - longitude
+    - latitude
   name: string
   longitude: float
   latitude: float
   type: string
-  $keys: [name, longitude, latitude]
