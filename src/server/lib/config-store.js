@@ -1,6 +1,9 @@
-const config = require('./config-store.json');
-const P = require('bluebird');
+const R = require('ramda');
 
+const util = require('./util');
+const config = util.loadYamlSync(__dirname, 'config-store.yaml');
+
+const P = require('bluebird');
 const redis = require('redis');
 P.promisifyAll(redis.RedisClient.prototype);
 P.promisifyAll(redis.Multi.prototype);
@@ -22,11 +25,11 @@ function connect() {
       .on('connect', () => {
         console.log('Connection to Redis has been established');
       })
-      .on('reconnecting', (delay, attempt) => {
-        console.log(`Reconnecting to Redis: attempt=${attempt}, delay=${delay}.`);
+      .on('reconnecting', (info) => {
+        console.log(`Reconnecting to Redis: attempt=${info.attempt}, delay=${info.delay}.`);
       })
       .on('error', (error) => {
-        console.log(`Redis error caught by the global error handler: ${error}`);
+        console.log(`Redis error is caught by the global error handler. ${error}`);
       });
   }
 
@@ -43,32 +46,16 @@ function disconnect() {
   }
 }
 
-function swallow() {}
+const logRedisError = R.tap((error) =>
+  console.log(`Redis error is caught by the failure handler. ${error}`)
+);
 
-function logRedisErrorAndThrow(error) {
-  console.log(`Redis error caught by the failure handler: ${error}`);
-  throw error;
+function resolveRedisKey(namespace, key) {
+  return [config.redis.rootNamespace, namespace, key].join(config.redis.namespaceSeparator);
 }
 
-function resolveName(namespace, name) {
-  return `${namespace}:${name}`;
-}
-
-function getDef(namespace, name) {
-  return connect()
-    .getAsync(resolveName(namespace, name))
-    .catch(logRedisErrorAndThrow);
-}
-
-function setDef(namespace, name, content, defSetKey) {
-  const defKey = resolveName(namespace, name);
-
-  return connect()
-    .multi()
-    .set(defKey, content)
-    .sadd(defSetKey, defKey)
-    .execAsync()
-    .then(swallow, logRedisErrorAndThrow);
+function resolveRedisSetKey(namespace) {
+  return `${config.redis.rootNamespace}${config.redis.namespaceSeparator}${namespace}s`;
 }
 
 /**
@@ -76,166 +63,100 @@ function setDef(namespace, name, content, defSetKey) {
  */
 class NonexistentKeyError extends Error {
   constructor(key) {
-    super(`Failed to delete nonexistent definition with key "${key}".`);
+    super(`Configuration key "${key}" does not exist.`);
     this.key = key;
   }
 }
 
-function delDef(namespace, name, defSetKey) {
-  const defKey = resolveName(namespace, name);
+/**
+ * Retrieves a configuration definition.
+ * @param {string} type - The type of the configuration.
+ * @param {string} name - The name of the configuration.
+ * @return {Promise<string>} If resolved, will give the definition of the configuration.
+ */
+function getConfig(type, name) {
+  const key = resolveRedisKey(type, name);
+
+  return connect()
+    .getAsync(key)
+    .tapCatch(logRedisError)
+    .tap((content) => {
+      if (R.isNil(content)) {
+        throw new NonexistentKeyError(key);
+      }
+    });
+}
+
+/**
+ * Defines a configuration.
+ * @param {string} type - The type of the configuration.
+ * @param {string} name - The name of the configuration.
+ * @param {string} content - The definition of the configuration.
+ * @return {Promise}
+ */
+function defineConfig(type, name, content) {
+  return connect()
+    .multi()
+    .set(resolveRedisKey(type, name), content)
+    .sadd(resolveRedisSetKey(type), name)
+    .execAsync()
+    .tapCatch(logRedisError)
+    .then(R.always());
+}
+
+/**
+ * Deletes a configuration.
+ * @param {string} type - The type of the configuration.
+ * @param {string} name - The name of the configuration.
+ * @return {Promise}
+ */
+function deleteConfig(type, name) {
+  const key = resolveRedisKey(type, name);
+  const setKey = resolveRedisSetKey(type);
 
   return connect()
     .multi()
-    .srem(defSetKey, defKey)
-    .del(defKey)
+    .srem(setKey, name)
+    .del(key)
     .execAsync()
+    .tapCatch(logRedisError)
     .then(
       ([defSetMemberDeleted, defKeyDeleted]) => {
         if (defSetMemberDeleted === 0 || defKeyDeleted === 0) {
-          throw new NonexistentKeyError(defKey);
+          throw new NonexistentKeyError(key);
         }
-      },
-      logRedisErrorAndThrow
+      }
     );
 }
 
-function listDefNames(defSetKey) {
+/**
+ * Lists names of configuration of a specific type.
+ * @param {string} type - The type of the configurations.
+ * @return {Promise<string[]>} If resolved, will give an array of configuration names.
+ */
+function listConfigs(type) {
   return connect()
-    .smembersAsync(defSetKey)
-    .catch(logRedisErrorAndThrow);
+    .smembersAsync(resolveRedisSetKey(type))
+    .tapCatch(logRedisError);
 }
 
 /**
- * Retrieves a source definition.
- * @param {string} name
- * @return {Promise<string>} Will be resolved with the definition content if the requeted operation
- *                           is successful.
+ * Lists all configuration types.
+ * @return {Promise<string[]>} If resolved, will give an array of configuration types.
  */
-function getSourceDef(name) {
-  return getDef(config.redis.namespaces.source, name);
-}
-
-/**
- * Sets a source definition.
- * @param {string} name
- * @param {string} content
- * @return {Promise} Will be resolved if the requested operation is successful.
- */
-function setSourceDef(name, content) {
-  return setDef(config.redis.namespaces.source, name, content, config.redis.keys.sources);
-}
-
-/**
- * Deletes a source definition.
- * @param {string} name
- * @return {Promise} Will be resolved if the requested operation is successful. Can be rejected with
- *                   a {@link NonexistentKeyError} object.
- */
-function delSourceDef(name) {
-  return delDef(config.redis.namespaces.source, name, config.redis.keys.sources);
-}
-
-/**
- * Lists source definition names.
- * @return {Promise<string[]>} Will be resolved with an array of definition names if the requested
- *                             operation is successful.
- */
-function listSourceDefNames() {
-  return listDefNames(config.redis.keys.sources);
-}
-
-/**
- * Retrieves a mapping definition.
- * @param {string} name
- * @return {Promise<string>} Will be resolved with the definition content if the requeted operation
- *                           is successful.
- */
-function getMappingDef(name) {
-  return getDef(config.redis.namespaces.mapping, name);
-}
-
-/**
- * Sets a mapping definition.
- * @param {string} name
- * @param {string} content
- * @return {Promise} Will be resolved if the requested operation is successful.
- */
-function setMappingDef(name, content) {
-  return setDef(config.redis.namespaces.mapping, name, content, config.redis.keys.mappings);
-}
-
-/**
- * Deletes a mapping definition.
- * @param {string} name
- * @return {Promise} Will be resolved if the requested operation is successful. Can be rejected with
- *                   a {@link NonexistentKeyError} object.
- */
-function delMappingDef(name) {
-  return delDef(config.redis.namespaces.mapping, name, config.redis.keys.mappings);
-}
-
-/**
- * Lists mapping definition names.
- * @return {Promise<string[]>} Will be resolved with an array of definition names if the requested
- *                             operation is successful.
- */
-function listMappingDefNames() {
-  return listDefNames(config.redis.keys.mappings);
-}
-
-/**
- * Retrieves a graph schema definition.
- * @param {string} name
- * @return {Promise<string>} Will be resolved with the definition content if the requeted operation
- *                           is successful.
- */
-function getGraphSchemaDef(name) {
-  return getDef(config.redis.namespaces.graphSchema, name);
-}
-
-/**
- * Sets a graph schema definition.
- * @param {string} name
- * @param {string} content
- * @return {Promise} Will be resolved if the requested operation is successful.
- */
-function setGraphSchemaDef(name, content) {
-  return setDef(config.redis.namespaces.graphSchema, name, content, config.redis.keys.graphSchemas);
-}
-
-/**
- * Deletes a graph schema definition.
- * @param {string} name
- * @return {Promise} Will be resolved if the requested operation is successful. Can be rejected with
- *                   a {@link NonexistentKeyError} object.
- */
-function delGraphSchemaDef(name) {
-  return delDef(config.redis.namespaces.graphSchema, name, config.redis.keys.graphSchemas);
-}
-
-/**
- * Lists graph schema definition names.
- * @return {Promise<string[]>} Will be resolved with an array of definition names if the requested
- *                             operation is successful.
- */
-function listGraphSchemaDefNames() {
-  return listDefNames(config.redis.keys.graphSchemas);
+function listConfigTypes() {
+  return P.resolve(config.redis.configTypes.slice());
 }
 
 module.exports = {
-  getSourceDef,
-  setSourceDef,
-  delSourceDef,
-  listSourceDefNames,
-  getMappingDef,
-  setMappingDef,
-  delMappingDef,
-  listMappingDefNames,
-  getGraphSchemaDef,
-  setGraphSchemaDef,
-  delGraphSchemaDef,
-  listGraphSchemaDefNames,
+  getConfig,
+  defineConfig,
+  deleteConfig,
+  listConfigs,
+  listConfigTypes,
   connect,
   disconnect,
   NonexistentKeyError,
+  resolveRedisKey,
+  resolveRedisSetKey,
 };

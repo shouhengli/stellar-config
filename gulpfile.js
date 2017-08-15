@@ -23,6 +23,7 @@ const paths = {
       js: 'src/server/**/*.js',
       staticFiles: [
         'src/server/**/*.json',
+        'src/server/**/*.yaml',
         'package.json',
         'yarn.lock',
       ],
