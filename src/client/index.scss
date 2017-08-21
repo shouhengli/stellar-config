@@ -29,15 +29,24 @@ nav {
 }
 
 .field {
-  &.is-relative {
+  &.config-search {
     position: relative;
-  }
 
-  .panel.is-absolute {
-    position: absolute;
-    top: 2.25rem;
-    width: 100%;
-    background-color: $white;
+    .panel {
+      position: absolute;
+      top: 2.25rem;
+      // width: 100%;
+      background-color: $white;
+
+      .panel-tabs {
+        // overflow: scroll;
+        // justify-content: flex-start;
+
+        a {
+          white-space: nowrap;
+        }
+      }
+    }
   }
 }
 
