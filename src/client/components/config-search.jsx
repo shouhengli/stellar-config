@@ -23,7 +23,7 @@ class ConfigSearch extends React.Component {
           <div className="panel-tabs">
             {
               this.props.configTypes.map((configType) => {
-                if (configType === this.props.activeConfigSearchTab) {
+                if (configType === this.props.activeConfigType) {
                   return <ActiveTab key={configType} title={configType} />;
                 } else {
                   return <Tab key={configType} title={configType} />;
@@ -35,7 +35,7 @@ class ConfigSearch extends React.Component {
             this.props.configNames.map((configName) =>
               <Item
                 key={configName}
-                type={this.props.activeConfigSearchTab}
+                type={this.props.activeConfigType}
                 name={configName} />
             )
           }
@@ -55,19 +55,19 @@ class ConfigSearch extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const configTypes = state.getIn(['config', 'types']);
-  const activeConfigSearchTab = state.getIn(['ui', 'activeConfigSearchTab']);
-  const configNames = state.getIn(['config', 'names', activeConfigSearchTab], List());
+  const configTypes = state.getIn(['search', 'types']);
+  const activeConfigType = state.getIn(['search', 'activeType']);
+  const configNames = state.getIn(['search', 'names'], List());
 
   return {
     configTypes,
-    activeConfigSearchTab,
+    activeConfigType,
     configNames,
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  const handleSearchInputFocus = () => dispatch(actions.loadConfigTypesAsync());
+  const handleSearchInputFocus = () => dispatch(actions.loadSearchConfigTypesAsync());
 
   return {
     handleSearchInputFocus,

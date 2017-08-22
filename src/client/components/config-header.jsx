@@ -1,22 +1,24 @@
 const React = require('react');
 const {connect} = require('react-redux');
 
-const Header = ({activeConfig}) => {
+const Header = ({configType, configName}) => {
   return (
     <div>
+      {configName}
       <span className="tag">
-        {activeConfig.get('type')}
+        {configType}
       </span>
-      {activeConfig.get('name')}
     </div>
   );
 };
 
 function mapStateToProps(state) {
-  const activeConfig = state.getIn(['ui', 'activeConfig']);
+  const configType = state.getIn(['edit', 'type']);
+  const configName = state.getIn(['edit', 'name']);
 
   return {
-    activeConfig,
+    configType,
+    configName,
   };
 }
 

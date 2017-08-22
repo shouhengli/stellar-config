@@ -25,7 +25,7 @@ class ActiveTab extends React.Component {
 function mapDispatchToProps(dispatch) {
   return {
     loadConfigNames: (configType) =>
-      dispatch(actions.loadConfigNamesAsync(configType)),
+      dispatch(actions.loadSearchConfigNamesAsync(configType)),
   };
 }
 

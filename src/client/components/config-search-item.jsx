@@ -16,7 +16,7 @@ const Item = ({type, name, handleClick}) => {
 function mapDispatchToProps(dispatch) {
   return {
     handleClick: (configType, configName) =>
-      dispatch(actions.setActiveConfig(configType, configName)),
+      dispatch(actions.loadEditConfigAsync(configType, configName)),
   };
 }
 

@@ -1,83 +1,70 @@
 require('whatwg-fetch');
-const LOAD_CONFIG_TYPES = 'LOAD_CONFIG_TYPES';
-const LOAD_CONFIG_NAMES = 'LOAD_CONFIG_NAMES';
-const LOAD_CONFIG_CONTENT = 'LOAD_CONFIG_CONTENT';
-const SET_ACTIVE_CONFIG_SEARCH_TAB = 'SET_ACTIVE_CONFIG_SEARCH_TAB';
-const SET_ACTIVE_CONFIG = 'SET_ACTIVE_CONFIG';
+const LOAD_SEARCH_CONFIG_TYPES = 'LOAD_SEARCH_CONFIG_TYPES';
+const LOAD_SEARCH_CONFIG_NAMES = 'LOAD_SEARCH_CONFIG_NAMES';
+const SET_SEARCH_ACTIVE_CONFIG_TYPE = 'SET_SEARCH_ACTIVE_CONFIG_TYPE';
+const LOAD_EDIT_CONFIG = 'LOAD_EDIT_CONFIG';
 
-function loadConfigTypes(configTypes) {
+function loadSearchConfigTypes(configTypes) {
   return {
-    type: LOAD_CONFIG_TYPES,
+    type: LOAD_SEARCH_CONFIG_TYPES,
     configTypes,
   };
 }
 
-function loadConfigTypesAsync() {
+function loadSearchConfigTypesAsync() {
   return (dispatch, getState) =>
     fetch('/config')
       .then((response) => response.json())
-      .then((configTypes) => dispatch(loadConfigTypes(configTypes)));
+      .then((configTypes) => dispatch(loadSearchConfigTypes(configTypes)));
 }
 
-function loadConfigNames(configType, configNames) {
+function loadSearchConfigNames(configType, configNames) {
   return {
-    type: LOAD_CONFIG_NAMES,
+    type: LOAD_SEARCH_CONFIG_NAMES,
     configType,
     configNames,
   };
 }
 
-function loadConfigNamesAsync(configType) {
+function loadSearchConfigNamesAsync(configType) {
   return (dispatch) =>
     fetch(`/config/${configType}`)
       .then((response) => response.json())
-      .then((configNames) => dispatch(loadConfigNames(configType, configNames)));
+      .then((configNames) => dispatch(loadSearchConfigNames(configType, configNames)));
 }
 
-function loadConfigContent(configType, configName, configContent) {
+function setSearchActiveConfigType(activeConfigType) {
   return {
-    type: LOAD_CONFIG_CONTENT,
+    type: SET_SEARCH_ACTIVE_CONFIG_TYPE,
+    activeConfigType,
+  };
+}
+
+function loadEditConfig(configType, configName, configContent) {
+  return {
+    type: LOAD_EDIT_CONFIG,
     configType,
     configName,
     configContent,
   };
 }
 
-function loadConfigContentAsync(configType, configName) {
+function loadEditConfigAsync(configType, configName) {
   return (dispatch) =>
     fetch(`/config/${configType}/${configName}`)
       .then((response) => response.json())
       .then((configContent) =>
-        dispatch(loadConfigContent(configType, configName, configContent))
+        dispatch(loadEditConfig(configType, configName, configContent))
       );
 }
 
-function setActiveConfigSearchTab(activeConfigSearchTab) {
-  return {
-    type: SET_ACTIVE_CONFIG_SEARCH_TAB,
-    activeConfigSearchTab,
-  };
-}
-
-function setActiveConfig(type, name) {
-  return {
-    type: SET_ACTIVE_CONFIG,
-    activeConfig: {
-      type,
-      name,
-    },
-  };
-}
-
 module.exports = {
-  LOAD_CONFIG_TYPES,
-  LOAD_CONFIG_NAMES,
-  LOAD_CONFIG_CONTENT,
-  SET_ACTIVE_CONFIG_SEARCH_TAB,
-  SET_ACTIVE_CONFIG,
-  loadConfigTypesAsync,
-  loadConfigNamesAsync,
-  loadConfigContentAsync,
-  setActiveConfigSearchTab,
-  setActiveConfig,
+  LOAD_SEARCH_CONFIG_TYPES,
+  LOAD_SEARCH_CONFIG_NAMES,
+  SET_SEARCH_ACTIVE_CONFIG_TYPE,
+  LOAD_EDIT_CONFIG,
+  loadSearchConfigTypesAsync,
+  loadSearchConfigNamesAsync,
+  setSearchActiveConfigType,
+  loadEditConfigAsync,
 };

@@ -8,7 +8,7 @@ const Tab = ({title, handleClick}) =>
 function mapDispatchToProps(dispatch) {
   return {
     handleClick: (configType) =>
-      dispatch(actions.setActiveConfigSearchTab(configType)),
+      dispatch(actions.setSearchActiveConfigType(configType)),
   };
 }
 

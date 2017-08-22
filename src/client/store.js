@@ -2,42 +2,47 @@ const R = require('ramda');
 const {fromJS} = require('immutable');
 const actions = require('./actions');
 
-const initialConfigState = fromJS({types: [], names: {}, contents: {}});
+const initialSearchState = fromJS({
+  types: [],
+  names: [],
+  activeType: null,
+});
 
-function reduceConfigState(state = initialConfigState, action) {
+function reduceSearchState(state = initialSearchState, action) {
   switch (action.type) {
-    case actions.LOAD_CONFIG_TYPES:
+    case actions.LOAD_SEARCH_CONFIG_TYPES:
+      if (action.configTypes.length > 0
+          && !R.contains(state.get('activeType'), action.configTypes)) {
+        state = state.set('activeType', action.configTypes[0]);
+      }
+
       return state.set('types', fromJS(action.configTypes));
-    case actions.LOAD_CONFIG_NAMES:
-      return state.setIn(['names', action.configType], fromJS(action.configNames));
-    case actions.LOAD_CONFIG_CONTENT:
-      return state.setIn(['contents', action.configType, action.configName], action.configContent);
+
+    case actions.LOAD_SEARCH_CONFIG_NAMES:
+      return state.set('names', fromJS(action.configNames));
+
+    case actions.SET_SEARCH_ACTIVE_CONFIG_TYPE:
+      return state.set('activeType', action.activeConfigType);
+
     default:
       return state;
   }
 }
 
-const initialUiState = fromJS({
-  activeConfigSearchTab: null,
-  activeConfig: {},
+const initialEditState = fromJS({
+  type: null,
+  name: null,
+  content: null,
 });
 
-function reduceUiState(state = initialUiState, action) {
+function reduceEditState(state = initialEditState, action) {
   switch (action.type) {
-    case actions.LOAD_CONFIG_TYPES: {
-      const activeConfigSearchTab = state.getIn(['ui', 'activeConfigSearchTab']);
+    case actions.LOAD_EDIT_CONFIG:
+      return state
+        .set('type', action.configType)
+        .set('name', action.configName)
+        .set('content', action.configContent);
 
-      if (action.configTypes.length > 0
-          && !R.contains(activeConfigSearchTab, action.configTypes)) {
-        return state.set('activeConfigSearchTab', action.configTypes[0]);
-      }
-
-      return state;
-    }
-    case actions.SET_ACTIVE_CONFIG_SEARCH_TAB:
-      return state.set('activeConfigSearchTab', action.activeConfigSearchTab);
-    case actions.SET_ACTIVE_CONFIG:
-      return state.set('activeConfig', fromJS(action.activeConfig));
     default:
       return state;
   }
@@ -49,8 +54,8 @@ const thunk = require('redux-thunk').default;
 
 module.exports = createStore(
   combineReducers({
-    config: reduceConfigState,
-    ui: reduceUiState,
+    search: reduceSearchState,
+    edit: reduceEditState,
   }),
   applyMiddleware(thunk)
 );
