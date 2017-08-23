@@ -16,7 +16,8 @@ const Item = ({type, name, handleClick}) => {
 function mapDispatchToProps(dispatch) {
   return {
     handleClick: (configType, configName) =>
-      dispatch(actions.loadEditConfigAsync(configType, configName)),
+      dispatch(actions.loadEditConfigAsync(configType, configName))
+        .then(() => dispatch(actions.hideSearch())),
   };
 }
 

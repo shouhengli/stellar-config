@@ -1,13 +1,14 @@
+const R = require('ramda');
 const React = require('react');
+const {connect} = require('react-redux');
+
+const {Nav, NavItem, StartAlignedNavItem} = require('./nav.jsx');
 const ConfigSearch = require('./config-search.jsx');
+const ConfigSearchIcon = require('./config-search-icon.jsx');
+const ConfigSearchClose = require('./config-search-close.jsx');
 const ConfigHeader = require('./config-header.jsx');
-
-require('brace');
-require('brace/mode/yaml');
-require('brace/theme/github');
-const AceEditor = require('react-ace').default;
-
-const lorem = 'Lorem Ipsum '.repeat(1000);
+const ConfigEditor = require('./config-editor.jsx');
+const FullView = require('./full-view.jsx');
 
 class Main extends React.Component {
   constructor(props) {
@@ -25,48 +26,24 @@ class Main extends React.Component {
   render() {
     return (
       <div>
-        <nav className="navbar is-fixed">
-          <div className="navbar-brand">
-            <div className="navbar-item">
-              SEAWEED
-            </div>
-          </div>
-          <div className="navbar-menu">
-            <div className="navbar-start">
-              <div className="navbar-item">
-                <ConfigHeader />
-              </div>
-              <div className="navbar-item">
-                <span className="icon is-small">
-                  <i className="fa fa-search"></i>
-                </span>
-              </div>
-              <div className="navbar-item">
+        <Nav itemClassNames={[null, 'has-content-start']}>
+          {this.props.configHeaderVisible && <NavItem><ConfigHeader /></NavItem>}
+          {
+            this.props.configSearchVisible ? (
+              <StartAlignedNavItem>
                 <ConfigSearch />
-              </div>
-              <div className="navbar-item">
-                <a className="button">Save</a>
-              </div>
-            </div>
-          </div>
-        </nav>
-        <div className="pane is-pulled-left">
-          <AceEditor
-            name="code-editor"
-            mode="yaml"
-            theme="github"
-            width="100%"
-            height="100%"
-            fontSize={16}
-            tabSize={2}
-            showPrintMargin={false}
-            setOptions={{scrollPastEnd: false}}
-            value={this.state.editorContent}
-            onChange={(value) => this.onEditorContentChange(value)} />
-        </div>
-        <div className="pane is-pulled-right is-scrollable">
-          {lorem}
-        </div>
+                <ConfigSearchClose />
+              </StartAlignedNavItem>
+            ) : (
+              <NavItem>
+                <ConfigSearchIcon />
+              </NavItem>
+            )
+          }
+        </Nav>
+        <FullView>
+          <ConfigEditor />
+        </FullView>
       </div>
     );
   }
@@ -78,4 +55,18 @@ class Main extends React.Component {
   }
 }
 
-module.exports = Main;
+function mapStateToProps(state) {
+  const configHeaderVisible = R.not(R.or(
+    R.isNil(state.getIn(['edit', 'type'])),
+    R.isNil(state.getIn(['edit', 'name']))
+  ));
+
+  const configSearchVisible = state.getIn(['search', 'visible']);
+
+  return {
+    configHeaderVisible,
+    configSearchVisible,
+  };
+}
+
+module.exports = connect(mapStateToProps)(Main);

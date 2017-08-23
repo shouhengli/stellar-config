@@ -18,39 +18,40 @@ class ConfigSearch extends React.Component {
 
   render() {
     return (
-      <div className="field config-search">
-        <nav className="panel">
-          <div className="panel-tabs">
-            {
-              this.props.configTypes.map((configType) => {
-                if (configType === this.props.activeConfigType) {
-                  return <ActiveTab key={configType} title={configType} />;
-                } else {
-                  return <Tab key={configType} title={configType} />;
-                }
-              })
-            }
+      <nav className="panel config-search">
+        <div className="panel-block config-search-input">
+          <div className="control has-icons-left">
+            <input className="input" type="text" />
+            <span className="icon is-small is-left">
+              <i className="fa fa-search"></i>
+            </span>
           </div>
-          {
-            this.props.configNames.map((configName) =>
-              <Item
-                key={configName}
-                type={this.props.activeConfigType}
-                name={configName} />
-            )
-          }
-        </nav>
-        <div className="control has-icons-right">
-          <input
-            className="input"
-            type="text"
-            onFocus={() => this.props.handleSearchInputFocus()} />
-          <span className="icon is-small is-right">
-            <i className="fa fa-search"></i>
-          </span>
         </div>
-      </div>
+        <div className="panel-tabs">
+          {
+            this.props.configTypes.map((configType) => {
+              if (configType === this.props.activeConfigType) {
+                return <ActiveTab key={configType} title={configType} />;
+              } else {
+                return <Tab key={configType} title={configType} />;
+              }
+            })
+          }
+        </div>
+        {
+          this.props.configNames.map((configName) =>
+            <Item
+              key={configName}
+              type={this.props.activeConfigType}
+              name={configName} />
+          )
+        }
+      </nav>
     );
+  }
+
+  componentWillMount() {
+    this.props.loadConfigTypes();
   }
 }
 
@@ -67,10 +68,10 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  const handleSearchInputFocus = () => dispatch(actions.loadSearchConfigTypesAsync());
+  const loadConfigTypes = () => dispatch(actions.loadSearchConfigTypesAsync());
 
   return {
-    handleSearchInputFocus,
+    loadConfigTypes,
   };
 }
 

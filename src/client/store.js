@@ -6,6 +6,7 @@ const initialSearchState = fromJS({
   types: [],
   names: [],
   activeType: null,
+  visible: false,
 });
 
 function reduceSearchState(state = initialSearchState, action) {
@@ -24,6 +25,12 @@ function reduceSearchState(state = initialSearchState, action) {
     case actions.SET_SEARCH_ACTIVE_CONFIG_TYPE:
       return state.set('activeType', action.activeConfigType);
 
+    case actions.HIDE_SEARCH:
+      return state.set('visible', false);
+
+    case actions.REVEAL_SEARCH:
+      return state.set('visible', true);
+
     default:
       return state;
   }
@@ -32,7 +39,7 @@ function reduceSearchState(state = initialSearchState, action) {
 const initialEditState = fromJS({
   type: null,
   name: null,
-  content: null,
+  content: '',
 });
 
 function reduceEditState(state = initialEditState, action) {
@@ -42,6 +49,9 @@ function reduceEditState(state = initialEditState, action) {
         .set('type', action.configType)
         .set('name', action.configName)
         .set('content', action.configContent);
+
+    case actions.SET_EDIT_CONFIG_CONTENT:
+      return state.set('content', action.configContent);
 
     default:
       return state;

@@ -28,23 +28,26 @@ nav {
   }
 }
 
-.field {
+.navbar-item {
+  &.is-start-aligned {
+    align-items: flex-start;
+  }
+}
+
+.panel {
   &.config-search {
-    position: relative;
+    background-color: $white;
 
-    .panel {
-      position: absolute;
-      top: 2.25rem;
-      // width: 100%;
-      background-color: $white;
+    .panel-block {
+      &.config-search-input {
+        padding: 0;
+        border: 0;
+      }
+    }
 
-      .panel-tabs {
-        // overflow: scroll;
-        // justify-content: flex-start;
-
-        a {
-          white-space: nowrap;
-        }
+    .panel-tabs {
+      a {
+        white-space: nowrap;
       }
     }
   }
@@ -52,12 +55,16 @@ nav {
 
 div.pane {
   height: calc(100vh - #{$navbar-height});
-  width: 50vw;
+  width: 100vw;
   margin-top: $navbar-height;
   border-top: 1px solid $border;
 
-  &:first-of-type {
-    border-right: 1px solid $border;
+  &.is-half {
+    width: 50vw;
+
+    &:first-of-type {
+      border-right: 1px solid $border;
+    }
   }
 
   &.is-scrollable {
