@@ -4,10 +4,10 @@ const {connect} = require('react-redux');
 const Header = ({configType, configName}) => {
   return (
     <div className="tags has-addons">
-      <span className="tag is-medium">
+      <span className="tag is-medium is-primary">
         {configType}
       </span>
-      <span className="tag is-medium is-primary">
+      <span className="tag is-medium">
         {configName}
       </span>
     </div>

@@ -29,7 +29,7 @@ class ConfigSearch extends React.Component {
             </div>
             <div className="control">
               <button
-                className="button is-medium is-dark"
+                className="button is-medium"
                 onClick={() => this.props.hideSearch()}>
                 <span className="icon is-small">
                   <i className="fa fa-times"></i>

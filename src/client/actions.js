@@ -1,4 +1,5 @@
 require('whatwg-fetch');
+
 const LOAD_SEARCH_CONFIG_TYPES = 'LOAD_SEARCH_CONFIG_TYPES';
 const LOAD_SEARCH_CONFIG_NAMES = 'LOAD_SEARCH_CONFIG_NAMES';
 const SET_SEARCH_ACTIVE_CONFIG_TYPE = 'SET_SEARCH_ACTIVE_CONFIG_TYPE';
@@ -6,6 +7,7 @@ const HIDE_SEARCH = 'HIDE_SEARCH';
 const REVEAL_SEARCH = 'REVEAL_SEARCH';
 const LOAD_EDIT_CONFIG = 'LOAD_EDIT_CONFIG';
 const SET_EDIT_CONFIG_CONTENT = 'SET_EDIT_CONFIG_CONTENT';
+const SET_EDIT_CONFIG_STATUS = 'SET_EDIT_CONFIG_STATUS';
 
 function loadSearchConfigTypes(configTypes) {
   return {
@@ -76,6 +78,22 @@ function setEditConfigContent(configContent) {
   };
 }
 
+function setEditConfigStatus(configStatus) {
+  return {
+    type: SET_EDIT_CONFIG_STATUS,
+    configStatus,
+  };
+}
+
+function saveEditConfigAsync(configType, configName, configContent) {
+  return (dispatch) =>
+    fetch(`/config/${configType}/${configName}`, {
+      method: 'POST',
+      headers: {'CONTENT-TYPE': 'application/json'},
+      body: JSON.stringify({content: configContent}),
+    });
+}
+
 module.exports = {
   LOAD_SEARCH_CONFIG_TYPES,
   LOAD_SEARCH_CONFIG_NAMES,
@@ -84,6 +102,7 @@ module.exports = {
   REVEAL_SEARCH,
   LOAD_EDIT_CONFIG,
   SET_EDIT_CONFIG_CONTENT,
+  SET_EDIT_CONFIG_STATUS,
   loadSearchConfigTypesAsync,
   loadSearchConfigNamesAsync,
   setSearchActiveConfigType,
@@ -91,4 +110,6 @@ module.exports = {
   revealSearch,
   loadEditConfigAsync,
   setEditConfigContent,
+  setEditConfigStatus,
+  saveEditConfigAsync,
 };

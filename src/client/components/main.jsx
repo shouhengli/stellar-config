@@ -4,8 +4,9 @@ const {connect} = require('react-redux');
 
 const {Nav, NavItem} = require('./nav.jsx');
 const ConfigSearch = require('./config-search.jsx');
-const ConfigSearchIcon = require('./config-search-icon.jsx');
+const ConfigSearchToggle = require('./config-search-toggle.jsx');
 const ConfigHeader = require('./config-header.jsx');
+const ConfigSave = require('./config-save.jsx');
 const ConfigEditor = require('./config-editor.jsx');
 const FullView = require('./full-view.jsx');
 const ModalView = require('./modal-view.jsx');
@@ -27,13 +28,14 @@ class Main extends React.Component {
     return (
       <div>
         <Nav>
-          {this.props.configHeaderVisible && <NavItem><ConfigHeader /></NavItem>}
+          {this.props.editing && <NavItem><ConfigHeader /></NavItem>}
+          {this.props.editing && <ConfigSave />}
           <NavItem>
-            <ConfigSearchIcon />
+            <ConfigSearchToggle />
           </NavItem>
         </Nav>
         <FullView>
-          <ConfigEditor />
+          {this.props.editing && <ConfigEditor />}
         </FullView>
         <ModalView active={this.props.configSearchVisible}>
           <ConfigSearch />
@@ -50,7 +52,7 @@ class Main extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const configHeaderVisible = R.not(R.or(
+  const editing = R.not(R.or(
     R.isNil(state.getIn(['edit', 'type'])),
     R.isNil(state.getIn(['edit', 'name']))
   ));
@@ -58,7 +60,7 @@ function mapStateToProps(state) {
   const configSearchVisible = state.getIn(['search', 'visible']);
 
   return {
-    configHeaderVisible,
+    editing,
     configSearchVisible,
   };
 }

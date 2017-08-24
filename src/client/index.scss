@@ -77,3 +77,11 @@ div.pane {
     overflow: scroll;
   }
 }
+
+.modal {
+  align-items: flex-start;
+
+  .modal-content {
+    margin-top: $navbar-height;
+  }
+}
