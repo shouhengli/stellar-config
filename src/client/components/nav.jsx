@@ -3,9 +3,6 @@ const React = require('react');
 const NavItem = ({children}) =>
   <div className="navbar-item">{children}</div>;
 
-const StartAlignedNavItem = ({children}) =>
-  <div className="navbar-item is-start-aligned">{children}</div>;
-
 const Nav = ({children}) => {
   return (
     <nav className="navbar is-fixed">
@@ -26,5 +23,4 @@ const Nav = ({children}) => {
 module.exports = {
   Nav,
   NavItem,
-  StartAlignedNavItem,
 };

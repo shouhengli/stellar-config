@@ -2,13 +2,13 @@ const R = require('ramda');
 const React = require('react');
 const {connect} = require('react-redux');
 
-const {Nav, NavItem, StartAlignedNavItem} = require('./nav.jsx');
+const {Nav, NavItem} = require('./nav.jsx');
 const ConfigSearch = require('./config-search.jsx');
 const ConfigSearchIcon = require('./config-search-icon.jsx');
-const ConfigSearchClose = require('./config-search-close.jsx');
 const ConfigHeader = require('./config-header.jsx');
 const ConfigEditor = require('./config-editor.jsx');
 const FullView = require('./full-view.jsx');
+const ModalView = require('./modal-view.jsx');
 
 class Main extends React.Component {
   constructor(props) {
@@ -26,24 +26,18 @@ class Main extends React.Component {
   render() {
     return (
       <div>
-        <Nav itemClassNames={[null, 'has-content-start']}>
+        <Nav>
           {this.props.configHeaderVisible && <NavItem><ConfigHeader /></NavItem>}
-          {
-            this.props.configSearchVisible ? (
-              <StartAlignedNavItem>
-                <ConfigSearch />
-                <ConfigSearchClose />
-              </StartAlignedNavItem>
-            ) : (
-              <NavItem>
-                <ConfigSearchIcon />
-              </NavItem>
-            )
-          }
+          <NavItem>
+            <ConfigSearchIcon />
+          </NavItem>
         </Nav>
         <FullView>
           <ConfigEditor />
         </FullView>
+        <ModalView active={this.props.configSearchVisible}>
+          <ConfigSearch />
+        </ModalView>
       </div>
     );
   }

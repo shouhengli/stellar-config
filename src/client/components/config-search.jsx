@@ -20,11 +20,22 @@ class ConfigSearch extends React.Component {
     return (
       <nav className="panel config-search">
         <div className="panel-block config-search-input">
-          <div className="control has-icons-left">
-            <input className="input" type="text" />
-            <span className="icon is-small is-left">
-              <i className="fa fa-search"></i>
-            </span>
+          <div className="field has-addons">
+            <div className="control has-icons-left is-expanded">
+              <input className="input is-medium" type="text" />
+              <span className="icon is-left">
+                <i className="fa fa-search"></i>
+              </span>
+            </div>
+            <div className="control">
+              <button
+                className="button is-medium is-dark"
+                onClick={() => this.props.hideSearch()}>
+                <span className="icon is-small">
+                  <i className="fa fa-times"></i>
+                </span>
+              </button>
+            </div>
           </div>
         </div>
         <div className="panel-tabs">
@@ -69,9 +80,11 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   const loadConfigTypes = () => dispatch(actions.loadSearchConfigTypesAsync());
+  const hideSearch = () => dispatch(actions.hideSearch());
 
   return {
     loadConfigTypes,
+    hideSearch,
   };
 }
 
