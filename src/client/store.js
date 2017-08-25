@@ -88,7 +88,7 @@ const initialUiState = fromJS({
   newConfigType: '',
   newConfigName: '',
   configDeleteVisible: false,
-  configDeleteName: null,
+  configDeleteName: '',
 });
 
 function reduceUiState(state = initialUiState, action) {

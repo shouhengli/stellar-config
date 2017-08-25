@@ -82,7 +82,7 @@ function mapDispatchToProps(dispatch) {
     handleDeleteButtonClick: (configType, configName) =>
       dispatch(actions.deleteConfigAsync(configType, configName))
         .then(() => dispatch(actions.resetEditConfig()))
-        .then(() => dispatch(actions.setConfigDeleteName(null)))
+        .then(() => dispatch(actions.setConfigDeleteName('')))
         .then(() => dispatch(actions.hideConfigDelete())),
   };
 }
