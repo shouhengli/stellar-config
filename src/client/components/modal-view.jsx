@@ -1,8 +1,8 @@
 const React = require('react');
 
-const ModalView = ({children, active}) => {
+const ModalView = ({children}) => {
   return (
-    <div className={active ? 'modal is-active' : 'modal'}>
+    <div className="modal is-active">
       <div className="modal-background"></div>
       <div className="modal-content">
         {children}

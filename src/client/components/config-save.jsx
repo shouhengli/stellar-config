@@ -9,31 +9,25 @@ const {
   CONFIG_STATUS_SAVING,
 } = require('../config-status');
 
-const {NavItem} = require('./nav.jsx');
-
 const Save = ({configType, configName, configContent, configStatus, handleClick}) => {
   switch (configStatus) {
     case CONFIG_STATUS_CHANGED:
       return (
-        <NavItem>
-          <button
-            className="button is-white"
-            onClick={() => handleClick(configType, configName, configContent)}>
-            <span className="icon">
-              <i className="fa fa-cloud-upload"></i>
-            </span>
-          </button>
-        </NavItem>
+        <button
+          className="button is-white"
+          onClick={() => handleClick(configType, configName, configContent)}>
+          <span className="icon">
+            <i className="fa fa-cloud-upload"></i>
+          </span>
+        </button>
       );
     case CONFIG_STATUS_SAVING:
       return (
-        <NavItem>
-          <button className="button is-white is-loading">
-            <span className="icon">
-              <i className="fa fa-spinner"></i>
-            </span>
-          </button>
-        </NavItem>
+        <button className="button is-white is-loading">
+          <span className="icon">
+            <i className="fa fa-spinner"></i>
+          </span>
+        </button>
       );
     default:
       return null;

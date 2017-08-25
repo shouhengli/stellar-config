@@ -8,6 +8,11 @@ const REVEAL_SEARCH = 'REVEAL_SEARCH';
 const LOAD_EDIT_CONFIG = 'LOAD_EDIT_CONFIG';
 const SET_EDIT_CONFIG_CONTENT = 'SET_EDIT_CONFIG_CONTENT';
 const SET_EDIT_CONFIG_STATUS = 'SET_EDIT_CONFIG_STATUS';
+const REVEAL_NEW_CONFIG = 'REVEAL_NEW_CONFIG';
+const HIDE_NEW_CONFIG = 'HIDE_NEW_CONFIG';
+const SET_NEW_CONFIG_TYPE = 'SET_NEW_CONFIG_TYPE';
+const SET_NEW_CONFIG_NAME = 'SET_NEW_CONFIG_NAME';
+const ADD_NEW_CONFIG = 'ADD_NEW_CONFIG';
 
 function loadSearchConfigTypes(configTypes) {
   return {
@@ -94,6 +99,40 @@ function saveEditConfigAsync(configType, configName, configContent) {
     });
 }
 
+function revealNewConfig() {
+  return {
+    type: REVEAL_NEW_CONFIG,
+  };
+}
+
+function hideNewConfig() {
+  return {
+    type: HIDE_NEW_CONFIG,
+  };
+}
+
+function setNewConfigType(configType) {
+  return {
+    type: SET_NEW_CONFIG_TYPE,
+    configType,
+  };
+}
+
+function setNewConfigName(configName) {
+  return {
+    type: SET_NEW_CONFIG_NAME,
+    configName,
+  };
+}
+
+function addNewConfig(configType, configName) {
+  return {
+    type: ADD_NEW_CONFIG,
+    configType,
+    configName,
+  };
+}
+
 module.exports = {
   LOAD_SEARCH_CONFIG_TYPES,
   LOAD_SEARCH_CONFIG_NAMES,
@@ -103,6 +142,11 @@ module.exports = {
   LOAD_EDIT_CONFIG,
   SET_EDIT_CONFIG_CONTENT,
   SET_EDIT_CONFIG_STATUS,
+  REVEAL_NEW_CONFIG,
+  HIDE_NEW_CONFIG,
+  SET_NEW_CONFIG_TYPE,
+  SET_NEW_CONFIG_NAME,
+  ADD_NEW_CONFIG,
   loadSearchConfigTypesAsync,
   loadSearchConfigNamesAsync,
   setSearchActiveConfigType,
@@ -112,4 +156,9 @@ module.exports = {
   setEditConfigContent,
   setEditConfigStatus,
   saveEditConfigAsync,
+  revealNewConfig,
+  hideNewConfig,
+  setNewConfigType,
+  setNewConfigName,
+  addNewConfig,
 };

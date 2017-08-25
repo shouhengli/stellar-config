@@ -1,6 +1,7 @@
 const R = require('ramda');
 const React = require('react');
 const {connect} = require('react-redux');
+const actions = require('../actions');
 
 const {Nav, NavItem} = require('./nav.jsx');
 const ConfigSearch = require('./config-search.jsx');
@@ -10,6 +11,8 @@ const ConfigSave = require('./config-save.jsx');
 const ConfigEditor = require('./config-editor.jsx');
 const FullView = require('./full-view.jsx');
 const ModalView = require('./modal-view.jsx');
+const NewConfig = require('./new-config.jsx');
+const NewConfigToggle = require('./new-config-toggle.jsx');
 
 class Main extends React.Component {
   constructor(props) {
@@ -29,19 +32,37 @@ class Main extends React.Component {
       <div>
         <Nav>
           {this.props.editing && <NavItem><ConfigHeader /></NavItem>}
-          {this.props.editing && <ConfigSave />}
           <NavItem>
+            {this.props.editing && <ConfigSave />}
             <ConfigSearchToggle />
+            <NewConfigToggle />
           </NavItem>
         </Nav>
         <FullView>
           {this.props.editing && <ConfigEditor />}
         </FullView>
-        <ModalView active={this.props.configSearchVisible}>
-          <ConfigSearch />
-        </ModalView>
+        {
+          this.props.configSearchVisible
+          && (
+            <ModalView>
+              <ConfigSearch />
+            </ModalView>
+          )
+        }
+        {
+          this.props.newConfigVisible
+          && (
+            <ModalView>
+              <NewConfig />
+            </ModalView>
+          )
+        }
       </div>
     );
+  }
+
+  componentWillMount() {
+    this.props.loadConfigTypes();
   }
 
   onEditorContentChange(value) {
@@ -58,11 +79,21 @@ function mapStateToProps(state) {
   ));
 
   const configSearchVisible = state.getIn(['search', 'visible']);
+  const newConfigVisible = state.getIn(['ui', 'newConfigVisible']);
 
   return {
     editing,
     configSearchVisible,
+    newConfigVisible,
   };
 }
 
-module.exports = connect(mapStateToProps)(Main);
+function mapDispatchToProps(dispatch) {
+  const loadConfigTypes = () => dispatch(actions.loadSearchConfigTypesAsync());
+
+  return {
+    loadConfigTypes,
+  };
+}
+
+module.exports = connect(mapStateToProps, mapDispatchToProps)(Main);

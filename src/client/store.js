@@ -60,6 +60,43 @@ function reduceEditState(state = initialEditState, action) {
     case actions.SET_EDIT_CONFIG_STATUS:
       return state.set('status', action.configStatus);
 
+    case actions.ADD_NEW_CONFIG:
+      return state
+        .set('type', action.configType)
+        .set('name', action.configName)
+        .set('content', '')
+        .set('status', CONFIG_STATUS_NORMAL);
+
+    default:
+      return state;
+  }
+}
+
+const initialUiState = fromJS({
+  newConfigVisible: false,
+  newConfigType: '',
+  newConfigName: '',
+});
+
+function reduceUiState(state = initialUiState, action) {
+  switch (action.type) {
+    case actions.REVEAL_NEW_CONFIG:
+      return state.set('newConfigVisible', true);
+
+    case actions.HIDE_NEW_CONFIG:
+      return state.set('newConfigVisible', false);
+
+    case actions.SET_NEW_CONFIG_TYPE:
+      return state.set('newConfigType', action.configType);
+
+    case actions.SET_NEW_CONFIG_NAME:
+      return state.set('newConfigName', action.configName);
+
+    case actions.ADD_NEW_CONFIG:
+      return state
+        .set('newConfigType', '')
+        .set('newConfigName', '');
+
     default:
       return state;
   }
@@ -73,6 +110,7 @@ module.exports = createStore(
   combineReducers({
     search: reduceSearchState,
     edit: reduceEditState,
+    ui: reduceUiState,
   }),
   applyMiddleware(thunk)
 );

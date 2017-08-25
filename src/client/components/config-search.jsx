@@ -60,10 +60,6 @@ class ConfigSearch extends React.Component {
       </nav>
     );
   }
-
-  componentWillMount() {
-    this.props.loadConfigTypes();
-  }
 }
 
 function mapStateToProps(state) {
@@ -79,11 +75,9 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  const loadConfigTypes = () => dispatch(actions.loadSearchConfigTypesAsync());
   const hideSearch = () => dispatch(actions.hideSearch());
 
   return {
-    loadConfigTypes,
     hideSearch,
   };
 }
