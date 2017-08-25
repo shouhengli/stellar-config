@@ -1,5 +1,4 @@
 const React = require('react');
-const R = require('ramda');
 const {connect} = require('react-redux');
 const actions = require('../actions');
 
@@ -73,9 +72,9 @@ function mapStateToProps(state) {
   const searchConfigTypes = state.getIn(['search', 'types']);
   const configName = state.getIn(['ui', 'newConfigName']);
 
-  const selectedConfigType = R.contains(configType, searchConfigTypes)
+  const selectedConfigType = searchConfigTypes.indexOf(configType) >= 0
                            ? configType
-                           : R.head(searchConfigTypes) || '';
+                           : searchConfigTypes.first() || '';
 
   return {
     configTypes: searchConfigTypes,
