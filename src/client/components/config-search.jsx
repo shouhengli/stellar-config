@@ -22,7 +22,11 @@ class ConfigSearch extends React.Component {
         <div className="panel-block config-search-input">
           <div className="field has-addons">
             <div className="control has-icons-left is-expanded">
-              <input className="input is-medium" type="text" />
+              <input
+                className="input is-medium"
+                type="text"
+                value={this.props.searchText}
+                onChange={(event) => this.props.handleSearchTextChange(event)} />
               <span className="icon is-left">
                 <i className="fa fa-search"></i>
               </span>
@@ -50,12 +54,16 @@ class ConfigSearch extends React.Component {
           }
         </div>
         {
-          this.props.configNames.map((configName) =>
-            <Item
-              key={configName}
-              type={this.props.activeConfigType}
-              name={configName} />
-          )
+          this.props.configNames
+              .filter((configName) =>
+                configName.indexOf(this.props.searchText) >= 0
+              )
+              .map((configName) =>
+                <Item
+                  key={configName}
+                  type={this.props.activeConfigType}
+                  name={configName} />
+              )
         }
       </nav>
     );
@@ -66,19 +74,24 @@ function mapStateToProps(state) {
   const configTypes = state.getIn(['search', 'types']);
   const activeConfigType = state.getIn(['search', 'activeType']);
   const configNames = state.getIn(['search', 'names'], List());
+  const searchText = state.getIn(['search', 'text']);
 
   return {
     configTypes,
     activeConfigType,
     configNames,
+    searchText,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   const hideSearch = () => dispatch(actions.hideSearch());
+  const handleSearchTextChange =
+    (event) => dispatch(actions.setSearchText(event.target.value));
 
   return {
     hideSearch,
+    handleSearchTextChange,
   };
 }
 

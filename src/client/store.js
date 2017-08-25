@@ -8,6 +8,7 @@ const initialSearchState = fromJS({
   names: [],
   activeType: null,
   visible: false,
+  text: '',
 });
 
 function reduceSearchState(state = initialSearchState, action) {
@@ -25,6 +26,9 @@ function reduceSearchState(state = initialSearchState, action) {
 
     case actions.SET_SEARCH_ACTIVE_CONFIG_TYPE:
       return state.set('activeType', action.activeConfigType);
+
+    case actions.SET_SEARCH_TEXT:
+      return state.set('text', action.searchText);
 
     case actions.HIDE_SEARCH:
       return state.set('visible', false);

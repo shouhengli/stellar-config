@@ -3,6 +3,7 @@ require('whatwg-fetch');
 const LOAD_SEARCH_CONFIG_TYPES = 'LOAD_SEARCH_CONFIG_TYPES';
 const LOAD_SEARCH_CONFIG_NAMES = 'LOAD_SEARCH_CONFIG_NAMES';
 const SET_SEARCH_ACTIVE_CONFIG_TYPE = 'SET_SEARCH_ACTIVE_CONFIG_TYPE';
+const SET_SEARCH_TEXT = 'SET_SEARCH_TEXT';
 const HIDE_SEARCH = 'HIDE_SEARCH';
 const REVEAL_SEARCH = 'REVEAL_SEARCH';
 const LOAD_EDIT_CONFIG = 'LOAD_EDIT_CONFIG';
@@ -47,6 +48,13 @@ function setSearchActiveConfigType(activeConfigType) {
   return {
     type: SET_SEARCH_ACTIVE_CONFIG_TYPE,
     activeConfigType,
+  };
+}
+
+function setSearchText(searchText) {
+  return {
+    type: SET_SEARCH_TEXT,
+    searchText,
   };
 }
 
@@ -137,6 +145,7 @@ module.exports = {
   LOAD_SEARCH_CONFIG_TYPES,
   LOAD_SEARCH_CONFIG_NAMES,
   SET_SEARCH_ACTIVE_CONFIG_TYPE,
+  SET_SEARCH_TEXT,
   HIDE_SEARCH,
   REVEAL_SEARCH,
   LOAD_EDIT_CONFIG,
@@ -150,6 +159,7 @@ module.exports = {
   loadSearchConfigTypesAsync,
   loadSearchConfigNamesAsync,
   setSearchActiveConfigType,
+  setSearchText,
   hideSearch,
   revealSearch,
   loadEditConfigAsync,
