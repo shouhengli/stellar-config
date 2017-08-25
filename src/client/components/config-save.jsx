@@ -16,15 +16,15 @@ const Save = ({configType, configName, configContent, configStatus, handleClick}
         <button
           className="button is-white"
           onClick={() => handleClick(configType, configName, configContent)}>
-          <span className="icon">
-            <i className="fa fa-cloud-upload"></i>
+          <span className="icon is-small">
+            <i className="fa fa-upload"></i>
           </span>
         </button>
       );
     case CONFIG_STATUS_SAVING:
       return (
         <button className="button is-white is-loading">
-          <span className="icon">
+          <span className="icon is-small">
             <i className="fa fa-spinner"></i>
           </span>
         </button>

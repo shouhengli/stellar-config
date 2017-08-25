@@ -9,11 +9,15 @@ const REVEAL_SEARCH = 'REVEAL_SEARCH';
 const LOAD_EDIT_CONFIG = 'LOAD_EDIT_CONFIG';
 const SET_EDIT_CONFIG_CONTENT = 'SET_EDIT_CONFIG_CONTENT';
 const SET_EDIT_CONFIG_STATUS = 'SET_EDIT_CONFIG_STATUS';
+const RESET_EDIT_CONFIG = 'RESET_EDIT_CONFIG';
 const REVEAL_NEW_CONFIG = 'REVEAL_NEW_CONFIG';
 const HIDE_NEW_CONFIG = 'HIDE_NEW_CONFIG';
 const SET_NEW_CONFIG_TYPE = 'SET_NEW_CONFIG_TYPE';
 const SET_NEW_CONFIG_NAME = 'SET_NEW_CONFIG_NAME';
 const ADD_NEW_CONFIG = 'ADD_NEW_CONFIG';
+const REVEAL_CONFIG_DELETE = 'REVEAL_CONFIG_DELETE';
+const HIDE_CONFIG_DELETE = 'HIDE_CONFIG_DELETE';
+const SET_CONFIG_DELETE_NAME = 'SET_CONFIG_DELETE_NAME';
 
 function loadSearchConfigTypes(configTypes) {
   return {
@@ -98,6 +102,12 @@ function setEditConfigStatus(configStatus) {
   };
 }
 
+function resetEditConfig() {
+  return {
+    type: RESET_EDIT_CONFIG,
+  };
+}
+
 function saveEditConfigAsync(configType, configName, configContent) {
   return (dispatch) =>
     fetch(`/config/${configType}/${configName}`, {
@@ -141,6 +151,30 @@ function addNewConfig(configType, configName) {
   };
 }
 
+function deleteConfigAsync(configType, configName) {
+  return (dispatch) =>
+    fetch(`/config/${configType}/${configName}`, {method: 'DELETE'});
+}
+
+function revealConfigDelete() {
+  return {
+    type: REVEAL_CONFIG_DELETE,
+  };
+}
+
+function hideConfigDelete() {
+  return {
+    type: HIDE_CONFIG_DELETE,
+  };
+}
+
+function setConfigDeleteName(configName) {
+  return {
+    type: SET_CONFIG_DELETE_NAME,
+    configName,
+  };
+}
+
 module.exports = {
   LOAD_SEARCH_CONFIG_TYPES,
   LOAD_SEARCH_CONFIG_NAMES,
@@ -151,11 +185,15 @@ module.exports = {
   LOAD_EDIT_CONFIG,
   SET_EDIT_CONFIG_CONTENT,
   SET_EDIT_CONFIG_STATUS,
+  RESET_EDIT_CONFIG,
   REVEAL_NEW_CONFIG,
   HIDE_NEW_CONFIG,
   SET_NEW_CONFIG_TYPE,
   SET_NEW_CONFIG_NAME,
   ADD_NEW_CONFIG,
+  REVEAL_CONFIG_DELETE,
+  HIDE_CONFIG_DELETE,
+  SET_CONFIG_DELETE_NAME,
   loadSearchConfigTypesAsync,
   loadSearchConfigNamesAsync,
   setSearchActiveConfigType,
@@ -165,10 +203,15 @@ module.exports = {
   loadEditConfigAsync,
   setEditConfigContent,
   setEditConfigStatus,
+  resetEditConfig,
   saveEditConfigAsync,
   revealNewConfig,
   hideNewConfig,
   setNewConfigType,
   setNewConfigName,
   addNewConfig,
+  revealConfigDelete,
+  hideConfigDelete,
+  deleteConfigAsync,
+  setConfigDeleteName,
 };

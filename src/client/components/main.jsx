@@ -13,6 +13,8 @@ const FullView = require('./full-view.jsx');
 const ModalView = require('./modal-view.jsx');
 const NewConfig = require('./new-config.jsx');
 const NewConfigToggle = require('./new-config-toggle.jsx');
+const ConfigDelete = require('./config-delete.jsx');
+const ConfigDeleteToggle = require('./config-delete-toggle.jsx');
 
 class Main extends React.Component {
   constructor(props) {
@@ -36,6 +38,7 @@ class Main extends React.Component {
             {this.props.editing && <ConfigSave />}
             <ConfigSearchToggle />
             <NewConfigToggle />
+            {this.props.editing && <ConfigDeleteToggle />}
           </NavItem>
         </Nav>
         <FullView>
@@ -54,6 +57,14 @@ class Main extends React.Component {
           && (
             <ModalView>
               <NewConfig />
+            </ModalView>
+          )
+        }
+        {
+          this.props.configDeleteVisible
+          && (
+            <ModalView>
+              <ConfigDelete />
             </ModalView>
           )
         }
@@ -80,11 +91,13 @@ function mapStateToProps(state) {
 
   const configSearchVisible = state.getIn(['search', 'visible']);
   const newConfigVisible = state.getIn(['ui', 'newConfigVisible']);
+  const configDeleteVisible = state.getIn(['ui', 'configDeleteVisible']);
 
   return {
     editing,
     configSearchVisible,
     newConfigVisible,
+    configDeleteVisible,
   };
 }
 

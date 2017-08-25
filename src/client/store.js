@@ -64,6 +64,13 @@ function reduceEditState(state = initialEditState, action) {
     case actions.SET_EDIT_CONFIG_STATUS:
       return state.set('status', action.configStatus);
 
+    case actions.RESET_EDIT_CONFIG:
+      return state
+        .set('type', null)
+        .set('name', null)
+        .set('content', '')
+        .set('status', CONFIG_STATUS_NORMAL);
+
     case actions.ADD_NEW_CONFIG:
       return state
         .set('type', action.configType)
@@ -80,6 +87,8 @@ const initialUiState = fromJS({
   newConfigVisible: false,
   newConfigType: '',
   newConfigName: '',
+  configDeleteVisible: false,
+  configDeleteName: null,
 });
 
 function reduceUiState(state = initialUiState, action) {
@@ -100,6 +109,15 @@ function reduceUiState(state = initialUiState, action) {
       return state
         .set('newConfigType', '')
         .set('newConfigName', '');
+
+    case actions.HIDE_CONFIG_DELETE:
+      return state.set('configDeleteVisible', false);
+
+    case actions.REVEAL_CONFIG_DELETE:
+      return state.set('configDeleteVisible', true);
+
+    case actions.SET_CONFIG_DELETE_NAME:
+      return state.set('configDeleteName', action.configName);
 
     default:
       return state;

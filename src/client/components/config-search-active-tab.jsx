@@ -17,7 +17,7 @@ class ActiveTab extends React.Component {
     );
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.props.loadConfigNames(this.props.title);
   }
 }
