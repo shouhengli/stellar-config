@@ -1,6 +1,11 @@
 const React = require('react');
 const {connect} = require('react-redux');
-const actions = require('../actions');
+const {
+  setConfigDeleteName,
+  hideConfigDelete,
+  deleteConfigAsync,
+  resetEditConfig,
+} = require('../action-creators/edit');
 
 const ConfigDelete = (props) => {
   const {
@@ -74,16 +79,16 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     handleNameChange: (event) =>
-      dispatch(actions.setConfigDeleteName(event.target.value)),
+      dispatch(setConfigDeleteName(event.target.value)),
 
     handleCloseButtonClick: () =>
-      dispatch(actions.hideConfigDelete()),
+      dispatch(hideConfigDelete()),
 
     handleDeleteButtonClick: (configType, configName) =>
-      dispatch(actions.deleteConfigAsync(configType, configName))
-        .then(() => dispatch(actions.resetEditConfig()))
-        .then(() => dispatch(actions.setConfigDeleteName('')))
-        .then(() => dispatch(actions.hideConfigDelete())),
+      dispatch(deleteConfigAsync(configType, configName))
+        .then(() => dispatch(resetEditConfig()))
+        .then(() => dispatch(setConfigDeleteName('')))
+        .then(() => dispatch(hideConfigDelete())),
   };
 }
 

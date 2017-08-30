@@ -1,7 +1,7 @@
 const React = require('react');
 
 const {connect} = require('react-redux');
-const actions = require('../actions');
+const {setEditConfigContent} = require('../action-creators/edit');
 const {CONFIG_STATUS_SAVING} = require('../config-status');
 
 require('brace');
@@ -41,7 +41,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     handleChange: (value) =>
-      dispatch(actions.setEditConfigContent(value)),
+      dispatch(setEditConfigContent(value)),
   };
 }
 

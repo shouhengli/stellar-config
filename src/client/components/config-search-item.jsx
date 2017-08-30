@@ -1,6 +1,7 @@
 const React = require('react');
 const {connect} = require('react-redux');
-const actions = require('../actions');
+const {hideSearch} = require('../action-creators/search');
+const {loadEditConfigAsync} = require('../action-creators/edit');
 
 const Item = ({type, name, handleClick}) => {
   return (
@@ -16,8 +17,8 @@ const Item = ({type, name, handleClick}) => {
 function mapDispatchToProps(dispatch) {
   return {
     handleClick: (configType, configName) =>
-      dispatch(actions.loadEditConfigAsync(configType, configName))
-        .then(() => dispatch(actions.hideSearch())),
+      dispatch(loadEditConfigAsync(configType, configName))
+        .then(() => dispatch(hideSearch())),
   };
 }
 

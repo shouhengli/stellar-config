@@ -1,7 +1,7 @@
 const React = require('react');
 const {connect} = require('react-redux');
 
-const actions = require('../actions');
+const {setEditConfigStatus, saveEditConfigAsync} = require('../action-creators/edit');
 
 const {
   CONFIG_STATUS_NORMAL,
@@ -51,11 +51,11 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     handleClick: (configType, configName, configContent) => Promise
-      .resolve(dispatch(actions.setEditConfigStatus(CONFIG_STATUS_SAVING)))
+      .resolve(dispatch(setEditConfigStatus(CONFIG_STATUS_SAVING)))
       .then(() =>
-        dispatch(actions.saveEditConfigAsync(configType, configName, configContent))
+        dispatch(saveEditConfigAsync(configType, configName, configContent))
       )
-      .then(() => dispatch(actions.setEditConfigStatus(CONFIG_STATUS_NORMAL))),
+      .then(() => dispatch(setEditConfigStatus(CONFIG_STATUS_NORMAL))),
   };
 }
 

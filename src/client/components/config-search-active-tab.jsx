@@ -1,6 +1,6 @@
 const React = require('react');
 const {connect} = require('react-redux');
-const actions = require('../actions');
+const {loadSearchConfigNamesAsync} = require('../action-creators/search');
 
 class ActiveTab extends React.Component {
   constructor(props) {
@@ -25,7 +25,7 @@ class ActiveTab extends React.Component {
 function mapDispatchToProps(dispatch) {
   return {
     loadConfigNames: (configType) =>
-      dispatch(actions.loadSearchConfigNamesAsync(configType)),
+      dispatch(loadSearchConfigNamesAsync(configType)),
   };
 }
 

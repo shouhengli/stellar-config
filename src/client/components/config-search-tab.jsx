@@ -1,6 +1,6 @@
 const React = require('react');
 const {connect} = require('react-redux');
-const actions = require('../actions');
+const {setSearchActiveConfigType} = require('../action-creators/search');
 
 const Tab = ({title, handleClick}) =>
   <a onClick={() => handleClick(title)}>{title}</a>;
@@ -8,7 +8,7 @@ const Tab = ({title, handleClick}) =>
 function mapDispatchToProps(dispatch) {
   return {
     handleClick: (configType) =>
-      dispatch(actions.setSearchActiveConfigType(configType)),
+      dispatch(setSearchActiveConfigType(configType)),
   };
 }
 

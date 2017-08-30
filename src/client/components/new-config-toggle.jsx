@@ -1,6 +1,6 @@
 const React = require('react');
 const {connect} = require('react-redux');
-const actions = require('../actions');
+const {revealNewConfig} = require('../action-creators/edit');
 
 const Toggle = ({handleClick}) => {
   return (
@@ -15,7 +15,7 @@ const Toggle = ({handleClick}) => {
 function mapDispatchToProps(dispatch) {
   return {
     handleClick: () =>
-      dispatch(actions.revealNewConfig()),
+      dispatch(revealNewConfig()),
   };
 }
 

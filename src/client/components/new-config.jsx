@@ -1,6 +1,11 @@
 const React = require('react');
 const {connect} = require('react-redux');
-const actions = require('../actions');
+const {
+  hideNewConfig,
+  addNewConfig,
+  setNewConfigName,
+  setNewConfigType,
+} = require('../action-creators/edit');
 
 const NewConfig = (props) => {
   const {
@@ -86,15 +91,15 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     handleConfigTypeChange: (event) =>
-      dispatch(actions.setNewConfigType(event.target.value)),
+      dispatch(setNewConfigType(event.target.value)),
     handleConfigNameChange: (event) =>
-      dispatch(actions.setNewConfigName(event.target.value)),
+      dispatch(setNewConfigName(event.target.value)),
     handleCancelButtonClick: () =>
-      dispatch(actions.hideNewConfig()),
+      dispatch(hideNewConfig()),
     handleAddButtonClick: (configType, configName) =>
       Promise
-        .resolve(dispatch(actions.addNewConfig(configType, configName)))
-        .then(() => dispatch(actions.hideNewConfig())),
+        .resolve(dispatch(addNewConfig(configType, configName)))
+        .then(() => dispatch(hideNewConfig())),
   };
 }
 

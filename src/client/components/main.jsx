@@ -1,7 +1,7 @@
 const R = require('ramda');
 const React = require('react');
 const {connect} = require('react-redux');
-const actions = require('../actions');
+const {loadSearchConfigTypesAsync} = require('../action-creators/search');
 
 const {Nav, NavItem} = require('./nav.jsx');
 const ConfigSearch = require('./config-search.jsx');
@@ -102,7 +102,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  const loadConfigTypes = () => dispatch(actions.loadSearchConfigTypesAsync());
+  const loadConfigTypes = () => dispatch(loadSearchConfigTypesAsync());
 
   return {
     loadConfigTypes,

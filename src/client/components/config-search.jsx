@@ -1,7 +1,7 @@
 const {List} = require('immutable');
 const React = require('react');
 const {connect} = require('react-redux');
-const actions = require('../actions');
+const {setSearchText, hideSearch} = require('../action-creators/search');
 
 const Tab = require('./config-search-tab.jsx');
 const ActiveTab = require('./config-search-active-tab.jsx');
@@ -34,7 +34,7 @@ class ConfigSearch extends React.Component {
             <div className="control">
               <button
                 className="button is-medium"
-                onClick={() => this.props.hideSearch()}>
+                onClick={() => this.props.handleHideButtonClick()}>
                 <span className="icon is-small">
                   <i className="fa fa-times"></i>
                 </span>
@@ -85,12 +85,12 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  const hideSearch = () => dispatch(actions.hideSearch());
+  const handleHideButtonClick = () => dispatch(hideSearch());
   const handleSearchTextChange =
-    (event) => dispatch(actions.setSearchText(event.target.value));
+    (event) => dispatch(setSearchText(event.target.value));
 
   return {
-    hideSearch,
+    handleHideButtonClick,
     handleSearchTextChange,
   };
 }

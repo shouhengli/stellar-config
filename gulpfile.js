@@ -11,7 +11,7 @@ const paths = {
     client: {
       all: 'src/client/**/*',
       js: ['src/client/**/*.js', 'src/client/**/*.jsx'],
-      jsEntries: ['src/client/index.js'],
+      jsEntries: ['src/client/index.js', 'src/client/force-layout.js'],
       sass: 'src/client/**/*.scss',
       staticFiles: [
         'src/client/**/*.html',
