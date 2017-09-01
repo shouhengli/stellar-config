@@ -24,16 +24,30 @@ function locateBezierControlPoints(x0, y0, x1, y1, x2, y2) {
   }
 }
 
-const ClassLinkPath = ({id, x0, y0, x1, y1, x2, y2, markerId}) => {
-  const {cx0, cy0, cx1, cy1} = locateBezierControlPoints(x0, y0, x1, y1, x2, y2);
-  const pathData = `M${x0},${y0}Q${cx0},${cy0} ${x1},${y1}Q${cx1},${cy1} ${x2},${y2}`;
+class ClassLinkPath extends React.Component {
+  constructor(props) {
+    super(props);
+  }
 
-  return (
-    <path id={`graph-schema-class-link-path-${id}`}
-      d={pathData}
-      markerMid={`url(#${markerId})`} />
-  );
-};
+  static get displayName() {
+    return 'Graph Schema';
+  }
+
+  render() {
+    const {id, x0, y0, x1, y1, x2, y2, markerId} = this.props;
+    const {cx0, cy0, cx1, cy1} = locateBezierControlPoints(x0, y0, x1, y1, x2, y2);
+    const pathData =
+      `M${x0},${y0}Q${cx0},${cy0} ${x1},${y1}Q${cx1},${cy1} ${x2},${y2}`;
+
+    return (
+      <path
+        id={`graph-schema-class-link-path-${id}`}
+        d={pathData}
+        markerMid={`url(#${markerId})`}
+        ref={(path) => this.getLength = () => path.getTotalLength()}/>
+    );
+  }
+}
 
 module.exports = {
   locateBezierControlPoints,

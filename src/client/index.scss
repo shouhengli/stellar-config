@@ -88,3 +88,65 @@ div.pane {
     margin-top: $navbar-height;
   }
 }
+
+.graph-schema {
+  .graph-schema-class-links {
+    .graph-schema-class-link {
+      path {
+        stroke: $primary;
+        fill: none;
+      }
+
+      text {
+        fill: $primary;
+      }
+    }
+  }
+
+  #graph-schema-arrow {
+    path {
+      fill: $primary;
+    }
+  }
+
+  .graph-schema-classes {
+    .graph-schema-class {
+      .graph-schema-class-name {
+        text {
+          fill: $primary;
+        }
+
+        circle {
+          fill: $white;
+          stroke: $primary;
+        }
+      }
+
+      .graph-schema-class-arc {
+        path {
+          fill: $primary;
+        }
+      }
+
+      .graph-schema-class-prop-name {
+        path {
+          fill: none;
+        }
+
+        text {
+          fill: $white;
+        }
+      }
+
+      .graph-schema-class-prop-tooltip {
+        path {
+          fill: none;
+        }
+
+        text {
+          fill: $primary;
+        }
+      }
+    }
+  }
+}

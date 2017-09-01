@@ -10,7 +10,7 @@ function loadSearchConfigTypes(configTypes) {
 }
 
 function loadSearchConfigTypesAsync() {
-  return (dispatch, getState) =>
+  return (dispatch) =>
     fetch('/config')
       .then((response) => response.json())
       .then((configTypes) => dispatch(loadSearchConfigTypes(configTypes)));
