@@ -17,13 +17,17 @@ function reduceClassesState(state = initialClassesState, action) {
       );
 
     case actions.UPDATE_GRAPH_SCHEMA_ELEMENT_POSITIONS:
-      return R.reduce(
-        (s, c) => s
-          .setIn([c.name, 'x'], c.x)
-          .setIn([c.name, 'y'], c.y),
-        state,
-        action.classes
-      );
+      if (R.any((c) => !state.has(c.name), action.classes)) {
+        return state;
+      } else {
+        return R.reduce(
+          (s, c) => s
+            .setIn([c.name, 'x'], c.x)
+            .setIn([c.name, 'y'], c.y),
+          state,
+          action.classes
+        );
+      }
 
     case actions.UPDATE_GRAPH_SCHEMA_CLASS_POSITION:
       return state
@@ -64,13 +68,17 @@ function reduceClassLinksState(state = initialClassLinksState, action) {
       );
 
     case actions.UPDATE_GRAPH_SCHEMA_ELEMENT_POSITIONS:
-      return R.reduce(
-        (s, l) => s
-          .setIn([getClassLinkKey(l), 'x'], l.x)
-          .setIn([getClassLinkKey(l), 'y'], l.y),
-        state,
-        action.classLinks
-      );
+      if (R.any((l) => !state.has(getClassLinkKey(l)), action.classLinks)) {
+        return state;
+      } else {
+        return R.reduce(
+          (s, l) => s
+            .setIn([getClassLinkKey(l), 'x'], l.x)
+            .setIn([getClassLinkKey(l), 'y'], l.y),
+          state,
+          action.classLinks
+        );
+      }
 
     case actions.UPDATE_GRAPH_SCHEMA_CLASS_LINK_POSITION: {
       const classLinkKey = getClassLinkKey({
@@ -94,7 +102,7 @@ function reduceClassLinksState(state = initialClassLinksState, action) {
       return state.withMutations((mutableState) => {
         action.classLinks.forEach((classLink) =>
           mutableState.setIn(
-            [getClassLinkKey(action.classLink), 'length'],
+            [getClassLinkKey(classLink), 'length'],
             classLink.length
           )
         );
@@ -105,13 +113,17 @@ function reduceClassLinksState(state = initialClassLinksState, action) {
   }
 }
 
-const initialUiState = Map({
+const initialUiState = fromJS({
   drag: {},
   shouldUpdateClassLinkLengths: false,
+  dimensions: [0, 0],
 });
 
 function reduceUiState(state = initialUiState, action) {
   switch (action.type) {
+    case actions.LOAD_GRAPH_SCHEMA_ELEMENTS:
+      return state.set('shouldUpdateClassLinkLengths', false);
+
     case actions.START_GRAPH_SCHEMA_CLASS_DRAG:
       return state.setIn(
         ['drag', 'class'],
@@ -143,13 +155,34 @@ function reduceUiState(state = initialUiState, action) {
       return state.set('shouldUpdateClassLinkLengths', true);
 
     case actions.UPDATE_GRAPH_SCHEMA_CLASS_POSITION:
-      return state.set('shouldUpdateClassLinkLengths', true);
+      return state
+        .setIn(
+          ['drag', 'class', 'fromX'],
+          state.getIn(['drag', 'class', 'fromX']) + action.dx
+        )
+        .setIn(
+          ['drag', 'class', 'fromY'],
+          state.getIn(['drag', 'class', 'fromY']) + action.dy
+        )
+        .set('shouldUpdateClassLinkLengths', true);
 
     case actions.UPDATE_GRAPH_SCHEMA_CLASS_LINK_POSITION:
-      return state.set('shouldUpdateClassLinkLengths', true);
+      return state
+        .setIn(
+          ['drag', 'classLink', 'fromX'],
+          state.getIn(['drag', 'classLink', 'fromX']) + action.dx
+        )
+        .setIn(
+          ['drag', 'classLink', 'fromY'],
+          state.getIn(['drag', 'classLink', 'fromY']) + action.dy
+        )
+        .set('shouldUpdateClassLinkLengths', true);
 
     case actions.UPDATE_GRAPH_SCHEMA_CLASS_LINK_LENGTHS:
       return state.set('shouldUpdateClassLinkLengths', false);
+
+    case actions.SET_GRAPH_SCHEMA_DIMENSIONS:
+      return state.set('dimensions', List(action.dimensions));
 
     default:
       return state;

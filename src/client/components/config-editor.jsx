@@ -1,5 +1,4 @@
 const React = require('react');
-
 const {connect} = require('react-redux');
 const {setEditConfigContent} = require('../action-creators/edit');
 const {CONFIG_STATUS_SAVING} = require('../config-status');
@@ -9,7 +8,8 @@ require('brace/mode/yaml');
 require('brace/theme/github');
 const AceEditor = require('react-ace').default;
 
-const ConfigEditor = ({configStatus, configContent, handleChange}) => {
+const ConfigEditor = (props) => {
+  const {configStatus, configContent, handleChange} = props;
   return (
     <AceEditor
       name="code-editor"
@@ -38,10 +38,11 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps) {
   return {
-    handleChange: (value) =>
-      dispatch(setEditConfigContent(value)),
+    handleChange: (value) => {
+      dispatch(setEditConfigContent(value));
+    },
   };
 }
 

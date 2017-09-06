@@ -1,5 +1,7 @@
 const React = require('react');
 const {connect} = require('react-redux');
+const P = require('bluebird');
+
 const {
   hideNewConfig,
   addNewConfig,
@@ -97,9 +99,8 @@ function mapDispatchToProps(dispatch) {
     handleCancelButtonClick: () =>
       dispatch(hideNewConfig()),
     handleAddButtonClick: (configType, configName) =>
-      Promise
-        .resolve(dispatch(addNewConfig(configType, configName)))
-        .then(() => dispatch(hideNewConfig())),
+      P.resolve(dispatch(addNewConfig(configType, configName)))
+       .then(() => dispatch(hideNewConfig())),
   };
 }
 

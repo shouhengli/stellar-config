@@ -8,17 +8,28 @@ const {ClassLinkPath} = require('./graph-schema-class-link-path.jsx');
 const ClassLinkLabel = require('./graph-schema-class-link-label.jsx');
 const Class = require('./graph-schema-class.jsx');
 
-const {getClassLinkId} = require('../graph-schema');
 const {
-  updateClassLinkLengthsAsync,
-  updateClassPosition,
-  updateClassLinkPosition,
+  GraphSchemaFormatError,
+  getClassLinkId,
+  parseYaml,
+} = require('../graph-schema');
+
+const {
+  loadGraphSchemaElements,
+  setLayoutDimensions,
+  startLayoutAsync,
   stopDrag,
+  stopLayoutAsync,
+  updateClassLinkLengthsAsync,
+  updateClassLinkPosition,
+  updateClassPosition,
 } = require('../action-creators/graph-schema');
 
 class GraphSchema extends React.Component {
   constructor(props) {
     super(props);
+
+    this.classLinkPaths = {};
   }
 
   static get displayName() {
@@ -35,13 +46,10 @@ class GraphSchema extends React.Component {
       draggedClassLink,
     } = this.props;
 
-    this.classLinkPaths = [];
-
     return (
       <svg
+        ref={(ref) => this.svg = ref}
         className="graph-schema"
-        width="100%"
-        height="100%"
         onMouseMove={
           (event) => handleMouseMove(event, draggedClass, draggedClassLink)
         }
@@ -52,20 +60,30 @@ class GraphSchema extends React.Component {
           </defs>
           <g className="graph-schema-class-links">
             {
-              classLinks.map((l, i) => {
+              classLinks.map((l) => {
                 return (
                   <ClassLink key={JSON.stringify(getClassLinkId(l.toJS()))}>
                     <ClassLinkPath
-                      ref={(p) => this.classLinkPaths.push({l, p})}
-                      id={i}
-                      x0={classes.getIn([l.source, 'x'])}
-                      y0={classes.getIn([l.source, 'y'])}
+                      ref={
+                        (p) => {
+                          if (R.isNil(p)) {
+                            delete this.classLinkPaths[l.get('globalIndex')];
+                          } else {
+                            this.classLinkPaths[l.get('globalIndex')] = {l, p};
+                          }
+                        }
+                      }
+                      id={l.get('globalIndex')}
+                      x0={classes.getIn([l.get('source'), 'x'])}
+                      y0={classes.getIn([l.get('source'), 'y'])}
                       x1={l.get('x')}
                       y1={l.get('y')}
-                      x2={classes.getIn([l.target, 'x'])}
-                      y2={classes.getIn([l.target, 'y'])}
+                      x2={classes.getIn([l.get('target'), 'x'])}
+                      y2={classes.getIn([l.get('target'), 'y'])}
                       markerId="graph-schema-arrow" />
-                    <ClassLinkLabel id={i} classLink={l} />
+                    <ClassLinkLabel
+                      id={l.get('globalIndex')}
+                      classLink={l} />
                   </ClassLink>
                 );
               })
@@ -73,7 +91,7 @@ class GraphSchema extends React.Component {
           </g>
           <g className="graph-schema-classes">
             {
-              classes.toList().map((c, i) => {
+              classes.toList().map((c) => {
                 return <Class key={c.get('name')} cls={c} />;
               })
             }
@@ -83,43 +101,83 @@ class GraphSchema extends React.Component {
     );
   }
 
-  componentDidUpdate() {
-    if (this.props.shouldUpdateClassLinkLengths) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.editorContent !== this.props.editorContent) {
+      this.props.handleEditorContentChange(
+        this.props.editorContent,
+        this.props.dimensions.toJS()
+      );
+    } else if (this.props.shouldUpdateClassLinkLengths) {
       this.props.updateClassLinkLengths(this.classLinkPaths);
     }
+  }
+
+  componentDidMount() {
+    this.props.init(
+      [this.svg.clientWidth, this.svg.clientHeight],
+      this.props.editorContent
+    );
+  }
+
+  componentWillUnmount() {
+    this.props.stopLayout();
   }
 }
 
 function mapStateToProps(state) {
+  const editorContent = state.getIn(['edit', 'content']);
+
   const graphSchemaState = state.get('graphSchema');
   const classes = graphSchemaState.get('classes');
   const classLinks = graphSchemaState.get('classLinks').toList();
 
-  const shouldUpdateClassLinkLengths = graphSchemaState.getIn(
-    ['ui', 'shouldUpdateClassLinkLengths']
-  );
-
-  const draggedClass = graphSchemaState.getIn(['ui', 'drag', 'class']);
-  const draggedClassLink = graphSchemaState.getIn(['ui', 'drag', 'classLink']);
+  const uiState = graphSchemaState.get('ui');
+  const shouldUpdateClassLinkLengths = uiState.get('shouldUpdateClassLinkLengths');
+  const dimensions = uiState.get('dimensions');
+  const draggedClass = uiState.getIn(['drag', 'class']);
+  const draggedClassLink = uiState.getIn(['drag', 'classLink']);
 
   return {
+    editorContent,
     classes,
     classLinks,
     shouldUpdateClassLinkLengths,
     draggedClass,
     draggedClassLink,
+    dimensions,
   };
+}
+
+function handleEditorContentChange(dispatch, editorContent, layoutDimensions) {
+  dispatch(stopLayoutAsync())
+    .then(() => parseYaml(editorContent))
+    .then(({classes, classLinks}) => {
+      dispatch(loadGraphSchemaElements(classes, classLinks));
+      return {classes, classLinks};
+    })
+    .then(({classes, classLinks}) =>
+      dispatch(startLayoutAsync(classes, classLinks, layoutDimensions))
+    )
+    .catch(
+      GraphSchemaFormatError,
+      (error) => {
+        console.log(error.message);
+      }
+    );
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    updateClassLinkLengths: (classLinksPaths) => updateClassLinkLengthsAsync(
-      classLinksPaths.map(({l, p}) => {
-        const classLink = l.toJS();
-        classLink.length = p.getLength();
-        return classLink;
-      })
-    ),
+    updateClassLinkLengths: (classLinkPaths) =>
+      dispatch(
+        updateClassLinkLengthsAsync(
+          R.values(classLinkPaths).map(({l, p}) => {
+            const classLink = l.toJS();
+            classLink.length = p.getLength();
+            return classLink;
+          })
+        )
+      ),
 
     handleMouseMove: (event, draggedClass, draggedClassLink) => {
       if (R.not(R.isNil(draggedClass))) {
@@ -140,6 +198,16 @@ function mapDispatchToProps(dispatch) {
     },
 
     handleMouseUp: () => dispatch(stopDrag()),
+
+    init: (dimensions, editorContent) => {
+      dispatch(setLayoutDimensions(dimensions));
+      handleEditorContentChange(dispatch, editorContent, dimensions);
+    },
+
+    stopLayout: () => dispatch(stopLayoutAsync()),
+
+    handleEditorContentChange: (editorContent, layoutDimensions) =>
+      handleEditorContentChange(dispatch, editorContent, layoutDimensions),
   };
 }
 

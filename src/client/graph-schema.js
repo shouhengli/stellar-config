@@ -1,8 +1,21 @@
+const P = require('bluebird');
+const R = require('ramda');
+const yaml = require('js-yaml');
+const ClientError = require('./error');
+
 const FONT_SIZE = 16;
 const CLASS_INNER_RADIUS = 75;
 const CLASS_OUTER_RADIUS = 125;
 const CLASS_PAD_ANGLE = 0.02;
 const CLASS_LINK_LABEL_MARGIN = 10;
+
+const createGlobalIndexGenerator = () => {
+  let id = 0;
+  return () => id++;
+};
+
+const generateClassGlobalIndex = createGlobalIndexGenerator();
+const generateClassLinkGlobalIndex = createGlobalIndexGenerator();
 
 /**
  * Creates a class.
@@ -23,6 +36,7 @@ function createClass(
   outerRadius = CLASS_INNER_RADIUS
 ) {
   return {
+    globalIndex: generateClassGlobalIndex(),
     name,
     props,
     x,
@@ -54,6 +68,7 @@ function createClassLink(
   length=0
 ) {
   return {
+    globalIndex: generateClassLinkGlobalIndex(),
     name,
     source,
     target,
@@ -72,10 +87,77 @@ function getClassLinkId(classLink) {
   return [classLink.source, classLink.name, classLink.target];
 }
 
+class GraphSchemaFormatError extends ClientError {
+  constructor(cause) {
+    super(cause);
+  }
+}
+
+const graphSchemaPrimitiveTypes = ['string', 'boolean', 'integer', 'float'];
+const isInGraphSchemaPrimitiveTypes = R.contains(R.__, graphSchemaPrimitiveTypes);
+
+function parseYaml(yamlDoc) {
+  return P
+    .try(() => yaml.safeLoad(yamlDoc))
+    .catch((error) => {
+      throw new GraphSchemaFormatError(error);
+    })
+    .then((graphSchema) => {
+      if (R.type(graphSchema) !== 'Object') {
+        throw new GraphSchemaFormatError('Graph schema is not a mapping.');
+      }
+
+      const [classes, classLinkLists] = R.pipe(
+        R.toPairs,
+        R.map(([className, classProps]) => {
+          if (R.type(classProps) !== 'Object') {
+            throw new GraphSchemaFormatError(
+              `Properties of class "${className}" is not a mapping.`
+            );
+          }
+
+          const [primitivePropPairs, linkPropPairs] =
+            R.partition(
+              ([n, t]) => isInGraphSchemaPrimitiveTypes(t),
+              R.toPairs(classProps)
+            );
+
+          const cls = createClass(className, R.fromPairs(primitivePropPairs));
+
+          const classLinks =
+            linkPropPairs.map(([n, t]) => createClassLink(n, className, t));
+
+          return [
+            cls,
+            classLinks,
+          ];
+        }),
+        R.transpose
+      )(graphSchema);
+
+      const classLinks = R.unnest(classLinkLists);
+
+      classLinks.forEach((l) => {
+        if (!R.has(l.target, graphSchema)) {
+          throw new GraphSchemaFormatError(
+            `Cannot find class link target "${l.target}".`
+          );
+        }
+      });
+
+      return {
+        classes,
+        classLinks,
+      };
+    });
+}
+
 module.exports = {
   createClass,
   createClassLink,
   getClassLinkId,
+  parseYaml,
+  GraphSchemaFormatError,
   FONT_SIZE,
   CLASS_INNER_RADIUS,
   CLASS_OUTER_RADIUS,

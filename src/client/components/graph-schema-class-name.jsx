@@ -8,12 +8,11 @@ const ClassName = ({name, radius, fontSize, handleMouseDown}) => {
   return (
     <g
       className="graph-schema-class-name"
-      onMouseDown={(event) => handleMouseDown(event)}>
-      <circle r={radius}>
-        <text textAnchor="middle" dy={fontSize / 2}>
-          {name}
-        </text>
-      </circle>
+      onMouseDown={(event) => handleMouseDown(event, name)}>
+      <circle r={radius} />
+      <text textAnchor="middle" dy={fontSize / 2}>
+        {name}
+      </text>
     </g>
   );
 };
@@ -22,10 +21,11 @@ function mapDispatchToProps(dispatch) {
   return {
     handleMouseDown: (event, className) => {
       event.preventDefault();
+      const {clientX, clientY} = event;
 
       dispatch(stopLayoutAsync())
         .then(() => dispatch(
-          startClassDrag(className, event.clientX, event.clientY)
+          startClassDrag(className, clientX, clientY)
         ));
     },
   };

@@ -1,7 +1,15 @@
 const P = require('bluebird');
 const actions = require('../actions');
 const layout = require('../force-layout');
-const layoutWorker = new Worker('/force-layout.js');
+const layoutWorker = new Worker('/force-layout-worker.js');
+
+function loadGraphSchemaElements(classes, classLinks) {
+  return {
+    type: actions.LOAD_GRAPH_SCHEMA_ELEMENTS,
+    classes,
+    classLinks,
+  };
+}
 
 function startClassDrag(name, fromX, fromY) {
   return {
@@ -59,16 +67,23 @@ function updateClassLinkPosition(
   };
 }
 
+function setLayoutDimensions(dimensions) {
+  return {
+    type: actions.SET_GRAPH_SCHEMA_DIMENSIONS,
+    dimensions,
+  };
+}
+
 function initLayoutAsync() {
   return (dispatch) => P.resolve().then(() =>
-    layoutWorker.onmessage((event) => {
+    layoutWorker.onmessage = (event) => {
       if (event.data.type === layout.UPDATE_GRAPH_SCHEMA_ELEMENT_POSITIONS) {
         dispatch(updateGraphSchemaElementPositions(
           event.data.classes,
           event.data.classLinks
         ));
       }
-    })
+    }
   );
 }
 
@@ -129,9 +144,11 @@ function updateClassLinkLengthsAsync(classLinks) {
 }
 
 module.exports = {
+  loadGraphSchemaElements,
   startClassDrag,
   startClassLinkDrag,
   stopDrag,
+  setLayoutDimensions,
   initLayoutAsync,
   startLayoutAsync,
   stopLayoutAsync,

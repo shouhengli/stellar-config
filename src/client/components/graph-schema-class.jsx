@@ -20,92 +20,92 @@ const ClassPropTooltip = require('./graph-schema-class-prop-tooltip.jsx');
 
 const getLengthSum = R.compose(R.sum, R.map((x) => x.length));
 
-const getClassPropAngles = createSelector(
-  (cls) => cls.get('props'),
-  (classProps) => {
-    const classPropNames = classProps.keySeq().toJS;
-    const classPropNamesLengthSum = getLengthSum(classPropNames);
-
-    const classPropAngles = R.reduce(
-      (angles, classPropName) => {
-        const start = (R.last(angles) || {end: 0}).endAngle;
-
-        const end = Math.min(
-          start + 2 * Math.PI * (classPropName.length / classPropNamesLengthSum),
-          2 * Math.PI
-        );
-
-        angles.push({classPropName, start, end});
-        return angles;
-      },
-      [],
-      classPropNames
-    );
-
-    return classPropAngles;
-  }
-);
-
-const getClassOuterRadius = (cls) => cls.get('outerRadius');
-
-const getClassArcGenerator = createSelector(
-  getClassOuterRadius,
-  (classOuterRadius) => d3
-    .arc()
-    .innerRadius(CLASS_INNER_RADIUS)
-    .outerRadius(classOuterRadius)
-    .padAngle(CLASS_PAD_ANGLE)
-    .startAngle((d) => d.start)
-    .endAngle((d) => d.end)
-);
-
-const getClassPropNameRadius = createSelector(
-  getClassOuterRadius,
-  (classOuterRadius) => 0.5 * (classOuterRadius + CLASS_INNER_RADIUS)
-);
-
-const getClassPropNameArcPath = createSelector(
-  getClassPropNameRadius,
-  (classPropNameRadius) => {
-    const arc = d3
-      .arc()
-      .innerRadius(0)
-      .outerRadius(classPropNameRadius)
-      .startAngle(0)
-      .endAngle(2 * Math.PI);
-
-    return arc();
-  }
-);
-
-const getClassPropNameVisibility = createSelector(
-  getClassOuterRadius,
-  (classOuterRadius) =>
-    classOuterRadius > CLASS_INNER_RADIUS ? 'visible' : 'hidden'
-);
-
-const getClassPropTooltipRadius = createSelector(
-  getClassOuterRadius,
-  (classOuterRadius) => classOuterRadius + 10
-);
-
-const getClassPropTooltipArcPath = createSelector(
-  getClassPropTooltipRadius,
-  (classPropTooltipRadius) => {
-    const arc = d3
-      .arc()
-      .innerRadius(0)
-      .outerRadius(classPropTooltipRadius)
-      .startAngle(0)
-      .endAngle(2 * Math.PI);
-
-    return arc();
-  }
-);
-
 class Class extends React.Component {
   constructor(props) {
     super(props);
+
+    this.getClassPropAngles = createSelector(
+      (cls) => cls.get('props'),
+      (classProps) => {
+        const classPropNames = classProps.keySeq().toJS();
+        const classPropNamesLengthSum = getLengthSum(classPropNames);
+
+        const classPropAngles = R.reduce(
+          (angles, classPropName) => {
+            const start = (R.last(angles) || {end: 0}).end;
+
+            const end = Math.min(
+              start + 2 * Math.PI * (classPropName.length / classPropNamesLengthSum),
+              2 * Math.PI
+            );
+
+            angles.push({classPropName, start, end});
+            return angles;
+          },
+          [],
+          classPropNames
+        );
+
+        return classPropAngles;
+      }
+    );
+
+    this.getClassOuterRadius = (cls) => cls.get('outerRadius');
+
+    this.getClassArcGenerator = createSelector(
+      this.getClassOuterRadius,
+      (classOuterRadius) => d3
+        .arc()
+        .innerRadius(CLASS_INNER_RADIUS)
+        .outerRadius(classOuterRadius)
+        .padAngle(CLASS_PAD_ANGLE)
+        .startAngle((d) => d.start)
+        .endAngle((d) => d.end)
+    );
+
+    this.getClassPropNameRadius = createSelector(
+      this.getClassOuterRadius,
+      (classOuterRadius) => 0.5 * (classOuterRadius + CLASS_INNER_RADIUS)
+    );
+
+    this.getClassPropNameArcPath = createSelector(
+      this.getClassPropNameRadius,
+      (classPropNameRadius) => {
+        const arc = d3
+          .arc()
+          .innerRadius(0)
+          .outerRadius(classPropNameRadius)
+          .startAngle(0)
+          .endAngle(2 * Math.PI);
+
+        return arc();
+      }
+    );
+
+    this.getClassPropNameVisibility = createSelector(
+      this.getClassOuterRadius,
+      (classOuterRadius) =>
+        classOuterRadius > CLASS_INNER_RADIUS ? 'visible' : 'hidden'
+    );
+
+    this.getClassPropTooltipRadius = createSelector(
+      this.getClassOuterRadius,
+      (classOuterRadius) => classOuterRadius + 10
+    );
+
+    this.getClassPropTooltipArcPath = createSelector(
+      this.getClassPropTooltipRadius,
+      (classPropTooltipRadius) => {
+        const arc = d3
+          .arc()
+          .innerRadius(0)
+          .outerRadius(classPropTooltipRadius)
+          .startAngle(0)
+          .endAngle(2 * Math.PI);
+
+        return arc();
+      }
+    );
   }
 
   static get displayName() {
@@ -120,13 +120,14 @@ class Class extends React.Component {
     } = this.props;
 
     const className = cls.get('name');
+    const classGlobalIndex = cls.get('globalIndex');
     const tooltipVisibleProp = cls.get('tooltipVisibleProp');
-    const classArcGenerator = getClassArcGenerator(cls);
-    const classPropNameRadius = getClassPropNameRadius(cls);
-    const classPropNameArcPath = getClassPropNameArcPath(cls);
-    const classPropNameVisibility = getClassPropNameVisibility(cls);
-    const classPropTooltipRadius = getClassPropTooltipRadius(cls);
-    const classPropTooltipArcPath = getClassPropTooltipArcPath(cls);
+    const classArcGenerator = this.getClassArcGenerator(cls);
+    const classPropNameRadius = this.getClassPropNameRadius(cls);
+    const classPropNameArcPath = this.getClassPropNameArcPath(cls);
+    const classPropNameVisibility = this.getClassPropNameVisibility(cls);
+    const classPropTooltipRadius = this.getClassPropTooltipRadius(cls);
+    const classPropTooltipArcPath = this.getClassPropTooltipArcPath(cls);
 
     return (
       <g
@@ -141,9 +142,10 @@ class Class extends React.Component {
           fontSize={FONT_SIZE} />
 
         {
-          getClassPropAngles(cls).map(({classPropName, start, end}, i) => {
+          this.getClassPropAngles(cls).map(({classPropName, start, end}, i) => {
             const classArcPath = classArcGenerator({start, end});
             const rotation = 180 * ((start + end) * 0.5 / Math.PI - 1);
+            const classPropId = `${classGlobalIndex}-${i}`;
 
             return (
               <g key={classPropName}>
@@ -152,16 +154,17 @@ class Class extends React.Component {
                   className={className}
                   classPropName={classPropName} />
                 <ClassPropName
-                  id={i}
+                  id={classPropId}
                   rotation={rotation}
                   clipPath={classArcPath}
                   classPropNameArcPath={classPropNameArcPath}
                   classPropNameRadius={classPropNameRadius}
                   classPropNameVisibility={classPropNameVisibility}
                   className={className}
-                  classPropName={classPropName} />
+                  classPropName={classPropName}
+                  fontSize={FONT_SIZE} />
                 <ClassPropTooltip
-                  id={i}
+                  id={classPropId}
                   rotation={rotation}
                   classPropTooltipArcPath={classPropTooltipArcPath}
                   classPropTooltipRadius={classPropTooltipRadius}
@@ -185,6 +188,7 @@ const classOuterRadiusAnimationIndex = {};
 const stopClassOuterRadiusAnimation = (className) => {
   if (classOuterRadiusAnimationIndex[className]) {
     classOuterRadiusAnimationIndex[className].pause();
+    delete classOuterRadiusAnimationIndex[className];
   }
 };
 
@@ -197,7 +201,7 @@ const playClassOuterRadiusAnimation =
     classOuterRadiusAnimationIndex[className] = anime({
       targets: target,
       r: targetRadius,
-      update: () => handleUpdate(target.r),
+      update: () => handleUpdate(Number(target.r)),
     });
   };
 
@@ -221,8 +225,9 @@ function mapDispatchToProps(dispatch) {
         cls.get('outerRadius'),
         (radius) => dispatch(updateClassOuterRadius(cls.get('name'), radius))
       ),
-    handleComponentWillUnmount: (cls) =>
-      dispatch(updateClassOuterRadius(cls.get('name'), CLASS_INNER_RADIUS)),
+    handleComponentWillUnmount: (cls) => {
+      stopClassOuterRadiusAnimation(cls.name);
+    },
   };
 }
 

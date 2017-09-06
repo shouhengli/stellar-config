@@ -14,8 +14,10 @@ const ClassLinkLabel = (props) => {
   } = props;
 
   return (
-    <text textAnchor="middle"
-      dx={classLink.get('length')} dy={-CLASS_LINK_LABEL_MARGIN}
+    <text
+      textAnchor="middle"
+      dx={classLink.get('length') / 2}
+      dy={-CLASS_LINK_LABEL_MARGIN}
       onMouseDown={(event) => handleMouseDown(event, classLink)}>
       <textPath xlinkHref={`#graph-schema-class-link-path-${id}`}>
         {classLink.get('name')}
@@ -28,10 +30,11 @@ function mapDispatchToProps(dispatch) {
   return {
     handleMouseDown: (event, classLink) => {
       event.preventDefault();
+      const {clientX, clientY} = event;
 
       dispatch(stopLayoutAsync())
         .then(() => dispatch(
-          startClassLinkDrag(classLink.toJS(), event.clientX, event.clientY)
+          startClassLinkDrag(classLink.toJS(), clientX, clientY)
         ));
     },
   };

@@ -1,5 +1,6 @@
 const React = require('react');
 const {connect} = require('react-redux');
+const P = require('bluebird');
 
 const {setEditConfigStatus, saveEditConfigAsync} = require('../action-creators/edit');
 
@@ -50,7 +51,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    handleClick: (configType, configName, configContent) => Promise
+    handleClick: (configType, configName, configContent) => P
       .resolve(dispatch(setEditConfigStatus(CONFIG_STATUS_SAVING)))
       .then(() =>
         dispatch(saveEditConfigAsync(configType, configName, configContent))

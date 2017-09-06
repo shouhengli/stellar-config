@@ -16,6 +16,7 @@ const ClassPropName = (props) => {
     classPropNameRadius,
     className,
     classPropName,
+    fontSize,
     handleMouseOver,
     handleMouseOut,
   } = props;
@@ -29,7 +30,7 @@ const ClassPropName = (props) => {
         d={classPropNameArcPath} />
       <text visibility={classPropNameVisibility}
         dx={Math.PI * classPropNameRadius}
-        dy={this.props.fontSize / 2}
+        dy={fontSize / 2}
         textAnchor="middle"
         onMouseOver={() => handleMouseOver(className, classPropName)}
         onMouseOut={() => handleMouseOut(className, classPropName)}>

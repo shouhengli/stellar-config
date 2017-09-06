@@ -15,6 +15,10 @@ $modal-z: 200;
 $modal-background-background-color: rgba($black, 0.1);
 @import '../../node_modules/bulma/sass/components/modal';
 
+$pane-height-formula: 100vh - #{$navbar-height};
+$pane-height: calc(#{$pane-height-formula});
+$graph-schema-height: calc(#{$pane-height-formula} - 0.5rem);
+
 .tabs {
   a {
     border-bottom-color: $white;
@@ -63,7 +67,7 @@ nav {
 }
 
 div.pane {
-  height: calc(100vh - #{$navbar-height});
+  height: $pane-height;
   width: 100vw;
   margin-top: $navbar-height;
   border-top: 1px solid $border;
@@ -90,6 +94,9 @@ div.pane {
 }
 
 .graph-schema {
+  width: 100%;
+  height: $graph-schema-height;
+
   .graph-schema-class-links {
     .graph-schema-class-link {
       path {

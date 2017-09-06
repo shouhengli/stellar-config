@@ -2,6 +2,7 @@ const R = require('ramda');
 const React = require('react');
 const {connect} = require('react-redux');
 const {loadSearchConfigTypesAsync} = require('../action-creators/search');
+const {initLayoutAsync} = require('../action-creators/graph-schema');
 
 const {Nav, NavItem} = require('./nav.jsx');
 const ConfigSearch = require('./config-search.jsx');
@@ -9,12 +10,16 @@ const ConfigSearchToggle = require('./config-search-toggle.jsx');
 const ConfigHeader = require('./config-header.jsx');
 const ConfigSave = require('./config-save.jsx');
 const ConfigEditor = require('./config-editor.jsx');
+const GraphSchema = require('./graph-schema.jsx');
 const FullView = require('./full-view.jsx');
+const SplitView = require('./split-view.jsx');
 const ModalView = require('./modal-view.jsx');
 const NewConfig = require('./new-config.jsx');
 const NewConfigToggle = require('./new-config-toggle.jsx');
 const ConfigDelete = require('./config-delete.jsx');
 const ConfigDeleteToggle = require('./config-delete-toggle.jsx');
+
+const GRAPH_SCHEMA_CONFIG_TYPE = 'graphSchema';
 
 class Main extends React.Component {
   constructor(props) {
@@ -30,22 +35,42 @@ class Main extends React.Component {
   }
 
   render() {
+    const {
+      configType,
+      editing,
+      configSearchVisible,
+      newConfigVisible,
+      configDeleteVisible,
+    } = this.props;
+
     return (
       <div>
         <Nav>
-          {this.props.editing && <NavItem><ConfigHeader /></NavItem>}
+          {editing && <NavItem><ConfigHeader /></NavItem>}
           <NavItem>
-            {this.props.editing && <ConfigSave />}
+            {editing && <ConfigSave />}
             <ConfigSearchToggle />
             <NewConfigToggle />
-            {this.props.editing && <ConfigDeleteToggle />}
+            {editing && <ConfigDeleteToggle />}
           </NavItem>
         </Nav>
-        <FullView>
-          {this.props.editing && <ConfigEditor />}
-        </FullView>
+
         {
-          this.props.configSearchVisible
+          editing && (
+            configType === GRAPH_SCHEMA_CONFIG_TYPE ? (
+              <SplitView>
+                <ConfigEditor />
+                <GraphSchema />
+              </SplitView>
+            ) : (
+              <FullView>
+                <ConfigEditor />
+              </FullView>
+            )
+          )
+        }
+        {
+          configSearchVisible
           && (
             <ModalView>
               <ConfigSearch />
@@ -53,7 +78,7 @@ class Main extends React.Component {
           )
         }
         {
-          this.props.newConfigVisible
+          newConfigVisible
           && (
             <ModalView>
               <NewConfig />
@@ -61,7 +86,7 @@ class Main extends React.Component {
           )
         }
         {
-          this.props.configDeleteVisible
+          configDeleteVisible
           && (
             <ModalView>
               <ConfigDelete />
@@ -76,16 +101,16 @@ class Main extends React.Component {
     this.props.loadConfigTypes();
   }
 
-  onEditorContentChange(value) {
-    this.setState({
-      editorContent: value,
-    });
+  componentDidMount() {
+    this.props.initGraphSchemaLayout();
   }
 }
 
 function mapStateToProps(state) {
+  const configType = state.getIn(['edit', 'type']);
+
   const editing = R.not(R.or(
-    R.isNil(state.getIn(['edit', 'type'])),
+    R.isNil(configType),
     R.isNil(state.getIn(['edit', 'name']))
   ));
 
@@ -94,6 +119,7 @@ function mapStateToProps(state) {
   const configDeleteVisible = state.getIn(['ui', 'configDeleteVisible']);
 
   return {
+    configType,
     editing,
     configSearchVisible,
     newConfigVisible,
@@ -104,8 +130,11 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   const loadConfigTypes = () => dispatch(loadSearchConfigTypesAsync());
 
+  const initGraphSchemaLayout = () => dispatch(initLayoutAsync());
+
   return {
     loadConfigTypes,
+    initGraphSchemaLayout,
   };
 }
 
