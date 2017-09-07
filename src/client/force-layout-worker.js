@@ -10,8 +10,8 @@ const {
 const CLASS_FORCE_RADIUS = 125;
 const CLASS_LINK_FORCE_RADIUS = 50;
 const COLLIDE_FORCE_RADIUS_MULTIPLIER = 1.1;
-const LINK_FORCE_DISTANCE = 250;
-const MANY_BODY_FORCE_STRENGTH = -500;
+const LINK_FORCE_DISTANCE = 175;
+const MANY_BODY_FORCE_STRENGTH = 50;
 
 const graphSchemaSimulation = d3.forceSimulation().stop();
 

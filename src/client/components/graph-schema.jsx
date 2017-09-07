@@ -152,7 +152,15 @@ function handleEditorContentChange(dispatch, editorContent, layoutDimensions) {
   dispatch(stopLayoutAsync())
     .then(() => parseYaml(editorContent))
     .then(({classes, classLinks}) => {
+      const [defaultX, defaultY] = layoutDimensions.map((d) => d / 2);
+
+      classes.forEach((cls) => {
+        cls.x = defaultX;
+        cls.y = defaultY;
+      });
+
       dispatch(loadGraphSchemaElements(classes, classLinks));
+
       return {classes, classLinks};
     })
     .then(({classes, classLinks}) =>

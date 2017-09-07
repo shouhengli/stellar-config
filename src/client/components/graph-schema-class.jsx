@@ -148,7 +148,9 @@ class Class extends React.Component {
             const classPropId = `${classGlobalIndex}-${i}`;
 
             return (
-              <g key={classPropName}>
+              <g
+                key={classPropName}
+                transform="rotate(180)">
                 <ClassArc
                   path={classArcPath}
                   className={className}
