@@ -1,16 +1,23 @@
-@import '../../node_modules/bulma/sass/utilities/initial-variables';
-
-// Customize the initial variables here
-
 @import '../../node_modules/bulma/sass/utilities/_all';
 @import '../../node_modules/bulma/sass/base/_all';
 @import '../../node_modules/bulma/sass/elements/button';
 @import '../../node_modules/bulma/sass/elements/form';
 @import '../../node_modules/bulma/sass/elements/icon';
 @import '../../node_modules/bulma/sass/elements/tag';
+@import '../../node_modules/bulma/sass/elements/box';
+@import '../../node_modules/bulma/sass/elements/other';
 @import '../../node_modules/bulma/sass/components/navbar';
 @import '../../node_modules/bulma/sass/components/tabs';
 @import '../../node_modules/bulma/sass/components/panel';
+@import '../../node_modules/bulma/sass/components/message';
+
+$modal-z: 200;
+$modal-background-background-color: rgba($black, 0.1);
+@import '../../node_modules/bulma/sass/components/modal';
+
+$pane-height-formula: 100vh - #{$navbar-height};
+$pane-height: calc(#{$pane-height-formula});
+$graph-schema-height: calc(#{$pane-height-formula} - 0.5rem);
 
 .tabs {
   a {
@@ -28,30 +35,125 @@ nav {
   }
 }
 
-.field {
-  &.is-relative {
-    position: relative;
+.navbar-item {
+  &.is-start-aligned {
+    align-items: flex-start;
   }
+}
 
-  .panel.is-absolute {
-    position: absolute;
-    top: 2.25rem;
-    width: 100%;
-    background-color: $white;
+.panel {
+  &.config-search {
+    .panel-block {
+      background-color: $white;
+
+      &.config-search-input {
+        background-color: transparent;
+        padding: 0;
+        border: 0;
+
+        .field {
+          flex-grow: 1;
+        }
+      }
+    }
+
+    .panel-tabs {
+      background-color: $white;
+      a {
+        white-space: nowrap;
+      }
+    }
   }
 }
 
 div.pane {
-  height: calc(100vh - #{$navbar-height});
-  width: 50vw;
+  height: $pane-height;
+  width: 100vw;
   margin-top: $navbar-height;
   border-top: 1px solid $border;
 
-  &:first-of-type {
-    border-right: 1px solid $border;
+  &.is-half {
+    width: 50vw;
+
+    &:first-of-type {
+      border-right: 1px solid $border;
+    }
   }
 
   &.is-scrollable {
     overflow: scroll;
+  }
+}
+
+.modal {
+  align-items: flex-start;
+
+  .modal-content {
+    margin-top: $navbar-height;
+  }
+}
+
+.graph-schema {
+  width: 100%;
+  height: $graph-schema-height;
+
+  .graph-schema-class-links {
+    .graph-schema-class-link {
+      path {
+        stroke: $primary;
+        fill: none;
+      }
+
+      text {
+        fill: $primary;
+      }
+    }
+  }
+
+  #graph-schema-arrow {
+    path {
+      fill: $primary;
+    }
+  }
+
+  .graph-schema-classes {
+    .graph-schema-class {
+      .graph-schema-class-name {
+        text {
+          fill: $primary;
+        }
+
+        circle {
+          fill: $white;
+          stroke: $primary;
+        }
+      }
+
+      .graph-schema-class-arc {
+        path {
+          fill: $primary;
+        }
+      }
+
+      .graph-schema-class-prop-name {
+        path {
+          fill: none;
+        }
+
+        text {
+          fill: $white;
+        }
+      }
+
+      .graph-schema-class-prop-tooltip {
+        path {
+          fill: none;
+        }
+
+        text {
+          fill: $primary;
+        }
+      }
+    }
   }
 }

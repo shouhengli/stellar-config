@@ -6,12 +6,14 @@
     "new-cap": ["error", { "capIsNew": false }],
     "no-console": "off",
     "require-jsdoc": "off",
-    "react/display-name": "off"
+    "react/display-name": "off",
+    "react/prop-types": "off"
   },
   "env": {
     "es6": true,
     "node": true,
     "browser": true,
+    "worker": true,
     "jest": true
   },
   "parserOptions": {
