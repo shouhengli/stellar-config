@@ -34,8 +34,13 @@ class ClassLinkPath extends React.Component {
   }
 
   render() {
-    const {id, x0, y0, x1, y1, x2, y2, markerId} = this.props;
-    const {cx0, cy0, cx1, cy1} = locateBezierControlPoints(x0, y0, x1, y1, x2, y2);
+    const {id, markerId} = this.props;
+    let {x0, y0, x1, y1, x2, y2} = this.props;
+    let {cx0, cy0, cx1, cy1} = locateBezierControlPoints(x0, y0, x1, y1, x2, y2);
+
+    [x0, y0, x1, y1, x2, y2, cx0, cy0, cx1, cy1] =
+      [x0, y0, x1, y1, x2, y2, cx0, cy0, cx1, cy1].map((x) => x.toFixed());
+
     const pathData =
       `M${x0},${y0}Q${cx0},${cy0} ${x1},${y1}Q${cx1},${cy1} ${x2},${y2}`;
 

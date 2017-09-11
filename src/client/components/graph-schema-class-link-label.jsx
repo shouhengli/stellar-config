@@ -10,6 +10,7 @@ const ClassLinkLabel = (props) => {
   const {
     id,
     classLink,
+    zoom,
     handleMouseDown,
   } = props;
 
@@ -18,7 +19,7 @@ const ClassLinkLabel = (props) => {
       textAnchor="middle"
       dx={classLink.get('length') / 2}
       dy={-CLASS_LINK_LABEL_MARGIN}
-      onMouseDown={(event) => handleMouseDown(event, classLink)}>
+      onMouseDown={(event) => handleMouseDown(event, classLink, zoom)}>
       <textPath xlinkHref={`#graph-schema-class-link-path-${id}`}>
         {classLink.get('name')}
       </textPath>
@@ -26,18 +27,26 @@ const ClassLinkLabel = (props) => {
   );
 };
 
+function mapStateToProps(state) {
+  return {
+    zoom: state.getIn(['graphSchema', 'ui', 'zoom']),
+  };
+}
+
 function mapDispatchToProps(dispatch) {
   return {
-    handleMouseDown: (event, classLink) => {
+    handleMouseDown: (event, classLink, zoom) => {
       event.preventDefault();
-      const {clientX, clientY} = event;
+      event.stopPropagation();
+
+      const {pageX, pageY} = event;
 
       dispatch(stopLayoutAsync())
         .then(() => dispatch(
-          startClassLinkDrag(classLink.toJS(), clientX, clientY)
+          startClassLinkDrag(classLink.toJS(), pageX / zoom, pageY / zoom)
         ));
     },
   };
 }
 
-module.exports = connect(null, mapDispatchToProps)(ClassLinkLabel);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(ClassLinkLabel);

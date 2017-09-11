@@ -1,5 +1,6 @@
 const P = require('bluebird');
 const R = require('ramda');
+const {List, Map} = require('immutable');
 const yaml = require('js-yaml');
 const ClientError = require('./error');
 
@@ -80,12 +81,28 @@ function createClassLink(
 
 /**
  * Extracts name, source and target from a class link to form an ID.
- * @param {object} classLink
+ * @param {object | Map} classLink
  * @return {string[]} The ID of the class link.
  */
 function getClassLinkId(classLink) {
+  if (Map.isMap(classLink)) {
+    return [
+      classLink.get('source'),
+      classLink.get('name'),
+      classLink.get('target'),
+    ];
+  }
+
   return [classLink.source, classLink.name, classLink.target];
 }
+
+/**
+ * Extracts name, source and target from a class link to form an key.
+ * @func
+ * @param {object} classLink
+ * @return {List<string>} The key of the class link.
+ */
+const getClassLinkKey = R.compose(List, getClassLinkId);
 
 class GraphSchemaFormatError extends ClientError {
   constructor(cause) {
@@ -156,6 +173,7 @@ module.exports = {
   createClass,
   createClassLink,
   getClassLinkId,
+  getClassLinkKey,
   parseYaml,
   GraphSchemaFormatError,
   FONT_SIZE,

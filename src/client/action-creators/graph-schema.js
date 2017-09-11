@@ -29,6 +29,14 @@ function startClassLinkDrag(classLink, fromX, fromY) {
   };
 }
 
+function startPan(fromX, fromY) {
+  return {
+    type: actions.START_GRAPH_SCHEMA_PAN,
+    fromX,
+    fromY,
+  };
+}
+
 function stopDrag() {
   return {type: actions.STOP_GRAPH_SCHEMA_DRAG};
 }
@@ -67,10 +75,19 @@ function updateClassLinkPosition(
   };
 }
 
-function setLayoutDimensions(dimensions) {
+function updatePan(dx, dy) {
   return {
-    type: actions.SET_GRAPH_SCHEMA_DIMENSIONS,
+    type: actions.UPDATE_GRAPH_SCHEMA_PAN,
+    dx,
+    dy,
+  };
+}
+
+function setLayoutDimensionsAndCoordinates(dimensions, coordinates) {
+  return {
+    type: actions.SET_GRAPH_SCHEMA_DIMENSIONS_AND_COORDINATES,
     dimensions,
+    coordinates,
   };
 }
 
@@ -143,12 +160,22 @@ function updateClassLinkLengthsAsync(classLinks) {
   );
 }
 
+function zoom(offset, w, h) {
+  return {
+    type: actions.ZOOM_GRAPH_SCHEMA,
+    offset,
+    w,
+    h,
+  };
+}
+
 module.exports = {
   loadGraphSchemaElements,
   startClassDrag,
   startClassLinkDrag,
+  startPan,
   stopDrag,
-  setLayoutDimensions,
+  setLayoutDimensionsAndCoordinates,
   initLayoutAsync,
   startLayoutAsync,
   stopLayoutAsync,
@@ -158,4 +185,6 @@ module.exports = {
   updateClassLinkLengthsAsync,
   updateClassPosition,
   updateClassLinkPosition,
+  updatePan,
+  zoom,
 };
