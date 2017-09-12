@@ -17,7 +17,6 @@ $modal-background-background-color: rgba($black, 0.1);
 
 $pane-height-formula: 100vh - #{$navbar-height};
 $pane-height: calc(#{$pane-height-formula});
-$graph-schema-height: calc(#{$pane-height-formula} - 0.5rem);
 
 .tabs {
   a {
@@ -32,6 +31,7 @@ nav {
     left: 0;
     min-width: 100vw;
     z-index: 100;
+    border-bottom: 1px solid $border;
   }
 }
 
@@ -70,7 +70,7 @@ div.pane {
   height: $pane-height;
   width: 100%;
   margin-top: $navbar-height;
-  border-top: 1px solid $border;
+  overflow: hidden;
 
   &.is-half {
     width: 50%;
@@ -78,10 +78,6 @@ div.pane {
     &:first-of-type {
       border-right: 1px solid $border;
     }
-  }
-
-  &.is-scrollable {
-    overflow: scroll;
   }
 }
 
@@ -96,7 +92,7 @@ div.pane {
 
 .graph-schema {
   width: 100%;
-  height: $graph-schema-height;
+  height: 100%;
 
   .graph-schema-class-links {
     .graph-schema-class-link {
