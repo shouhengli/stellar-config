@@ -18,6 +18,10 @@ $modal-background-background-color: rgba($black, 0.1);
 $pane-height-formula: 100vh - #{$navbar-height};
 $pane-height: calc(#{$pane-height-formula});
 
+html {
+  overflow: auto;
+}
+
 .tabs {
   a {
     border-bottom-color: $white;
