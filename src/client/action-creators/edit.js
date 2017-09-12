@@ -1,5 +1,6 @@
-require('whatwg-fetch');
-
+const R = require('ramda');
+const P = require('bluebird');
+const request = require('superagent');
 const actions = require('../actions');
 
 function loadEditConfig(configType, configName, configContent) {
@@ -12,12 +13,21 @@ function loadEditConfig(configType, configName, configContent) {
 }
 
 function loadEditConfigAsync(configType, configName) {
-  return (dispatch) =>
-    fetch(`/config/${configType}/${configName}`)
-      .then((response) => response.json())
-      .then((configContent) =>
-        dispatch(loadEditConfig(configType, configName, configContent))
-      );
+  return (dispatch) => new P(
+    (resolve, reject) => {
+      request.get(`/config/${configType}/${configName}`)
+             .accept('json')
+             .end((error, response) => {
+               if (R.isNil(error)) {
+                 resolve(response.body);
+               } else {
+                 reject(error);
+               }
+             });
+    }
+  ).then((configContent) =>
+    dispatch(loadEditConfig(configType, configName, configContent))
+  );
 }
 
 function setEditConfigContent(configContent) {
@@ -41,12 +51,19 @@ function resetEditConfig() {
 }
 
 function saveEditConfigAsync(configType, configName, configContent) {
-  return (dispatch) =>
-    fetch(`/config/${configType}/${configName}`, {
-      method: 'POST',
-      headers: {'CONTENT-TYPE': 'application/json'},
-      body: JSON.stringify({content: configContent}),
-    });
+  return (dispatch) => new P(
+    (resolve, reject) => {
+      request.post(`/config/${configType}/${configName}`)
+             .send({content: configContent})
+             .end((error, response) => {
+               if (R.isNil(error)) {
+                 resolve();
+               } else {
+                 reject(error);
+               }
+             });
+    }
+  );
 }
 
 function revealNewConfig() {
@@ -84,8 +101,18 @@ function addNewConfig(configType, configName) {
 }
 
 function deleteConfigAsync(configType, configName) {
-  return (dispatch) =>
-    fetch(`/config/${configType}/${configName}`, {method: 'DELETE'});
+  return (dispatch) => new P(
+    (resolve, reject) => {
+      request.delete(`/config/${configType}/${configName}`)
+             .end((error, response) => {
+               if (R.isNil(error)) {
+                 resolve();
+               } else {
+                 reject(error);
+               }
+             });
+    }
+  );
 }
 
 function revealConfigDelete() {

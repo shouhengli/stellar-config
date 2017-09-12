@@ -21,6 +21,7 @@
     "@types/redux-immutable": "^3.0.34",
     "@types/redux-thunk": "^2.1.0",
     "@types/reselect": "^2.2.0",
+    "@types/superagent": "^3.5.5",
     "animejs": "^2.0.2",
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
@@ -34,7 +35,6 @@
     "del": "^3.0.0",
     "eslint-config-google": "^0.9.1",
     "eslint-plugin-react": "^7.1.0",
-    "fetch": "^1.1.0",
     "font-awesome": "^4.7.0",
     "gulp": "^3.9.1",
     "gulp-eslint": "^4.0.0",
@@ -50,6 +50,7 @@
     "redux-immutable": "^4.0.0",
     "redux-thunk": "^2.2.0",
     "reselect": "^3.0.1",
+    "superagent": "^3.6.0",
     "vinyl-named": "^1.1.0",
     "webpack": "^3.3.0",
     "webpack-stream": "^3.2.0"

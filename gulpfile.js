@@ -16,8 +16,8 @@ const paths = {
       staticFiles: [
         'src/client/**/*.html',
         'node_modules/font-awesome/css/font-awesome.min.css',
-        'node_modules/font-awesome/**/*.woff2',
       ],
+      fontFiles: 'node_modules/font-awesome/fonts/*',
     },
     server: {
       js: 'src/server/**/*.js',
@@ -35,6 +35,7 @@ const paths = {
       js: 'dist/public/',
       sass: 'dist/public/',
       staticFiles: 'dist/public/',
+      fontFiles: 'dist/public/fonts/',
     },
     server: {
       js: 'dist/',
@@ -88,6 +89,11 @@ gulp.task('client-static-files', () =>
       .pipe(gulp.dest(paths.dest.client.staticFiles))
 );
 
+gulp.task('client-font-files', () =>
+  gulp.src(paths.src.client.fontFiles)
+      .pipe(gulp.dest(paths.dest.client.fontFiles))
+);
+
 gulp.task('server-js-lint', () =>
   gulp.src(paths.src.server.js)
       .pipe(eslint())
@@ -106,7 +112,12 @@ gulp.task('server-static-files', () =>
 );
 
 gulp.task('server', ['server-static-files', 'server-js']);
-gulp.task('client', ['client-static-files', 'client-js', 'client-sass']);
+
+gulp.task(
+  'client',
+  ['client-static-files', 'client-font-files', 'client-js', 'client-sass']
+);
+
 gulp.task('default', ['client', 'server']);
 
 gulp.task('clean', () => del(paths.dest.root));
@@ -115,6 +126,7 @@ gulp.task('watch', () => {
   gulp.watch(paths.src.client.js, ['client-js']);
   gulp.watch(paths.src.client.sass, ['client-sass']);
   gulp.watch(paths.src.client.staticFiles, ['client-static-files']);
+  gulp.watch(paths.src.client.fontFiles, ['client-font-files']);
   gulp.watch(paths.src.server.js, ['server-js']);
   gulp.watch(paths.src.server.staticFiles, ['server-static-files']);
 });

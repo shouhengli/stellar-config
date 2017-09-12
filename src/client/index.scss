@@ -68,12 +68,12 @@ nav {
 
 div.pane {
   height: $pane-height;
-  width: 100vw;
+  width: 100%;
   margin-top: $navbar-height;
   border-top: 1px solid $border;
 
   &.is-half {
-    width: 50vw;
+    width: 50%;
 
     &:first-of-type {
       border-right: 1px solid $border;
@@ -89,6 +89,7 @@ div.pane {
   align-items: flex-start;
 
   .modal-content {
+    margin: 0;
     margin-top: $navbar-height;
   }
 }
