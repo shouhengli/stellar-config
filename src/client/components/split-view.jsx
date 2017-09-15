@@ -7,7 +7,7 @@ const SplitView = ({children}) => {
       <div className="pane is-half is-pulled-left">
         {leftChild}
       </div>
-      <div className="pane is-half is-scrollable is-pulled-right">
+      <div className="pane is-half is-pulled-right">
         {rightChild}
       </div>
     </div>

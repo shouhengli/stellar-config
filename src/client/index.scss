@@ -17,7 +17,10 @@ $modal-background-background-color: rgba($black, 0.1);
 
 $pane-height-formula: 100vh - #{$navbar-height};
 $pane-height: calc(#{$pane-height-formula});
-$graph-schema-height: calc(#{$pane-height-formula} - 0.5rem);
+
+html {
+  overflow: auto;
+}
 
 .tabs {
   a {
@@ -32,6 +35,7 @@ nav {
     left: 0;
     min-width: 100vw;
     z-index: 100;
+    border-bottom: 1px solid $border;
   }
 }
 
@@ -68,20 +72,16 @@ nav {
 
 div.pane {
   height: $pane-height;
-  width: 100vw;
+  width: 100%;
   margin-top: $navbar-height;
-  border-top: 1px solid $border;
+  overflow: hidden;
 
   &.is-half {
-    width: 50vw;
+    width: 50%;
 
     &:first-of-type {
       border-right: 1px solid $border;
     }
-  }
-
-  &.is-scrollable {
-    overflow: scroll;
   }
 }
 
@@ -89,13 +89,14 @@ div.pane {
   align-items: flex-start;
 
   .modal-content {
+    margin: 0;
     margin-top: $navbar-height;
   }
 }
 
 .graph-schema {
   width: 100%;
-  height: $graph-schema-height;
+  height: 100%;
 
   .graph-schema-class-links {
     .graph-schema-class-link {

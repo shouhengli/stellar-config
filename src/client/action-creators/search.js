@@ -1,4 +1,6 @@
-require('whatwg-fetch');
+const R = require('ramda');
+const P = require('bluebird');
+const request = require('superagent');
 
 const actions = require('../actions');
 
@@ -10,10 +12,19 @@ function loadSearchConfigTypes(configTypes) {
 }
 
 function loadSearchConfigTypesAsync() {
-  return (dispatch) =>
-    fetch('/config')
-      .then((response) => response.json())
-      .then((configTypes) => dispatch(loadSearchConfigTypes(configTypes)));
+  return (dispatch) => new P(
+    (resolve, reject) => {
+      request.get('/config')
+             .accept('json')
+             .end((error, response) => {
+               if (R.isNil(error)) {
+                 resolve(response.body);
+               } else {
+                 reject(error);
+               }
+             });
+    }
+  ).then((configTypes) => dispatch(loadSearchConfigTypes(configTypes)));
 }
 
 function loadSearchConfigNames(configType, configNames) {
@@ -25,10 +36,21 @@ function loadSearchConfigNames(configType, configNames) {
 }
 
 function loadSearchConfigNamesAsync(configType) {
-  return (dispatch) =>
-    fetch(`/config/${configType}`)
-      .then((response) => response.json())
-      .then((configNames) => dispatch(loadSearchConfigNames(configType, configNames)));
+  return (dispatch) => new P(
+    (resolve, reject) => {
+      request.get(`/config/${configType}`)
+             .accept('json')
+             .end((error, response) => {
+               if (R.isNil(error)) {
+                 resolve(response.body);
+               } else {
+                 reject(error);
+               }
+             });
+    }
+  ).then(
+    (configNames) => dispatch(loadSearchConfigNames(configType, configNames))
+  );
 }
 
 function setSearchActiveConfigType(activeConfigType) {

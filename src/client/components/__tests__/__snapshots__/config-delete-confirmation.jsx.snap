@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component config-delete-confirmation is editable 1`] = `
+<input
+  className="input is-danger"
+  onChange={[Function]}
+  type="text"
+  value="default"
+/>
+`;

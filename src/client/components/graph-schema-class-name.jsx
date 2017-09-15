@@ -4,11 +4,11 @@ const {connect} = require('react-redux');
 const {startClassDrag, stopLayoutAsync} =
   require('../action-creators/graph-schema');
 
-const ClassName = ({name, radius, fontSize, handleMouseDown}) => {
+const ClassName = ({name, radius, fontSize, zoom, handleMouseDown}) => {
   return (
     <g
       className="graph-schema-class-name"
-      onMouseDown={(event) => handleMouseDown(event, name)}>
+      onMouseDown={(event) => handleMouseDown(event, name, zoom)}>
       <circle r={radius} />
       <text textAnchor="middle" dy={fontSize / 2}>
         {name}
@@ -17,18 +17,25 @@ const ClassName = ({name, radius, fontSize, handleMouseDown}) => {
   );
 };
 
+function mapStateToProps(state) {
+  return {
+    zoom: state.getIn(['graphSchema', 'ui', 'zoom']),
+  };
+}
+
 function mapDispatchToProps(dispatch) {
   return {
-    handleMouseDown: (event, className) => {
+    handleMouseDown: (event, className, zoom) => {
       event.preventDefault();
-      const {clientX, clientY} = event;
+      event.stopPropagation();
+      const {pageX, pageY} = event;
 
       dispatch(stopLayoutAsync())
         .then(() => dispatch(
-          startClassDrag(className, clientX, clientY)
+          startClassDrag(className, pageX / zoom, pageY / zoom)
         ));
     },
   };
 }
 
-module.exports = connect(null, mapDispatchToProps)(ClassName);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(ClassName);

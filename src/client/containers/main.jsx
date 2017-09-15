@@ -4,19 +4,19 @@ const {connect} = require('react-redux');
 const {loadSearchConfigTypesAsync} = require('../action-creators/search');
 const {initLayoutAsync} = require('../action-creators/graph-schema');
 
-const {Nav, NavItem} = require('./nav.jsx');
-const ConfigSearch = require('./config-search.jsx');
-const ConfigSearchToggle = require('./config-search-toggle.jsx');
-const ConfigHeader = require('./config-header.jsx');
-const ConfigSave = require('./config-save.jsx');
-const ConfigEditor = require('./config-editor.jsx');
-const GraphSchema = require('./graph-schema.jsx');
-const FullView = require('./full-view.jsx');
-const SplitView = require('./split-view.jsx');
-const ModalView = require('./modal-view.jsx');
-const NewConfig = require('./new-config.jsx');
-const NewConfigToggle = require('./new-config-toggle.jsx');
-const ConfigDelete = require('./config-delete.jsx');
+const {Nav, NavItem} = require('../components/nav.jsx');
+const ConfigSearch = require('../components/config-search.jsx');
+const ConfigSearchToggle = require('../components/config-search-toggle.jsx');
+const ConfigHeader = require('../components/config-header.jsx');
+const ConfigSave = require('../components/config-save.jsx');
+const ConfigEditor = require('../containers/config-editor.jsx');
+const GraphSchema = require('../components/graph-schema.jsx');
+const FullView = require('../components/full-view.jsx');
+const SplitView = require('../components/split-view.jsx');
+const ModalView = require('../components/modal-view.jsx');
+const NewConfig = require('../components/new-config.jsx');
+const NewConfigToggle = require('../components/new-config-toggle.jsx');
+const ConfigDelete = require('../containers/config-delete.jsx');
 const ConfigDeleteToggle = require('./config-delete-toggle.jsx');
 
 const GRAPH_SCHEMA_CONFIG_TYPE = 'graphSchema';
@@ -37,6 +37,7 @@ class Main extends React.Component {
   render() {
     const {
       configType,
+      configName,
       editing,
       configSearchVisible,
       newConfigVisible,
@@ -46,7 +47,13 @@ class Main extends React.Component {
     return (
       <div>
         <Nav>
-          {editing && <NavItem><ConfigHeader /></NavItem>}
+          {
+            editing && (
+              <NavItem>
+                <ConfigHeader {...{configType, configName}} />
+              </NavItem>
+            )
+          }
           <NavItem>
             {editing && <ConfigSave />}
             <ConfigSearchToggle />
@@ -108,10 +115,11 @@ class Main extends React.Component {
 
 function mapStateToProps(state) {
   const configType = state.getIn(['edit', 'type']);
+  const configName = state.getIn(['edit', 'name']);
 
   const editing = R.not(R.or(
     R.isNil(configType),
-    R.isNil(state.getIn(['edit', 'name']))
+    R.isNil(configName)
   ));
 
   const configSearchVisible = state.getIn(['search', 'visible']);
@@ -120,6 +128,7 @@ function mapStateToProps(state) {
 
   return {
     configType,
+    configName,
     editing,
     configSearchVisible,
     newConfigVisible,

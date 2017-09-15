@@ -132,7 +132,9 @@ class Class extends React.Component {
     return (
       <g
         className="graph-schema-class"
-        transform={`translate(${cls.get('x')}, ${cls.get('y')})`}
+        transform={
+          `translate(${cls.get('x').toFixed()}, ${cls.get('y').toFixed()})`
+        }
         onMouseEnter={() => handleMouseEnter(cls)}
         onMouseLeave={() => handleMouseLeave(cls)}>
 
