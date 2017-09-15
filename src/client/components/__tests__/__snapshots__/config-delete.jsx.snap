@@ -1,0 +1,95 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component config-delete disables yes button when not confirmed 1`] = `
+<div
+  className="message is-danger"
+>
+  <div
+    className="message-header"
+  >
+    Confirmation
+    <button
+      className="delete"
+      onClick={[Function]}
+    />
+  </div>
+  <div
+    className="message-body"
+  >
+    <p>
+      Please type the configuration name to confirm the deletion.
+    </p>
+    <div
+      className="field has-addons"
+    >
+      <div
+        className="control is-expanded"
+      >
+        <input
+          className="input is-danger"
+          onChange={[Function]}
+          type="text"
+          value="def"
+        />
+      </div>
+      <div
+        className="control"
+      >
+        <button
+          className="button is-danger"
+          disabled={true}
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`component config-delete enables yes button when confirmed 1`] = `
+<div
+  className="message is-danger"
+>
+  <div
+    className="message-header"
+  >
+    Confirmation
+    <button
+      className="delete"
+      onClick={[Function]}
+    />
+  </div>
+  <div
+    className="message-body"
+  >
+    <p>
+      Please type the configuration name to confirm the deletion.
+    </p>
+    <div
+      className="field has-addons"
+    >
+      <div
+        className="control is-expanded"
+      >
+        <input
+          className="input is-danger"
+          onChange={[Function]}
+          type="text"
+          value="default"
+        />
+      </div>
+      <div
+        className="control"
+      >
+        <button
+          className="button is-danger"
+          onClick={[Function]}
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;

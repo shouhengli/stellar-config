@@ -1,13 +1,9 @@
 const React = require('react');
-const {connect} = require('react-redux');
-const {
-  setConfigDeleteName,
-  hideConfigDelete,
-  deleteConfigAsync,
-  resetEditConfig,
-} = require('../action-creators/edit');
+const Confirmation = require('./config-delete-confirmation.jsx');
+const Close = require('./config-delete-close.jsx');
+const Yes = require('./config-delete-yes.jsx');
 
-const ConfigDelete = (props) => {
+module.exports = (props) => {
   const {
     configType,
     configName,
@@ -22,10 +18,7 @@ const ConfigDelete = (props) => {
     <div className="message is-danger">
       <div className="message-header">
         Confirmation
-        <button
-          className="delete"
-          onClick={() => handleCloseButtonClick()}>
-        </button>
+        <Close handleClick={handleCloseButtonClick} />
       </div>
       <div className="message-body">
         <p>
@@ -33,21 +26,18 @@ const ConfigDelete = (props) => {
         </p>
         <div className="field has-addons">
           <div className="control is-expanded">
-            <input
-              className="input is-danger"
-              type="text"
-              value={configDeleteName}
-              onChange={(event) => handleNameChange(event)} />
+            <Confirmation
+              configDeleteName={configDeleteName}
+              handleChange={handleNameChange} />
           </div>
           <div className="control">
             {
               confirmed
               ?
-              <button
-                className="button is-danger"
-                onClick={() => handleDeleteButtonClick(configType, configName)}>
-                Delete
-              </button>
+              <Yes
+                configType={configType}
+                configName={configName}
+                handleClick={handleDeleteButtonClick} />
               :
               <button
                 className="button is-danger"
@@ -61,35 +51,3 @@ const ConfigDelete = (props) => {
     </div>
   );
 };
-
-function mapStateToProps(state) {
-  const configType = state.getIn(['edit', 'type']);
-  const configName = state.getIn(['edit', 'name']);
-  const configDeleteName = state.getIn(['ui', 'configDeleteName']);
-  const confirmed = configDeleteName === configName;
-
-  return {
-    configType,
-    configName,
-    configDeleteName,
-    confirmed,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    handleNameChange: (event) =>
-      dispatch(setConfigDeleteName(event.target.value)),
-
-    handleCloseButtonClick: () =>
-      dispatch(hideConfigDelete()),
-
-    handleDeleteButtonClick: (configType, configName) =>
-      dispatch(deleteConfigAsync(configType, configName))
-        .then(() => dispatch(resetEditConfig()))
-        .then(() => dispatch(setConfigDeleteName('')))
-        .then(() => dispatch(hideConfigDelete())),
-  };
-}
-
-module.exports = connect(mapStateToProps, mapDispatchToProps)(ConfigDelete);

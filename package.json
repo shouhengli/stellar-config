@@ -70,6 +70,7 @@
     "redis": "^2.7.1"
   },
   "jest": {
-    "rootDir": "src"
+    "rootDir": "src",
+    "verbose": true
   }
 }

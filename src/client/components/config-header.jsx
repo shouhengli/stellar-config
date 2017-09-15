@@ -1,7 +1,6 @@
 const React = require('react');
-const {connect} = require('react-redux');
 
-const Header = ({configType, configName}) => {
+module.exports = ({configType, configName}) => {
   return (
     <div className="tags has-addons">
       <span className="tag is-medium is-primary">
@@ -13,15 +12,3 @@ const Header = ({configType, configName}) => {
     </div>
   );
 };
-
-function mapStateToProps(state) {
-  const configType = state.getIn(['edit', 'type']);
-  const configName = state.getIn(['edit', 'name']);
-
-  return {
-    configType,
-    configName,
-  };
-}
-
-module.exports = connect(mapStateToProps)(Header);
