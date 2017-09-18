@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component config-search can be rendered 1`] = `
+<nav
+  className="panel config-search"
+>
+  <div
+    className="panel-block config-search-input"
+  >
+    <div
+      className="field has-addons"
+    >
+      <div
+        className="control has-icons-left is-expanded"
+      >
+        <input
+          className="input is-medium"
+          onChange={[Function]}
+          type="text"
+          value="default"
+        />
+        <span
+          className="icon is-left"
+        >
+          <i
+            className="fa fa-search"
+          />
+        </span>
+      </div>
+      <div
+        className="control"
+      >
+        <button
+          className="button is-medium"
+          onClick={[Function]}
+        >
+          <span
+            className="icon is-small"
+          >
+            <i
+              className="fa fa-times"
+            />
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    className="panel-tabs"
+  >
+    <div
+      title="source"
+    />
+    <div
+      title="mapping"
+    />
+    <div
+      title="graphSchema"
+    />
+  </div>
+  <div
+    name="default"
+    type="mapping"
+  />
+</nav>
+`;

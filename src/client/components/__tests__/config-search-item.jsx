@@ -1,21 +1,20 @@
 const React = require('react');
 const renderer = require('react-test-renderer');
-const ConfigDeleteToggle = require('../config-delete-toggle.jsx');
+const Item = require('../config-search-item.jsx');
 
-describe('component config-delete-toggle', () => {
+describe('component config-search-item', () => {
   test('is clickable', () => {
     const props = {
+      type: 'mapping',
+      name: 'transportation',
       handleClick: jest.fn(),
     };
 
-    const component = renderer.create(
-      <ConfigDeleteToggle {...props} />
-    );
-
-    const tree = component.toJSON();
+    const tree = renderer.create(<Item {...props} />).toJSON();
     tree.props.onClick();
 
     expect(tree).toMatchSnapshot();
     expect(props.handleClick).toHaveBeenCalledTimes(1);
+    expect(props.handleClick).toHaveBeenCalledWith(props.type, props.name);
   });
 });

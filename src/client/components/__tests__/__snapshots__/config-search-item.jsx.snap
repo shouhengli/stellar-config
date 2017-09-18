@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component config-search-item is clickable 1`] = `
+<div
+  className="panel-block"
+  onClick={[Function]}
+>
+  <span
+    className="panel-icon"
+  >
+    <i
+      className="fa fa-book"
+    />
+  </span>
+  transportation
+</div>
+`;

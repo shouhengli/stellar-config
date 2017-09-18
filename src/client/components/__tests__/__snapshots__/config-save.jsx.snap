@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component config-save is clickable when config has been changed 1`] = `
+<button
+  className="button is-white"
+  onClick={[Function]}
+>
+  <span
+    className="icon is-small"
+  >
+    <i
+      className="fa fa-upload"
+    />
+  </span>
+</button>
+`;
+
+exports[`component config-save shows loading icon when config is being saved 1`] = `
+<button
+  className="button is-white is-loading"
+>
+  <span
+    className="icon is-small"
+  >
+    <i
+      className="fa fa-spinner"
+    />
+  </span>
+</button>
+`;
