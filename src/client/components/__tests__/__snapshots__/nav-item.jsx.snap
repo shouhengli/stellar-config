@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component nav-item wraps its children 1`] = `
+<div
+  className="navbar-item"
+>
+  content
+</div>
+`;

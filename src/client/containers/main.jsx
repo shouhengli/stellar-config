@@ -4,14 +4,15 @@ const {connect} = require('react-redux');
 const {loadSearchConfigTypesAsync} = require('../action-creators/search');
 const {initLayoutAsync} = require('../action-creators/graph-schema');
 
-const {Nav, NavItem} = require('../components/nav.jsx');
+const Nav = require('../components/nav.jsx');
+const NavItem = require('../components/nav-item.jsx');
 const ConfigHeader = require('../components/config-header.jsx');
 const GraphSchema = require('../components/graph-schema.jsx');
 const FullView = require('../components/full-view.jsx');
 const SplitView = require('../components/split-view.jsx');
 const ModalView = require('../components/modal-view.jsx');
-const NewConfig = require('../components/new-config.jsx');
-const NewConfigToggle = require('../components/new-config-toggle.jsx');
+const NewConfig = require('./new-config.jsx');
+const NewConfigToggle = require('./new-config-toggle.jsx');
 
 const ConfigSave = require('./config-save.jsx');
 const ConfigEditor = require('./config-editor.jsx');

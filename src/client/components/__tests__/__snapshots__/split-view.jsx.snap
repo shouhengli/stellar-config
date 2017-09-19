@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component split-view wraps two children 1`] = `
+<div>
+  <div
+    className="pane is-half is-pulled-left"
+  >
+    <div>
+      Child 1
+    </div>
+  </div>
+  <div
+    className="pane is-half is-pulled-right"
+  >
+    <div>
+      Child 2
+    </div>
+  </div>
+</div>
+`;
