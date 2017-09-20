@@ -7,7 +7,6 @@ const {initLayoutAsync} = require('../action-creators/graph-schema');
 const Nav = require('../components/nav.jsx');
 const NavItem = require('../components/nav-item.jsx');
 const ConfigHeader = require('../components/config-header.jsx');
-const GraphSchema = require('../components/graph-schema.jsx');
 const FullView = require('../components/full-view.jsx');
 const SplitView = require('../components/split-view.jsx');
 const ModalView = require('../components/modal-view.jsx');
@@ -18,11 +17,9 @@ const ConfigSave = require('./config-save.jsx');
 const ConfigEditor = require('./config-editor.jsx');
 const ConfigSearch = require('./config-search.jsx');
 const ConfigSearchToggle = require('./config-search-toggle.jsx');
-const ConfigSearchTab = require('./config-search-tab.jsx');
-const ConfigSearchActiveTab = require('./config-search-active-tab.jsx');
-const ConfigSearchItem = require('./config-search-item.jsx');
 const ConfigDelete = require('./config-delete.jsx');
 const ConfigDeleteToggle = require('./config-delete-toggle.jsx');
+const GraphSchema = require('./graph-schema.jsx');
 
 const GRAPH_SCHEMA_CONFIG_TYPE = 'graphSchema';
 
@@ -85,10 +82,7 @@ class Main extends React.Component {
           configSearchVisible
           && (
             <ModalView>
-              <ConfigSearch
-                Tab={ConfigSearchTab}
-                ActiveTab={ConfigSearchActiveTab}
-                Item={ConfigSearchItem} />
+              <ConfigSearch />
             </ModalView>
           )
         }

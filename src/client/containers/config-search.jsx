@@ -1,6 +1,10 @@
+const React = require('react');
 const {List} = require('immutable');
 const {connect} = require('react-redux');
 
+const ConfigSearchTab = require('./config-search-tab.jsx');
+const ConfigSearchActiveTab = require('./config-search-active-tab.jsx');
+const ConfigSearchItem = require('./config-search-item.jsx');
 const ConfigSearch = require('../components/config-search.jsx');
 
 const {setSearchText, hideSearch} = require('../action-creators/search');
@@ -30,4 +34,10 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(ConfigSearch);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(
+  (props) => <ConfigSearch
+               Tab={ConfigSearchTab}
+               ActiveTab={ConfigSearchActiveTab}
+               Item={ConfigSearchItem}
+               {...props} />
+);

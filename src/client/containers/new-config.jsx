@@ -3,9 +3,10 @@ const P = require('bluebird');
 
 const {
   hideNewConfig,
-  addNewConfig,
+  loadEditConfig,
   setNewConfigName,
   setNewConfigType,
+  saveEditConfigAsync,
 } = require('../action-creators/edit');
 
 const NewConfig = require('../components/new-config.jsx');
@@ -35,7 +36,9 @@ function mapDispatchToProps(dispatch) {
     handleCancelButtonClick: () =>
       dispatch(hideNewConfig()),
     handleAddButtonClick: (configType, configName) =>
-      P.resolve(dispatch(addNewConfig(configType, configName)))
+      P.resolve(dispatch(loadEditConfig(configType, configName, '')))
+       .then(() => dispatch(saveEditConfigAsync(configType, configName, '')))
+       .then(() => dispatch(setNewConfigName('')))
        .then(() => dispatch(hideNewConfig())),
   };
 }

@@ -1,0 +1,120 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component graph-schema can be rendered 1`] = `
+<svg
+  className="graph-schema"
+  onMouseDown={[Function]}
+  onMouseMove={[Function]}
+  onMouseUp={[Function]}
+  onWheel={[Function]}
+>
+  <g
+    transform="scale(1.5) translate(150, -30)"
+  >
+    <defs>
+      <div
+        id="graph-schema-arrow"
+      />
+    </defs>
+    <g
+      className="graph-schema-class-links"
+    >
+      <div>
+        <div
+          id={0}
+          markerId="graph-schema-arrow"
+          x0={0}
+          x1={0}
+          x2={0}
+          y0={0}
+          y1={0}
+          y2={0}
+        />
+        <div
+          classLink={
+            Immutable.Map {
+              globalIndex: 0,
+              name: "has-a",
+              source: "Person",
+              target: "Mac",
+              x: 0,
+              y: 0,
+              length: 0,
+            }
+          }
+          id={0}
+        />
+      </div>
+      <div>
+        <div
+          id={1}
+          markerId="graph-schema-arrow"
+          x0={0}
+          x1={0}
+          x2={0}
+          y0={0}
+          y1={0}
+          y2={0}
+        />
+        <div
+          classLink={
+            Immutable.Map {
+              globalIndex: 1,
+              name: "is-a",
+              source: "Person",
+              target: "Engineer",
+              x: 0,
+              y: 0,
+              length: 0,
+            }
+          }
+          id={1}
+        />
+      </div>
+    </g>
+    <g
+      className="graph-schema-classes"
+    >
+      <div
+        cls={
+          Immutable.Map {
+            globalIndex: 0,
+            name: "Person",
+            props: undefined,
+            x: 0,
+            y: 0,
+            tooltipVisibleProp: false,
+            outerRadius: 75,
+          }
+        }
+      />
+      <div
+        cls={
+          Immutable.Map {
+            globalIndex: 1,
+            name: "Mac",
+            props: undefined,
+            x: 0,
+            y: 0,
+            tooltipVisibleProp: false,
+            outerRadius: 75,
+          }
+        }
+      />
+      <div
+        cls={
+          Immutable.Map {
+            globalIndex: 2,
+            name: "Engineer",
+            props: undefined,
+            x: 0,
+            y: 0,
+            tooltipVisibleProp: false,
+            outerRadius: 75,
+          }
+        }
+      />
+    </g>
+  </g>
+</svg>
+`;

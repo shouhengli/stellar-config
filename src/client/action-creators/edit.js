@@ -92,14 +92,6 @@ function setNewConfigName(configName) {
   };
 }
 
-function addNewConfig(configType, configName) {
-  return {
-    type: actions.ADD_NEW_CONFIG,
-    configType,
-    configName,
-  };
-}
-
 function deleteConfigAsync(configType, configName) {
   return (dispatch) => new P(
     (resolve, reject) => {
@@ -135,6 +127,7 @@ function setConfigDeleteName(configName) {
 }
 
 module.exports = {
+  loadEditConfig,
   loadEditConfigAsync,
   setEditConfigContent,
   setEditConfigStatus,
@@ -144,7 +137,6 @@ module.exports = {
   hideNewConfig,
   setNewConfigType,
   setNewConfigName,
-  addNewConfig,
   revealConfigDelete,
   hideConfigDelete,
   deleteConfigAsync,

@@ -33,13 +33,6 @@ function reduceEditState(state = initialEditState, action) {
         .set('content', '')
         .set('status', CONFIG_STATUS_NORMAL);
 
-    case actions.ADD_NEW_CONFIG:
-      return state
-        .set('type', action.configType)
-        .set('name', action.configName)
-        .set('content', '')
-        .set('status', CONFIG_STATUS_NORMAL);
-
     default:
       return state;
   }
