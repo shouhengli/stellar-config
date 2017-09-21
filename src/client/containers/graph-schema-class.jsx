@@ -5,7 +5,7 @@ const anime = require('animejs');
 const {updateClassOuterRadius} = require('../action-creators/graph-schema');
 const {CLASS_OUTER_RADIUS, CLASS_INNER_RADIUS} = require('../graph-schema');
 
-const ClassName = require('../components/graph-schema-class-name.jsx');
+const ClassName = require('./graph-schema-class-name.jsx');
 const ClassArc = require('./graph-schema-class-arc.jsx');
 const ClassPropName = require('../components/graph-schema-class-prop-name.jsx');
 const ClassPropTooltip = require('../components/graph-schema-class-prop-tooltip.jsx');
