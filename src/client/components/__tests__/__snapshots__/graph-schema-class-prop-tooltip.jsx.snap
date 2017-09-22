@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component graph-schema-class-prop-tooltip can be rendered 1`] = `
+<g
+  className="graph-schema-class-prop-tooltip"
+  transform="rotate(180)"
+>
+  <path
+    d="M2,3"
+    id="graph-schema-class-prop-tooltip-path-1"
+  />
+  <text
+    dx={314.1592653589793}
+    textAnchor="middle"
+    visibility="visible"
+  >
+    <textPath
+      xlinkHref="#graph-schema-class-prop-tooltip-path-1"
+    >
+      name
+    </textPath>
+  </text>
+</g>
+`;

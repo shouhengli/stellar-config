@@ -5,8 +5,8 @@ const {Map} = require('immutable');
 
 const Arrow = require('../components/graph-schema-arrow.jsx');
 const ClassLink = require('../components/graph-schema-class-link.jsx');
-const {ClassLinkPath} = require('../components/graph-schema-class-link-path.jsx');
-const ClassLinkLabel = require('../components/graph-schema-class-link-label.jsx');
+const ClassLinkPath = require('../components/graph-schema-class-link-path.jsx');
+const ClassLinkLabel = require('./graph-schema-class-link-label.jsx');
 const Class = require('./graph-schema-class.jsx');
 const GraphSchema = require('../components/graph-schema.jsx');
 

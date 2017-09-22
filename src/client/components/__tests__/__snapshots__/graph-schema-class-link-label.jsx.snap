@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component graph-schema-class-link-label can be rendered 1`] = `
+<text
+  dx={0}
+  dy={-10}
+  onMouseDown={[Function]}
+  textAnchor="middle"
+>
+  <textPath
+    xlinkHref="#graph-schema-class-link-path-1"
+  >
+    is-a
+  </textPath>
+</text>
+`;

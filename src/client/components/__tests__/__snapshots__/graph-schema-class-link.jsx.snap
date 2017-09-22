@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component graph-schema-class-link wraps its children 1`] = `
+<g
+  className="graph-schema-class-link"
+>
+  content
+</g>
+`;

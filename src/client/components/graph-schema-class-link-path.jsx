@@ -54,7 +54,4 @@ class ClassLinkPath extends React.Component {
   }
 }
 
-module.exports = {
-  locateBezierControlPoints,
-  ClassLinkPath,
-};
+module.exports = ClassLinkPath;

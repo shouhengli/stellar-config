@@ -7,7 +7,7 @@ const {CLASS_OUTER_RADIUS, CLASS_INNER_RADIUS} = require('../graph-schema');
 
 const ClassName = require('./graph-schema-class-name.jsx');
 const ClassArc = require('./graph-schema-class-arc.jsx');
-const ClassPropName = require('../components/graph-schema-class-prop-name.jsx');
+const ClassPropName = require('./graph-schema-class-prop-name.jsx');
 const ClassPropTooltip = require('../components/graph-schema-class-prop-tooltip.jsx');
 const Class = require('../components/graph-schema-class.jsx');
 
