@@ -118,6 +118,7 @@ function mapDispatchToProps(dispatch) {
 
     handleMouseMove: (event, drag, zoom) => {
       if (drag.has('class')) {
+        // If a graph class is being dragged...
         const draggedClass = drag.get('class');
 
         dispatch(updateClassPosition(
@@ -126,6 +127,7 @@ function mapDispatchToProps(dispatch) {
           event.pageY / zoom - draggedClass.get('fromY')
         ));
       } else if (drag.has('classLink')) {
+        // If a graph class link is being dragged...
         const draggedClassLink = drag.get('classLink');
 
         dispatch(updateClassLinkPosition(
@@ -136,6 +138,7 @@ function mapDispatchToProps(dispatch) {
           event.pageY / zoom - draggedClassLink.get('fromY')
         ));
       } else if (drag.has('pan')) {
+        // If the viewport is being dragged...
         const pan = drag.get('pan');
 
         dispatch(updatePan(

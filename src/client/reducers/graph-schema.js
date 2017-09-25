@@ -115,6 +115,16 @@ const ZOOM_STEP = 0.02;
 const MIN_ZOOM = 0.1;
 const MAX_ZOOM = 5;
 
+/**
+ * Initial UI state.
+ *
+ * The shouldUpdateClassLinkLengths field will be set to true when the position
+ * of any graph schema class or class link is changed. Then related React
+ * components can readjust their visualisation and reset this field to false
+ * afterwards.
+ *
+ * @type {Map}
+ */
 const initialUiState = fromJS({
   drag: {},
   shouldUpdateClassLinkLengths: false,
