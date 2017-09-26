@@ -60,7 +60,7 @@ describe('reducer classes', () => {
       expect(is(next, expected)).toBe(true);
     });
 
-    test('will not update any class position with unmatched class name', () => {
+    test('will not update any class if any unmatched name is found', () => {
       const state = initialState
         .set('Person', fromJS(createClass('Person', {name: 'string', age: 'integer'})))
         .set('Package', fromJS(createClass('Package', {id: 'string'}, 10, 20, undefined, 200)));
@@ -80,7 +80,7 @@ describe('reducer classes', () => {
   });
 
   describe('when UPDATE_GRAPH_SCHEMA_CLASS_POSITION', () => {
-    test('updates only position of one class', () => {
+    test('updates only position of matched class', () => {
       const state = initialState
         .set('Person', fromJS(createClass('Person', {name: 'string', age: 'integer'})))
         .set('Package', fromJS(createClass('Package', {id: 'string'}, 10, 20, undefined, 200)));
