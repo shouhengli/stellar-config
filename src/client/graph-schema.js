@@ -26,6 +26,7 @@ const generateClassLinkGlobalIndex = createGlobalIndexGenerator();
  * @param {number} [y=0]
  * @param {string} [tooltipVisibleProp=false]
  * @param {number} [outerRadius=75]
+ * @param {boolean} [shouldGenerateGlobalIndex=true]
  * @return {object}
  */
 function createClass(
@@ -33,11 +34,11 @@ function createClass(
   props,
   x = 0,
   y = 0,
-  tooltipVisibleProp = false,
-  outerRadius = CLASS_INNER_RADIUS
+  tooltipVisibleProp = null,
+  outerRadius = CLASS_INNER_RADIUS,
+  shouldGenerateGlobalIndex = true
 ) {
-  return {
-    globalIndex: generateClassGlobalIndex(),
+  let cls = {
     name,
     props,
     x,
@@ -45,6 +46,12 @@ function createClass(
     tooltipVisibleProp,
     outerRadius,
   };
+
+  if (shouldGenerateGlobalIndex) {
+    cls.globalIndex = generateClassGlobalIndex();
+  }
+
+  return cls;
 }
 
 /**
@@ -58,18 +65,19 @@ function createClass(
  * @param {number} [x=0] - The x-coordinate of the link's control node.
  * @param {number} [y=0] - The y-coordinate of the link's control node.
  * @param {number} [length=0]
+ * @param {boolean} [shouldGenerateGlobalIndex=true]
  * @return {object}
  */
 function createClassLink(
   name,
   source,
   target,
-  x=0,
-  y=0,
-  length=0
+  x = 0,
+  y = 0,
+  length = 0,
+  shouldGenerateGlobalIndex = true
 ) {
-  return {
-    globalIndex: generateClassLinkGlobalIndex(),
+  let classLink = {
     name,
     source,
     target,
@@ -77,6 +85,12 @@ function createClassLink(
     y,
     length,
   };
+
+  if (shouldGenerateGlobalIndex) {
+    classLink.globalIndex = generateClassLinkGlobalIndex();
+  }
+
+  return classLink;
 }
 
 /**
