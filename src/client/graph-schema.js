@@ -10,6 +10,10 @@ const CLASS_OUTER_RADIUS = 125;
 const CLASS_PAD_ANGLE = 0.02;
 const CLASS_LINK_LABEL_MARGIN = 10;
 
+const ZOOM_STEP = 0.02;
+const MIN_ZOOM = 0.1;
+const MAX_ZOOM = 5;
+
 const createGlobalIndexGenerator = () => {
   let id = 0;
   return () => id++;
@@ -195,4 +199,7 @@ module.exports = {
   CLASS_OUTER_RADIUS,
   CLASS_PAD_ANGLE,
   CLASS_LINK_LABEL_MARGIN,
+  ZOOM_STEP,
+  MIN_ZOOM,
+  MAX_ZOOM,
 };

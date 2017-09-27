@@ -1,9 +1,7 @@
 const {fromJS, List, Map} = require('immutable');
 const actions = require('../../actions');
 
-const ZOOM_STEP = 0.02;
-const MIN_ZOOM = 0.1;
-const MAX_ZOOM = 5;
+const {ZOOM_STEP, MAX_ZOOM, MIN_ZOOM} = require('../../graph-schema');
 
 /**
  * Initial UI state.
