@@ -1,4 +1,4 @@
-const {List, is, fromJS} = require('immutable');
+const {is, fromJS} = require('immutable');
 const reduceState = require('../ui');
 const actions = require('../../actions');
 
