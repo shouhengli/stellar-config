@@ -10,9 +10,10 @@ const ConfigHeader = require('../components/config-header.jsx');
 const FullView = require('../components/full-view.jsx');
 const SplitView = require('../components/split-view.jsx');
 const ModalView = require('../components/modal-view.jsx');
+const Main = require('../components/main.jsx');
+
 const NewConfig = require('./new-config.jsx');
 const NewConfigToggle = require('./new-config-toggle.jsx');
-
 const ConfigSave = require('./config-save.jsx');
 const ConfigEditor = require('./config-editor.jsx');
 const ConfigSearch = require('./config-search.jsx');
@@ -20,100 +21,7 @@ const ConfigSearchToggle = require('./config-search-toggle.jsx');
 const ConfigDelete = require('./config-delete.jsx');
 const ConfigDeleteToggle = require('./config-delete-toggle.jsx');
 const GraphSchema = require('./graph-schema.jsx');
-
-const GRAPH_SCHEMA_CONFIG_TYPE = 'graphSchema';
-
-class Main extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      editorContent: '',
-    };
-  }
-
-  static get displayName() {
-    return 'Main';
-  }
-
-  render() {
-    const {
-      configType,
-      configName,
-      editing,
-      configSearchVisible,
-      newConfigVisible,
-      configDeleteVisible,
-    } = this.props;
-
-    return (
-      <div>
-        <Nav>
-          {
-            editing && (
-              <NavItem>
-                <ConfigHeader {...{configType, configName}} />
-              </NavItem>
-            )
-          }
-          <NavItem>
-            {editing && <ConfigSave />}
-            <ConfigSearchToggle />
-            <NewConfigToggle />
-            {editing && <ConfigDeleteToggle />}
-          </NavItem>
-        </Nav>
-
-        {
-          editing && (
-            configType === GRAPH_SCHEMA_CONFIG_TYPE ? (
-              <SplitView>
-                <ConfigEditor />
-                <GraphSchema />
-              </SplitView>
-            ) : (
-              <FullView>
-                <ConfigEditor />
-              </FullView>
-            )
-          )
-        }
-        {
-          configSearchVisible
-          && (
-            <ModalView>
-              <ConfigSearch />
-            </ModalView>
-          )
-        }
-        {
-          newConfigVisible
-          && (
-            <ModalView>
-              <NewConfig />
-            </ModalView>
-          )
-        }
-        {
-          configDeleteVisible
-          && (
-            <ModalView>
-              <ConfigDelete />
-            </ModalView>
-          )
-        }
-      </div>
-    );
-  }
-
-  componentWillMount() {
-    this.props.loadConfigTypes();
-  }
-
-  componentDidMount() {
-    this.props.initGraphSchemaLayout();
-  }
-}
+const IngestionProfile = require('./ingestion-profile.jsx');
 
 function mapStateToProps(state) {
   const configType = state.getIn(['edit', 'type']);
@@ -149,4 +57,25 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(Main);
+module.exports = connect(mapStateToProps, mapDispatchToProps)((props) => {
+  return (
+    <Main
+      Nav={Nav}
+      NavItem={NavItem}
+      ConfigHeader={ConfigHeader}
+      FullView={FullView}
+      SplitView={SplitView}
+      ModalView={ModalView}
+      NewConfig={NewConfig}
+      NewConfigToggle={NewConfigToggle}
+      ConfigSave={ConfigSave}
+      ConfigEditor={ConfigEditor}
+      ConfigSearch={ConfigSearch}
+      ConfigSearchToggle={ConfigSearchToggle}
+      ConfigDelete={ConfigDelete}
+      ConfigDeleteToggle={ConfigDeleteToggle}
+      GraphSchema={GraphSchema}
+      IngestionProfile={IngestionProfile}
+      {...props} />
+  );
+});

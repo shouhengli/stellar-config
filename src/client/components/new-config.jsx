@@ -12,7 +12,7 @@ module.exports = (props) => {
   } = props;
 
   return (
-    <div className="box">
+    <div className="new-config box">
       <div className="field">
         <label className="label">Type</label>
         <div className="control is-expaned">

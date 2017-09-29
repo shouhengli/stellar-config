@@ -2,7 +2,7 @@
 
 exports[`component new-config can be rendered 1`] = `
 <div
-  className="box"
+  className="new-config box"
 >
   <div
     className="field"

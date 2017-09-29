@@ -128,7 +128,7 @@ describe('component graph-schema', () => {
   test('can track mouse move', () => {
     const wrapper = shallow(<GraphSchema {...props} />);
     const event = {pageX: 1000, pageY: 650};
-    wrapper.simulate('mousemove', event);
+    wrapper.find('svg').simulate('mousemove', event);
 
     expect(props.handleMouseMove).toHaveBeenCalledTimes(1);
     expect(props.handleMouseMove)
@@ -137,7 +137,7 @@ describe('component graph-schema', () => {
 
   test('can handle mouse-up event', () => {
     const wrapper = shallow(<GraphSchema {...props} />);
-    wrapper.simulate('mouseup');
+    wrapper.find('svg').simulate('mouseup');
 
     expect(props.handleMouseUp).toHaveBeenCalledTimes(1);
   });
@@ -145,7 +145,7 @@ describe('component graph-schema', () => {
   test('can handle mouse-down event', () => {
     const wrapper = shallow(<GraphSchema {...props} />);
     const event = {pageX: 1000, pageY: 650};
-    wrapper.simulate('mousedown', event);
+    wrapper.find('svg').simulate('mousedown', event);
 
     expect(props.handleMouseDown).toHaveBeenCalledTimes(1);
     expect(props.handleMouseDown).toHaveBeenCalledWith(event, props.zoom);
@@ -154,7 +154,7 @@ describe('component graph-schema', () => {
   test('can handle wheel event', () => {
     const wrapper = shallow(<GraphSchema {...props} />);
     const event = {pageX: 1000, pageY: 650};
-    wrapper.simulate('wheel', event);
+    wrapper.find('svg').simulate('wheel', event);
 
     expect(props.handleWheel).toHaveBeenCalledTimes(1);
     expect(props.handleWheel)
