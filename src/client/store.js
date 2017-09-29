@@ -8,6 +8,7 @@ module.exports = createStore(
     edit: require('./reducers/edit'),
     ui: require('./reducers/ui'),
     graphSchema: require('./reducers/graph-schema'),
+    ingestionProfile: require('./reducers/ingestion-profile'),
   }),
   applyMiddleware(thunk)
 );

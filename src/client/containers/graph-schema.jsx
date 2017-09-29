@@ -67,7 +67,7 @@ function handleEditorContentChange(
   currentClassLinks = Map()
 ) {
   dispatch(stopLayoutAsync())
-    .then(() => parseYaml(editorContent))
+    .then(() => parseYaml(editorContent.get('yaml')))
     .then(({classes, classLinks}) => {
       const [defaultX, defaultY] = layoutDimensions.map((d) => d / 2);
 

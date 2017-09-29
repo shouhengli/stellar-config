@@ -81,7 +81,7 @@ describe('reducer edit', () => {
       const expected = initialState
         .set('type', null)
         .set('name', null)
-        .set('content', '')
+        .set('content', Map())
         .set('status', CONFIG_STATUS_NORMAL);
 
       expect(is(next, expected)).toBe(true);

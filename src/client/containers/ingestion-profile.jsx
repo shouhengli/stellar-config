@@ -1,11 +1,16 @@
 const React = require('react');
+const {connect} = require('react-redux');
 
-const Sources = require('../components/ingestion-profile-sources.jsx');
+const Sources = require('./ingestion-profile-sources.jsx');
 const GraphSchemas = require('../components/ingestion-profile-graph-schemas.jsx');
 const DataTable = require('../components/ingestion-profile-data-table.jsx');
 const IngestionProfile = require('../components/ingestion-profile.jsx');
 
-module.exports = (props) => {
+function mapStateToProps(state) {
+  return {};
+}
+
+module.exports = connect(mapStateToProps)((props) => {
   return (
     <IngestionProfile
       Sources={Sources}
@@ -13,4 +18,4 @@ module.exports = (props) => {
       DataTable={DataTable}
       {...props} />
   );
-};
+});

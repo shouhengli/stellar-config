@@ -1,5 +1,6 @@
 const React = require('react');
 const R = require('ramda');
+const {is} = require('immutable');
 
 const {getClassLinkKey} = require('../graph-schema');
 
@@ -99,7 +100,7 @@ class GraphSchema extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.editorContent !== this.props.editorContent) {
+    if (!is(prevProps.editorContent, this.props.editorContent)) {
       this.props.handleEditorContentChange(
         this.props.editorContent,
         this.props.dimensions.toJS(),

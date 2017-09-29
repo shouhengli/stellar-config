@@ -1,4 +1,5 @@
 const {connect} = require('react-redux');
+const {Map} = require('immutable');
 const {setEditConfigContent} = require('../action-creators/edit');
 const {CONFIG_STATUS_SAVING} = require('../config-status');
 
@@ -8,7 +9,7 @@ require('brace/theme/github');
 const AceEditor = require('react-ace').default;
 
 function mapStateToProps(state) {
-  const configContent = state.getIn(['edit', 'content']);
+  const configContent = state.getIn(['edit', 'content', 'yaml']);
   const configStatus = state.getIn(['edit', 'status']);
 
   return {
@@ -30,7 +31,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch, ownProps) {
   return {
     onChange: (value) => {
-      dispatch(setEditConfigContent(value));
+      dispatch(setEditConfigContent(Map({yaml: value})));
     },
   };
 }

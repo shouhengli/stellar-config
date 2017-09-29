@@ -26,7 +26,7 @@ function loadEditConfigAsync(configType, configName) {
              });
     }
   ).then((configContent) =>
-    dispatch(loadEditConfig(configType, configName, configContent))
+    dispatch(loadEditConfig(configType, configName, JSON.parse(configContent)))
   );
 }
 
@@ -54,7 +54,7 @@ function saveEditConfigAsync(configType, configName, configContent) {
   return (dispatch) => new P(
     (resolve, reject) => {
       request.post(`/config/${configType}/${configName}`)
-             .send({content: configContent})
+             .send({content: JSON.stringify(configContent)})
              .end((error, response) => {
                if (R.isNil(error)) {
                  resolve();

@@ -36,8 +36,8 @@ function mapDispatchToProps(dispatch) {
     handleCancelButtonClick: () =>
       dispatch(hideNewConfig()),
     handleAddButtonClick: (configType, configName) =>
-      P.resolve(dispatch(loadEditConfig(configType, configName, '')))
-       .then(() => dispatch(saveEditConfigAsync(configType, configName, '')))
+      P.resolve(dispatch(loadEditConfig(configType, configName, {})))
+       .then(() => dispatch(saveEditConfigAsync(configType, configName, {})))
        .then(() => dispatch(setNewConfigName('')))
        .then(() => dispatch(hideNewConfig())),
   };
