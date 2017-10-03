@@ -1,9 +1,5 @@
 const React = require('react');
-const R = require('ramda');
-const {List} = require('immutable');
-
-const defaultToEmptyList = R.defaultTo(List());
-const defaultToEmptyString = R.defaultTo('');
+const {defaultToEmptyList, defaultToEmptyString} = require('../util');
 
 module.exports = (props) => {
   const {
@@ -29,6 +25,7 @@ module.exports = (props) => {
               <select
                 value={defaultToEmptyString(selectedSource)}
                 onChange={(event) => handleSourceChange(event.target.value)}>
+                <option>(None)</option>
                 {
                   defaultToEmptyList(configContent.get('sources')).map((s, i) =>
                     <option key={i} value={s}>{s}</option>

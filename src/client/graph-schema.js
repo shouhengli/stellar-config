@@ -14,6 +14,8 @@ const ZOOM_STEP = 0.02;
 const MIN_ZOOM = 0.1;
 const MAX_ZOOM = 5;
 
+const GRAPH_SCHEMA_CONFIG_TYPE = 'graph schema';
+
 const createGlobalIndexGenerator = () => {
   let id = 0;
   return () => id++;
@@ -202,4 +204,5 @@ module.exports = {
   ZOOM_STEP,
   MIN_ZOOM,
   MAX_ZOOM,
+  GRAPH_SCHEMA_CONFIG_TYPE,
 };

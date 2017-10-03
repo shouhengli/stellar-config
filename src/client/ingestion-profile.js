@@ -1,3 +1,5 @@
+const INGESTION_PROFILE_CONFIG_TYPE = 'ingestion profile';
+
 /**
  * Creates a ingestion profile.
  * @param {string[]} sources - A list of data sources.
@@ -16,4 +18,5 @@ function createIngestionProfile(sources, graphSchema, mapping) {
 
 module.exports = {
   createIngestionProfile,
+  INGESTION_PROFILE_CONFIG_TYPE,
 };

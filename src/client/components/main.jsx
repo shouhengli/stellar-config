@@ -1,7 +1,7 @@
 const React = require('react');
 
-const GRAPH_SCHEMA_CONFIG_TYPE = 'graph schema';
-const INGESTION_PROFILE_CONFIG_TYPE = 'ingestion profile';
+const {GRAPH_SCHEMA_CONFIG_TYPE} = require('../graph-schema');
+const {INGESTION_PROFILE_CONFIG_TYPE} = require('../ingestion-profile');
 
 class Main extends React.Component {
   constructor(props) {
