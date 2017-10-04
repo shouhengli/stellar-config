@@ -1,7 +1,6 @@
 const R = require('ramda');
-const P = require('bluebird');
-const request = require('superagent');
 const actions = require('../actions');
+const api = require('../api');
 const {GRAPH_SCHEMA_CONFIG_TYPE} = require('../graph-schema');
 
 function setSelectedSource(selectedSource) {
@@ -26,28 +25,27 @@ function loadGraphSchemas(graphSchemas) {
 }
 
 function loadGraphSchemasAsync() {
-  return (dispatch) => {
-    const promise = new P((resolve, reject) =>
-      request
-        .get(`/config/${GRAPH_SCHEMA_CONFIG_TYPE}`)
-        .accept('json')
-        .end((error, response) => {
-          if (R.isNil(error)) {
-            resolve(response.body);
-          } else {
-            reject(error);
-          }
-        })
-    );
+  return (dispatch) => api
+    .getConfigNames(GRAPH_SCHEMA_CONFIG_TYPE)
+    .then(R.compose(dispatch, loadGraphSchemas));
+}
 
-    promise.then(R.compose(dispatch, loadGraphSchemas));
-
-    return promise;
+function loadSample(sample) {
+  return {
+    type: actions.LOAD_INGESTION_PROFILE_SAMPLE,
+    sample,
   };
+}
+
+function loadSampleAsync(sourceUri) {
+  return (dispatch) => api
+    .getIngestionSample(sourceUri)
+    .then(R.compose(dispatch, loadSample));
 }
 
 module.exports = {
   setSelectedSource,
   setNewSource,
   loadGraphSchemasAsync,
+  loadSampleAsync,
 };

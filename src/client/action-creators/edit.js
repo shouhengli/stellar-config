@@ -1,6 +1,4 @@
-const R = require('ramda');
-const P = require('bluebird');
-const request = require('superagent');
+const api = require('../api');
 const actions = require('../actions');
 
 function loadEditConfig(configType, configName, configContent) {
@@ -13,21 +11,11 @@ function loadEditConfig(configType, configName, configContent) {
 }
 
 function loadEditConfigAsync(configType, configName) {
-  return (dispatch) => new P(
-    (resolve, reject) => {
-      request.get(`/config/${configType}/${configName}`)
-             .accept('json')
-             .end((error, response) => {
-               if (R.isNil(error)) {
-                 resolve(response.body);
-               } else {
-                 reject(error);
-               }
-             });
-    }
-  ).then((configContent) =>
-    dispatch(loadEditConfig(configType, configName, JSON.parse(configContent)))
-  );
+  return (dispatch) => api
+    .getConfig(configType, configName)
+    .then((configContent) =>
+      dispatch(loadEditConfig(configType, configName, configContent))
+    );
 }
 
 function setEditConfigContent(configContent) {
@@ -51,19 +39,7 @@ function resetEditConfig() {
 }
 
 function saveEditConfigAsync(configType, configName, configContent) {
-  return (dispatch) => new P(
-    (resolve, reject) => {
-      request.post(`/config/${configType}/${configName}`)
-             .send({content: JSON.stringify(configContent)})
-             .end((error, response) => {
-               if (R.isNil(error)) {
-                 resolve();
-               } else {
-                 reject(error);
-               }
-             });
-    }
-  );
+  return () => api.postConfig(configType, configName, configContent);
 }
 
 function revealNewConfig() {
@@ -93,18 +69,7 @@ function setNewConfigName(configName) {
 }
 
 function deleteConfigAsync(configType, configName) {
-  return (dispatch) => new P(
-    (resolve, reject) => {
-      request.delete(`/config/${configType}/${configName}`)
-             .end((error, response) => {
-               if (R.isNil(error)) {
-                 resolve();
-               } else {
-                 reject(error);
-               }
-             });
-    }
-  );
+  return () => api.deleteConfig(configType, configName);
 }
 
 function revealConfigDelete() {

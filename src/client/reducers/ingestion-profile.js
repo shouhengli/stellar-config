@@ -18,6 +18,9 @@ function reduceIngestionProfileState(state = initialEditState, action) {
     case actions.LOAD_INGESTION_PROFILE_GRAPH_SCHEMAS:
       return state.set('graphSchemas', List(action.graphSchemas));
 
+    case actions.LOAD_INGESTION_PROFILE_SAMPLE:
+      return state.set('sample', fromJS(action.sample));
+
     default:
       return state;
   }

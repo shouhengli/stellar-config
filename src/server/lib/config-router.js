@@ -5,18 +5,7 @@ const bodyParser = require('body-parser');
 router.use(bodyParser.json());
 
 const store = require('./config-store');
-
-function sendServerError(res) {
-  res.sendStatus(500);
-}
-
-function sendOk(res) {
-  res.sendStatus(200);
-}
-
-function sendNotFound(res) {
-  res.sendStatus(404);
-}
+const {sendServerError, sendNotFound, sendOk} = require('./util');
 
 router.get(
   '/',
@@ -32,7 +21,7 @@ router.get(
   '/:type/:name',
   (req, res) => store
     .getConfig(req.params.type, req.params.name)
-    .then((content) => res.json(content))
+    .then((content) => res.json(JSON.parse(content)))
     .catch(store.NonexistentKeyError, () => sendNotFound(res))
     .catch(() => sendServerError(res))
 );
@@ -40,7 +29,11 @@ router.get(
 router.post(
   '/:type/:name',
   (req, res) => store
-    .defineConfig(req.params.type, req.params.name, req.body.content)
+    .defineConfig(
+      req.params.type,
+      req.params.name,
+      JSON.stringify(req.body)
+    )
     .then(() => sendOk(res))
     .catch(() => sendServerError(res))
 );

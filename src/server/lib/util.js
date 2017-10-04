@@ -8,6 +8,21 @@ function loadYamlSync(...pathSegments) {
   );
 }
 
+function sendServerError(res) {
+  res.sendStatus(500);
+}
+
+function sendOk(res) {
+  res.sendStatus(200);
+}
+
+function sendNotFound(res) {
+  res.sendStatus(404);
+}
+
 module.exports = {
   loadYamlSync,
+  sendNotFound,
+  sendOk,
+  sendServerError,
 };
