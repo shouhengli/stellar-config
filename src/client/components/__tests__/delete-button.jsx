@@ -1,8 +1,8 @@
 const React = require('react');
 const renderer = require('react-test-renderer');
-const Close = require('../config-delete-close.jsx');
+const Close = require('../delete-button.jsx');
 
-describe('component config-delete-close', () => {
+describe('component delete-button', () => {
   test('is clickable', () => {
     const props = {
       handleClick: jest.fn(),

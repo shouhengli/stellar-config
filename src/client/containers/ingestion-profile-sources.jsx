@@ -7,7 +7,9 @@ const Sources = require('../components/ingestion-profile-sources.jsx');
 const {
   setSelectedSource,
   setNewSource,
+  loadSample,
   loadSampleAsync,
+  revealSourceDelete,
 } = require('../action-creators/ingestion-profile');
 
 const {setEditConfigContent} = require('../action-creators/edit');
@@ -31,7 +33,13 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   const handleSourceChange = (selectedSource) => P
     .try(R.compose(dispatch, setSelectedSource, R.always(selectedSource)))
-    .then(R.compose(dispatch, loadSampleAsync, R.always(selectedSource)));
+    .then(() =>
+      R.ifElse(
+        R.isEmpty,
+        R.compose(dispatch, loadSample, R.always(null)),
+        R.compose(dispatch, loadSampleAsync)
+      )(selectedSource)
+    );
 
   const handleNewSourceChange = R.compose(dispatch, setNewSource);
 
@@ -54,10 +62,13 @@ function mapDispatchToProps(dispatch) {
       R.always('')
     ));
 
+  const handleDeleteSource = R.compose(dispatch, revealSourceDelete);
+
   return {
     handleSourceChange,
     handleNewSourceChange,
     handleAddNewSource,
+    handleDeleteSource,
   };
 }
 

@@ -9,6 +9,7 @@ module.exports = (props) => {
     handleSourceChange,
     handleNewSourceChange,
     handleAddNewSource,
+    handleDeleteSource,
   } = props;
 
   return (
@@ -25,7 +26,7 @@ module.exports = (props) => {
               <select
                 value={defaultToEmptyString(selectedSource)}
                 onChange={(event) => handleSourceChange(event.target.value)}>
-                <option>(None)</option>
+                <option value=''>(None)</option>
                 {
                   defaultToEmptyList(configContent.get('sources')).map((s, i) =>
                     <option key={i} value={s}>{s}</option>
@@ -48,6 +49,13 @@ module.exports = (props) => {
               placeholder="http://..."
               value={newSource}
               onChange={(event) => handleNewSourceChange(event.target.value)} />
+          </div>
+          <div className="control">
+            <button
+              className="button is-danger"
+              onClick={() => handleDeleteSource()}>
+              Delete
+            </button>
           </div>
         </div>
       </div>

@@ -43,9 +43,20 @@ function loadSampleAsync(sourceUri) {
     .then(R.compose(dispatch, loadSample));
 }
 
+function revealSourceDelete() {
+  return {type: actions.REVEAL_INGESTION_PROFILE_SOURCE_DELETE};
+}
+
+function hideSourceDelete() {
+  return {type: actions.HIDE_INGESTION_PROFILE_SOURCE_DELETE};
+}
+
 module.exports = {
   setSelectedSource,
   setNewSource,
+  loadSample,
   loadGraphSchemasAsync,
   loadSampleAsync,
+  hideSourceDelete,
+  revealSourceDelete,
 };

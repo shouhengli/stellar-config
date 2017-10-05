@@ -1,6 +1,6 @@
 const React = require('react');
 const Confirmation = require('./config-delete-confirmation.jsx');
-const Close = require('./config-delete-close.jsx');
+const Close = require('./delete-button.jsx');
 const Yes = require('./config-delete-yes.jsx');
 
 module.exports = (props) => {
