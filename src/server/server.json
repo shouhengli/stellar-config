@@ -1,3 +1,7 @@
 {
-  "port": 6161
+  "port": 6161,
+  "ingestion": {
+    "server": "localhost",
+    "port": 6162
+  }
 }

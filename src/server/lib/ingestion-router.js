@@ -1,21 +1,13 @@
-const R = require('ramda');
 const express = require('express');
 const router = express.Router();
 
 const bodyParser = require('body-parser');
 router.use(bodyParser.json());
 
-router.get('/sample', (req, res) => {
-  console.log(`Requesting for sample from ${req.query.sourceUri}.`);
-  const sample = {
-    headers: R.compose(R.unnest, R.repeat)(['ID', 'Name', 'Age'], 10),
-    rows: R.repeat(
-      R.compose(R.unnest, R.repeat)([1, 'John Snow', '32'], 10),
-      25
-    ),
-  };
+const api = require('./ingestion-api');
 
-  res.json(sample);
+router.get('/sample', (req, res) => {
+  api.getSample(req.query.sourceUri).then((sample) => res.json(sample));
 });
 
 module.exports = router;
