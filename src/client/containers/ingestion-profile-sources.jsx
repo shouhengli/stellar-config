@@ -1,75 +1,51 @@
+const React = require('react');
 const R = require('ramda');
-const P = require('bluebird');
-const {List} = require('immutable');
 const {connect} = require('react-redux');
 const Sources = require('../components/ingestion-profile-sources.jsx');
+const NewSource = require('./ingestion-profile-new-source.jsx');
 
 const {
   setSelectedSource,
-  setNewSource,
   loadSample,
   loadSampleAsync,
   revealSourceDelete,
+  revealNewSource,
 } = require('../action-creators/ingestion-profile');
-
-const {setEditConfigContent} = require('../action-creators/edit');
-
-const defaultToEmptyList = R.defaultTo(List());
 
 function mapStateToProps(state) {
   const configContent = state.getIn(['edit', 'content']);
   const ingestionProfile = state.get('ingestionProfile');
-  const newSource = ingestionProfile.get('newSource');
-
-  let selectedSource = ingestionProfile.get('selectedSource');
+  const selectedSource = ingestionProfile.get('selectedSource');
+  const newSourceVisible = ingestionProfile.get('newSourceVisible');
 
   return {
     configContent,
     selectedSource,
-    newSource,
+    newSourceVisible,
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  const handleSourceChange = (selectedSource) => P
-    .try(R.compose(dispatch, setSelectedSource, R.always(selectedSource)))
-    .then(() =>
-      R.ifElse(
-        R.isEmpty,
-        R.compose(dispatch, loadSample, R.always(null)),
-        R.compose(dispatch, loadSampleAsync)
-      )(selectedSource)
-    );
+  const handleSourceChange = R.compose(dispatch, setSelectedSource);
 
-  const handleNewSourceChange = R.compose(dispatch, setNewSource);
-
-  const handleAddNewSource = (configContent, newSource) => P
-    .try(R.compose(
-      dispatch,
-      setEditConfigContent,
-      () => configContent.set(
-        'sources',
-        defaultToEmptyList(configContent.get('sources')).push(newSource)
-      )
-    ))
-    .then(R.compose(
-      handleSourceChange,
-      R.always(newSource)
-    ))
-    .then(R.compose(
-      dispatch,
-      setNewSource,
-      R.always('')
-    ));
+  const handleSourceDidChange = R.ifElse(
+    R.isEmpty,
+    R.compose(dispatch, loadSample, R.always(null)),
+    R.compose(dispatch, loadSampleAsync)
+  );
 
   const handleDeleteSource = R.compose(dispatch, revealSourceDelete);
 
+  const handleRevealNewSource = R.compose(dispatch, revealNewSource);
+
   return {
     handleSourceChange,
-    handleNewSourceChange,
-    handleAddNewSource,
+    handleSourceDidChange,
     handleDeleteSource,
+    handleRevealNewSource,
   };
 }
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(Sources);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(
+  (props) => <Sources NewSource={NewSource} {...props} />
+);

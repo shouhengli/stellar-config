@@ -8,7 +8,6 @@ const {setEditConfigContent} = require('../action-creators/edit');
 const {
   setSelectedSource,
   hideSourceDelete,
-  loadSample,
 } = require('../action-creators/ingestion-profile');
 
 function mapStateToProps(state) {
@@ -42,12 +41,7 @@ function mapDispatchToProps(dispatch) {
     .then(R.compose(
       dispatch,
       setSelectedSource,
-      R.always(null)
-    ))
-    .then(R.compose(
-      dispatch,
-      loadSample,
-      R.always(null)
+      R.always('')
     ))
     .then(handleCloseButtonClick);
 

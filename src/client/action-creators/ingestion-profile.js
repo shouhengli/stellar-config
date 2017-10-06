@@ -10,6 +10,14 @@ function setSelectedSource(selectedSource) {
   };
 }
 
+function revealNewSource() {
+  return {type: actions.REVEAL_INGESTION_PROFILE_NEW_SOURCE};
+}
+
+function hideNewSource() {
+  return {type: actions.HIDE_INGESTION_PROFILE_NEW_SOURCE};
+}
+
 function setNewSource(newSource) {
   return {
     type: actions.SET_INGESTION_PROFILE_NEW_SOURCE,
@@ -59,4 +67,6 @@ module.exports = {
   loadSampleAsync,
   hideSourceDelete,
   revealSourceDelete,
+  revealNewSource,
+  hideNewSource,
 };

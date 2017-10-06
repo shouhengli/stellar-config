@@ -2,8 +2,9 @@ const {fromJS, List} = require('immutable');
 const actions = require('../actions');
 
 const initialIngestionProfileState = fromJS({
-  selectedSource: null,
+  selectedSource: '',
   newSource: '',
+  newSourceVisible: false,
   graphSchemas: List(),
   sourceDeleteVisible: false,
   sample: null,
@@ -19,6 +20,12 @@ function reduceIngestionProfileState(
 
     case actions.SET_INGESTION_PROFILE_NEW_SOURCE:
       return state.set('newSource', action.newSource);
+
+    case actions.HIDE_INGESTION_PROFILE_NEW_SOURCE:
+      return state.set('newSourceVisible', false);
+
+    case actions.REVEAL_INGESTION_PROFILE_NEW_SOURCE:
+      return state.set('newSourceVisible', true);
 
     case actions.LOAD_INGESTION_PROFILE_GRAPH_SCHEMAS:
       return state.set('graphSchemas', List(action.graphSchemas));

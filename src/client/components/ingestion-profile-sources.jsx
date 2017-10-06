@@ -1,64 +1,81 @@
+const R = require('ramda');
 const React = require('react');
-const {defaultToEmptyList, defaultToEmptyString} = require('../util');
+const {defaultToEmptyList} = require('../util');
 
-module.exports = (props) => {
-  const {
-    configContent,
-    selectedSource,
-    newSource,
-    handleSourceChange,
-    handleNewSourceChange,
-    handleAddNewSource,
-    handleDeleteSource,
-  } = props;
+class Sources extends React.Component {
+  constructor(props) {
+    super(props);
+  }
 
-  return (
-    <div className="field is-horizontal">
-      <div className="field-label is-normal">
-        <label className="label">
-          Source
-        </label>
-      </div>
-      <div className="field-body">
-        <div className="field is-grouped">
-          <div className="control">
-            <div className="select">
-              <select
-                value={defaultToEmptyString(selectedSource)}
-                onChange={(event) => handleSourceChange(event.target.value)}>
-                <option value=''>(None)</option>
-                {
-                  defaultToEmptyList(configContent.get('sources')).map((s, i) =>
-                    <option key={i} value={s}>{s}</option>
-                  )
-                }
-              </select>
-            </div>
-          </div>
-          <div className="control">
-            <button
-              className="button"
-              onClick={() => handleAddNewSource(configContent, newSource)}>
-              Add
-            </button>
-          </div>
-          <div className="control">
-            <input
-              type="text"
-              className="input"
-              placeholder="http://..."
-              value={newSource}
-              onChange={(event) => handleNewSourceChange(event.target.value)} />
-          </div>
-          <div className="control">
-            <button
-              className="button is-danger"
-              onClick={() => handleDeleteSource()}>
-              Delete
-            </button>
+  render() {
+    const {
+      NewSource,
+      configContent,
+      selectedSource,
+      handleSourceChange,
+      handleDeleteSource,
+      handleRevealNewSource,
+      newSourceVisible,
+    } = this.props;
+
+    return (
+      <div className="field is-horizontal">
+        <div className="field-label is-normal">
+          <label className="label">
+            Source
+          </label>
+        </div>
+        <div className="field-body">
+          <div className="field is-grouped">
+            {
+              newSourceVisible
+              ? (
+                <NewSource configContent={configContent} />
+              )
+              : [
+                <div key="list" className="control">
+                  <div className="select">
+                    <select
+                      value={selectedSource}
+                      onChange={(event) => handleSourceChange(event.target.value)}>
+                      <option value=''>(None)</option>
+                      {
+                        defaultToEmptyList(configContent.get('sources'))
+                          .map((s, i) =>
+                            <option key={i} value={s}>{s}</option>
+                          )
+                      }
+                    </select>
+                  </div>
+                </div>,
+                <div key="add" className="control">
+                  <button
+                    className="button"
+                    onClick={() => handleRevealNewSource()}>
+                    Add
+                  </button>
+                </div>,
+                <div key="delete" className="control">
+                  <button
+                    className="button is-danger"
+                    disabled={R.isEmpty(selectedSource)}
+                    onClick={() => handleDeleteSource()}>
+                    Delete
+                  </button>
+                </div>,
+              ]
+            }
           </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.selectedSource !== prevProps.selectedSource) {
+      this.props.handleSourceDidChange(this.props.selectedSource);
+    }
+  }
+}
+
+module.exports = Sources;
