@@ -35,13 +35,13 @@ exports[`component graph-schema can be rendered 1`] = `
           <div
             classLink={
               Immutable.Map {
-                name: "has-a",
-                source: "Person",
-                target: "Mac",
-                x: 0,
-                y: 0,
-                length: 0,
-                globalIndex: 0,
+                "name": "has-a",
+                "source": "Person",
+                "target": "Mac",
+                "x": 0,
+                "y": 0,
+                "length": 0,
+                "globalIndex": 0,
               }
             }
             id={0}
@@ -61,13 +61,13 @@ exports[`component graph-schema can be rendered 1`] = `
           <div
             classLink={
               Immutable.Map {
-                name: "is-a",
-                source: "Person",
-                target: "Engineer",
-                x: 0,
-                y: 0,
-                length: 0,
-                globalIndex: 1,
+                "name": "is-a",
+                "source": "Person",
+                "target": "Engineer",
+                "x": 0,
+                "y": 0,
+                "length": 0,
+                "globalIndex": 1,
               }
             }
             id={1}
@@ -80,39 +80,39 @@ exports[`component graph-schema can be rendered 1`] = `
         <div
           cls={
             Immutable.Map {
-              name: "Person",
-              props: undefined,
-              x: 0,
-              y: 0,
-              tooltipVisibleProp: null,
-              outerRadius: 75,
-              globalIndex: 0,
+              "name": "Person",
+              "props": undefined,
+              "x": 0,
+              "y": 0,
+              "tooltipVisibleProp": null,
+              "outerRadius": 75,
+              "globalIndex": 0,
             }
           }
         />
         <div
           cls={
             Immutable.Map {
-              name: "Mac",
-              props: undefined,
-              x: 0,
-              y: 0,
-              tooltipVisibleProp: null,
-              outerRadius: 75,
-              globalIndex: 1,
+              "name": "Mac",
+              "props": undefined,
+              "x": 0,
+              "y": 0,
+              "tooltipVisibleProp": null,
+              "outerRadius": 75,
+              "globalIndex": 1,
             }
           }
         />
         <div
           cls={
             Immutable.Map {
-              name: "Engineer",
-              props: undefined,
-              x: 0,
-              y: 0,
-              tooltipVisibleProp: null,
-              outerRadius: 75,
-              globalIndex: 2,
+              "name": "Engineer",
+              "props": undefined,
+              "x": 0,
+              "y": 0,
+              "tooltipVisibleProp": null,
+              "outerRadius": 75,
+              "globalIndex": 2,
             }
           }
         />

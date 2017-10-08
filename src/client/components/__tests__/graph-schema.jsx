@@ -1,6 +1,6 @@
 const React = require('react');
 const renderer = require('react-test-renderer');
-const {mount, shallow} = require('enzyme');
+const {mount} = require('enzyme');
 const {Map, fromJS} = require('immutable');
 const GraphSchema = require('../graph-schema.jsx');
 
@@ -126,38 +126,50 @@ describe('component graph-schema', () => {
   });
 
   test('can track mouse move', () => {
-    const wrapper = shallow(<GraphSchema {...props} />);
+    const wrapper = mount(<GraphSchema {...props} />);
     const event = {pageX: 1000, pageY: 650};
     wrapper.find('svg').simulate('mousemove', event);
 
     expect(props.handleMouseMove).toHaveBeenCalledTimes(1);
     expect(props.handleMouseMove)
-      .toHaveBeenCalledWith(event, props.drag, props.zoom);
+      .toHaveBeenCalledWith(
+        expect.objectContaining(event),
+        props.drag,
+        props.zoom
+      );
   });
 
   test('can handle mouse-up event', () => {
-    const wrapper = shallow(<GraphSchema {...props} />);
+    const wrapper = mount(<GraphSchema {...props} />);
     wrapper.find('svg').simulate('mouseup');
 
     expect(props.handleMouseUp).toHaveBeenCalledTimes(1);
   });
 
   test('can handle mouse-down event', () => {
-    const wrapper = shallow(<GraphSchema {...props} />);
+    const wrapper = mount(<GraphSchema {...props} />);
     const event = {pageX: 1000, pageY: 650};
     wrapper.find('svg').simulate('mousedown', event);
 
     expect(props.handleMouseDown).toHaveBeenCalledTimes(1);
-    expect(props.handleMouseDown).toHaveBeenCalledWith(event, props.zoom);
+    expect(props.handleMouseDown)
+      .toHaveBeenCalledWith(
+        expect.objectContaining(event),
+        props.zoom
+      );
   });
 
   test('can handle wheel event', () => {
-    const wrapper = shallow(<GraphSchema {...props} />);
+    const wrapper = mount(<GraphSchema {...props} />);
     const event = {pageX: 1000, pageY: 650};
     wrapper.find('svg').simulate('wheel', event);
 
     expect(props.handleWheel).toHaveBeenCalledTimes(1);
     expect(props.handleWheel)
-      .toHaveBeenCalledWith(event, props.coordinates, props.drag);
+      .toHaveBeenCalledWith(
+        expect.objectContaining(event),
+        props.coordinates,
+        props.drag
+      );
   });
 });
