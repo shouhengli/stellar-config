@@ -8,12 +8,14 @@
 @import '../../node_modules/bulma/sass/elements/content';
 @import '../../node_modules/bulma/sass/elements/other';
 @import '../../node_modules/bulma/sass/components/navbar';
-@import '../../node_modules/bulma/sass/components/tabs';
 @import '../../node_modules/bulma/sass/components/panel';
 @import '../../node_modules/bulma/sass/components/message';
 @import '../../node_modules/bulma/sass/components/dropdown';
 @import '../../node_modules/bulma/sass/components/menu';
 @import '../../node_modules/bulma/sass/grid/columns';
+
+$tabs-link-padding: 0.25em 1em;
+@import '../../node_modules/bulma/sass/components/tabs';
 
 $table-cell-padding: 0.5em 1.5em;
 @import '../../node_modules/bulma/sass/elements/table';
@@ -29,12 +31,6 @@ html {
   overflow: auto;
 }
 
-.tabs {
-  a {
-    border-bottom-color: $white;
-  }
-}
-
 nav {
   &.is-fixed {
     position: fixed;
@@ -43,12 +39,6 @@ nav {
     min-width: 100vw;
     z-index: 100;
     border-bottom: 1px solid $border;
-  }
-}
-
-.navbar-item {
-  &.is-start-aligned {
-    align-items: flex-start;
   }
 }
 
@@ -77,7 +67,7 @@ nav {
   }
 }
 
-div.pane {
+div.view {
   height: $pane-height;
   width: 100%;
   margin-top: $navbar-height;

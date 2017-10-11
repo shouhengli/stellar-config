@@ -20,6 +20,9 @@ class Main extends React.Component {
     const {
       Nav,
       NavItem,
+      NavDropDown,
+      NavMenuStart,
+      NavMenuEnd,
       ConfigHeader,
       FullView,
       SplitView,
@@ -45,21 +48,21 @@ class Main extends React.Component {
     return (
       <div>
         <Nav>
-          {
-            editing && (
-              <NavItem>
-                <ConfigHeader {...{configType, configName}} />
-              </NavItem>
-            )
-          }
-          <NavItem>
-            {editing && <ConfigSave />}
-            <ConfigSearchToggle />
-            <NewConfigToggle />
-            {editing && <ConfigDeleteToggle />}
-          </NavItem>
+          <NavMenuStart>
+            <NavDropDown
+              label="Ingestion Profile"
+              items={['Ingestion Profile', 'Monitor']}/>
+            {editing && <ConfigHeader configName={configName} />}
+          </NavMenuStart>
+          <NavMenuEnd>
+            <NavItem>
+              {editing && <ConfigSave />}
+              <ConfigSearchToggle />
+              <NewConfigToggle />
+              {editing && <ConfigDeleteToggle />}
+            </NavItem>
+          </NavMenuEnd>
         </Nav>
-
         {
           editing && configType === GRAPH_SCHEMA_CONFIG_TYPE && (
             <SplitView>

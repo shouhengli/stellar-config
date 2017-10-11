@@ -6,6 +6,9 @@ const {initLayoutAsync} = require('../action-creators/graph-schema');
 
 const Nav = require('../components/nav.jsx');
 const NavItem = require('../components/nav-item.jsx');
+const NavMenuStart = require('../components/nav-menu-start.jsx');
+const NavMenuEnd = require('../components/nav-menu-end.jsx');
+const NavDropDown = require('../components/nav-drop-down.jsx');
 const ConfigHeader = require('../components/config-header.jsx');
 const FullView = require('../components/full-view.jsx');
 const SplitView = require('../components/split-view.jsx');
@@ -62,6 +65,9 @@ module.exports = connect(mapStateToProps, mapDispatchToProps)((props) => {
     <Main
       Nav={Nav}
       NavItem={NavItem}
+      NavMenuStart={NavMenuStart}
+      NavMenuEnd={NavMenuEnd}
+      NavDropDown={NavDropDown}
       ConfigHeader={ConfigHeader}
       FullView={FullView}
       SplitView={SplitView}

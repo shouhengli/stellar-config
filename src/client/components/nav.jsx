@@ -8,10 +8,8 @@ module.exports = ({children}) => {
           SEAWEED
         </div>
       </div>
-      <div className="navbar-menu">
-        <div className="navbar-start">
-          {children}
-        </div>
+      <div className="navbar-menu is-active">
+        {children}
       </div>
     </nav>
   );
