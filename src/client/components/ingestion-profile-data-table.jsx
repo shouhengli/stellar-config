@@ -10,6 +10,14 @@ module.exports = ({sample}) => {
           {
             defaultToEmptyList(sample.get('headers')).map((header, i) =>
               <th key={i}>
+              </th>
+            )
+          }
+        </tr>
+        <tr>
+          {
+            defaultToEmptyList(sample.get('headers')).map((header, i) =>
+              <th key={i}>
                 {header}
               </th>
             )

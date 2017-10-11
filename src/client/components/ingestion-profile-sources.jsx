@@ -57,7 +57,7 @@ class Sources extends React.Component {
                 </div>,
                 <div key="delete" className="control">
                   <button
-                    className="button is-danger"
+                    className="button is-outlined is-danger"
                     disabled={R.isEmpty(selectedSource)}
                     onClick={() => handleDeleteSource()}>
                     Delete

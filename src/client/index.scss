@@ -5,14 +5,18 @@
 @import '../../node_modules/bulma/sass/elements/icon';
 @import '../../node_modules/bulma/sass/elements/tag';
 @import '../../node_modules/bulma/sass/elements/box';
-@import '../../node_modules/bulma/sass/elements/table';
 @import '../../node_modules/bulma/sass/elements/content';
 @import '../../node_modules/bulma/sass/elements/other';
 @import '../../node_modules/bulma/sass/components/navbar';
 @import '../../node_modules/bulma/sass/components/tabs';
 @import '../../node_modules/bulma/sass/components/panel';
 @import '../../node_modules/bulma/sass/components/message';
+@import '../../node_modules/bulma/sass/components/dropdown';
+@import '../../node_modules/bulma/sass/components/menu';
 @import '../../node_modules/bulma/sass/grid/columns';
+
+$table-cell-padding: 0.5em 1.5em;
+@import '../../node_modules/bulma/sass/elements/table';
 
 $modal-z: 200;
 $modal-background-background-color: rgba($black, 0.1);
@@ -202,7 +206,24 @@ div.pane {
 
       .table {
         margin-bottom: 0;
+
+        tr {
+          &:hover {
+            background-color: initial;
+          }
+        }
+
+        th {
+          white-space: nowrap;
+        }
       }
     }
   }
+}
+
+.menu {
+  font-weight: normal;
+  overflow-y: scroll;
+  white-space: nowrap;
+  max-height: 20rem;
 }
