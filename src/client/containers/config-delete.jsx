@@ -6,7 +6,7 @@ const {
   hideConfigDelete,
   deleteConfigAsync,
   resetEditConfig,
-} = require('../action-creators/edit');
+} = require('../action-creators/ingestion-profile');
 
 function mapStateToProps(state) {
   const configType = state.getIn(['edit', 'type']);

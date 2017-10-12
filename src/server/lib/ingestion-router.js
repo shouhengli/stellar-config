@@ -7,7 +7,7 @@ router.use(bodyParser.json());
 const api = require('./ingestion-api');
 
 router.get('/sample', (req, res) => {
-  api.getSample(req.query.sourceUri).then((sample) => res.json(sample));
+  api.getSample(req.query.source).then((sample) => res.json(sample));
 });
 
 module.exports = router;

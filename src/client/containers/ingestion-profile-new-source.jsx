@@ -2,7 +2,7 @@ const P = require('bluebird');
 const R = require('ramda');
 const {List} = require('immutable');
 const {connect} = require('react-redux');
-const {setEditConfigContent} = require('../action-creators/edit');
+const {setEditConfigContent} = require('../action-creators/ingestion-profile');
 const defaultToEmptyList = R.defaultTo(List());
 const NewSource = require('../components/ingestion-profile-new-source.jsx');
 

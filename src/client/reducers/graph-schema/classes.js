@@ -2,18 +2,18 @@ const R = require('ramda');
 const {fromJS, Map} = require('immutable');
 const actions = require('../../actions');
 
-const initialClassesState = Map();
+const initialState = Map();
 
-function reduceClassesState(state = initialClassesState, action) {
+function reduce(state = initialState, action) {
   switch (action.type) {
-    case actions.LOAD_GRAPH_SCHEMA_ELEMENTS:
+    case actions.GRAPH_SCHEMA_LOAD_ELEMENTS:
       return R.reduce(
         (s, c) => s.set(c.name, fromJS(c)),
         Map(),
         action.classes
       );
 
-    case actions.UPDATE_GRAPH_SCHEMA_ELEMENT_POSITIONS:
+    case actions.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS:
       if (R.any((c) => !state.has(c.name), action.classes)) {
         return state;
       } else {
@@ -26,7 +26,7 @@ function reduceClassesState(state = initialClassesState, action) {
         );
       }
 
-    case actions.UPDATE_GRAPH_SCHEMA_CLASS_POSITION:
+    case actions.GRAPH_SCHEMA_UPDATE_CLASS_POSITION:
       return state
         .setIn(
           [action.name, 'x'],
@@ -37,15 +37,20 @@ function reduceClassesState(state = initialClassesState, action) {
           state.getIn([action.name, 'y']) + action.dy
         );
 
-    case actions.REVEAL_GRAPH_SCHEMA_CLASS_PROP_TOOLTIP:
+    case actions.GRAPH_SCHEMA_REVEAL_CLASS_PROP_TOOLTIP:
       return state.setIn([action.className, 'tooltipVisibleProp'], action.propName);
 
-    case actions.HIDE_GRAPH_SCHEMA_CLASS_PROP_TOOLTIP:
-      return state.getIn([action.className, 'tooltipVisibleProp']) === action.propName
-           ? state.setIn([action.className, 'tooltipVisibleProp'], null)
-           : state;
+    case actions.GRAPH_SCHEMA_HIDE_CLASS_PROP_TOOLTIP:
+      return (
+        R.identical(
+          state.getIn([action.className, 'tooltipVisibleProp']),
+          action.propName
+        )
+        ? state.setIn([action.className, 'tooltipVisibleProp'], null)
+        : state
+      );
 
-    case actions.UPDATE_GRAPH_SCHEMA_CLASS_OUTER_RADIUS:
+    case actions.GRAPH_SCHEMA_UPDATE_CLASS_OUTER_RADIUS:
       return state.setIn([action.className, 'outerRadius'], action.outerRadius);
 
     default:
@@ -53,4 +58,4 @@ function reduceClassesState(state = initialClassesState, action) {
   }
 }
 
-module.exports = reduceClassesState;
+module.exports = reduce;

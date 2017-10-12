@@ -10,12 +10,12 @@ describe('reducer classes', () => {
     initialState = Map();
   });
 
-  describe('when LOAD_GRAPH_SCHEMA_ELEMENTS', () => {
+  describe('when GRAPH_SCHEMA_LOAD_ELEMENTS', () => {
     test('forgets previous state', () => {
       const state = initialState.set('Dog', fromJS(createClass('Dog')));
 
       const action = {
-        type: actions.LOAD_GRAPH_SCHEMA_ELEMENTS,
+        type: actions.GRAPH_SCHEMA_LOAD_ELEMENTS,
         classes: [
           createClass('Person', {name: 'string', age: 'integer'}),
           createClass('Package', {id: 'string'}, 10, 20, undefined, 200),
@@ -35,14 +35,14 @@ describe('reducer classes', () => {
     });
   });
 
-  describe('when UPDATE_GRAPH_SCHEMA_ELEMENT_POSITIONS', () => {
+  describe('when GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS', () => {
     test('updates only class positions', () => {
       const state = initialState
         .set('Person', fromJS(createClass('Person', {name: 'string', age: 'integer'})))
         .set('Package', fromJS(createClass('Package', {id: 'string'}, 10, 20, undefined, 200)));
 
       const action = {
-        type: actions.UPDATE_GRAPH_SCHEMA_ELEMENT_POSITIONS,
+        type: actions.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS,
         classes: [
           createClass('Person', {address: 'string'}, 30, 55),
           createClass('Package', null, 0, 1, false, 0),
@@ -66,7 +66,7 @@ describe('reducer classes', () => {
         .set('Package', fromJS(createClass('Package', {id: 'string'}, 10, 20, undefined, 200)));
 
       const action = {
-        type: actions.UPDATE_GRAPH_SCHEMA_ELEMENT_POSITIONS,
+        type: actions.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS,
         classes: [
           createClass('Dog', {address: 'string'}, 30, 55),
           createClass('Package', null, 0, 1, false, 0),
@@ -79,14 +79,14 @@ describe('reducer classes', () => {
     });
   });
 
-  describe('when UPDATE_GRAPH_SCHEMA_CLASS_POSITION', () => {
+  describe('when GRAPH_SCHEMA_UPDATE_CLASS_POSITION', () => {
     test('updates only position of matched class', () => {
       const state = initialState
         .set('Person', fromJS(createClass('Person', {name: 'string', age: 'integer'})))
         .set('Package', fromJS(createClass('Package', {id: 'string'}, 10, 20, undefined, 200)));
 
       const action = {
-        type: actions.UPDATE_GRAPH_SCHEMA_CLASS_POSITION,
+        type: actions.GRAPH_SCHEMA_UPDATE_CLASS_POSITION,
         name: 'Package',
         dx: 1,
         dy: 2,
@@ -102,13 +102,13 @@ describe('reducer classes', () => {
     });
   });
 
-  describe('when REVEAL_GRAPH_SCHEMA_CLASS_PROP_TOOLTIP', () => {
+  describe('when GRAPH_SCHEMA_REVEAL_CLASS_PROP_TOOLTIP', () => {
     test('sets tooltip-visible property', () => {
       const state = initialState
         .set('Person', fromJS(createClass('Person', {name: 'string', age: 'integer'})));
 
       const action = {
-        type: actions.REVEAL_GRAPH_SCHEMA_CLASS_PROP_TOOLTIP,
+        type: actions.GRAPH_SCHEMA_REVEAL_CLASS_PROP_TOOLTIP,
         className: 'Person',
         propName: 'age',
       };
@@ -121,7 +121,7 @@ describe('reducer classes', () => {
     });
   });
 
-  describe('when HIDE_GRAPH_SCHEMA_CLASS_PROP_TOOLTIP', () => {
+  describe('when GRAPH_SCHEMA_HIDE_CLASS_PROP_TOOLTIP', () => {
     test('resets tooltip visibility of matching property', () => {
       const state = initialState
         .set(
@@ -131,13 +131,13 @@ describe('reducer classes', () => {
         .set('Package', fromJS(createClass('Package', {id: 'string'}, 10, 20, 'id', 200)));
 
       const ineffectiveAction = {
-        type: actions.HIDE_GRAPH_SCHEMA_CLASS_PROP_TOOLTIP,
+        type: actions.GRAPH_SCHEMA_HIDE_CLASS_PROP_TOOLTIP,
         className: 'Person',
         propName: 'age',
       };
 
       const effectiveAction = {
-        type: actions.HIDE_GRAPH_SCHEMA_CLASS_PROP_TOOLTIP,
+        type: actions.GRAPH_SCHEMA_HIDE_CLASS_PROP_TOOLTIP,
         className: 'Package',
         propName: 'id',
       };
@@ -152,14 +152,14 @@ describe('reducer classes', () => {
     });
   });
 
-  describe('when UPDATE_GRAPH_SCHEMA_CLASS_OUTER_RADIUS', () => {
+  describe('when GRAPH_SCHEMA_UPDATE_CLASS_OUTER_RADIUS', () => {
     test('sets outer radius of class', () => {
       const state = initialState
         .set('Person', fromJS(createClass('Person')))
         .set('Package', fromJS(createClass('Package')));
 
       const action = {
-        type: actions.UPDATE_GRAPH_SCHEMA_CLASS_OUTER_RADIUS,
+        type: actions.GRAPH_SCHEMA_UPDATE_CLASS_OUTER_RADIUS,
         className: 'Person',
         outerRadius: 1000,
       };

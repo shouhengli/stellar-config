@@ -3,7 +3,7 @@ const api = require('../api');
 
 function loadSearchConfigTypes(configTypes) {
   return {
-    type: actions.LOAD_SEARCH_CONFIG_TYPES,
+    type: actions.SEARCH_LOAD_CONFIG_TYPES,
     configTypes,
   };
 }
@@ -18,7 +18,7 @@ function loadSearchConfigTypesAsync() {
 
 function loadSearchConfigNames(configType, configNames) {
   return {
-    type: actions.LOAD_SEARCH_CONFIG_NAMES,
+    type: actions.SEARCH_LOAD_CONFIG_NAMES,
     configType,
     configNames,
   };
@@ -34,24 +34,24 @@ function loadSearchConfigNamesAsync(configType) {
 
 function setSearchActiveConfigType(activeConfigType) {
   return {
-    type: actions.SET_SEARCH_ACTIVE_CONFIG_TYPE,
+    type: actions.SEARCH_SET_ACTIVE_CONFIG_TYPE,
     activeConfigType,
   };
 }
 
 function setSearchText(searchText) {
   return {
-    type: actions.SET_SEARCH_TEXT,
+    type: actions.SEARCH_SET_TEXT,
     searchText,
   };
 }
 
 function hideSearch() {
-  return {type: actions.HIDE_SEARCH};
+  return {type: actions.SEARCH_HIDE};
 }
 
 function revealSearch() {
-  return {type: actions.REVEAL_SEARCH};
+  return {type: actions.SEARCH_REVEAL};
 }
 
 module.exports ={

@@ -7,13 +7,13 @@ const getBody = R.prop('body');
 const config = require('../server.json').ingestion;
 const root = `http://${config.server}:${config.port}`;
 
-function getSample(sourceUri) {
+function getSample(source) {
   return P
     .fromCallback((callback) =>
       request.get(`${root}/sampler/do-sample`)
              .accept('json')
              .query({
-               file: sourceUri,
+               file: source,
                samples: 25,
              })
              .end(callback)

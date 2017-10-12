@@ -1,40 +1,40 @@
 const api = require('../api');
 const actions = require('../actions');
 
-function loadEditConfig(configType, configName, configContent) {
+function loadIngestionProfile(configType, configName, configContent) {
   return {
-    type: actions.LOAD_EDIT_CONFIG,
+    type: actions.INGESTION_PROFILE_LOAD,
     configType,
     configName,
     configContent,
   };
 }
 
-function loadEditConfigAsync(configType, configName) {
+function loadIngestionProfileAsync(configType, configName) {
   return (dispatch) => api
     .getConfig(configType, configName)
     .then((configContent) =>
-      dispatch(loadEditConfig(configType, configName, configContent))
+      dispatch(loadIngestionProfile(configType, configName, configContent))
     );
 }
 
 function setEditConfigContent(configContent) {
   return {
-    type: actions.SET_EDIT_CONFIG_CONTENT,
+    type: actions.EDIT_SET_CONFIG_CONTENT,
     configContent,
   };
 }
 
 function setEditConfigStatus(configStatus) {
   return {
-    type: actions.SET_EDIT_CONFIG_STATUS,
+    type: actions.EDIT_SET_CONFIG_STATUS,
     configStatus,
   };
 }
 
 function resetEditConfig() {
   return {
-    type: actions.RESET_EDIT_CONFIG,
+    type: actions.EDIT_RESET_CONFIG,
   };
 }
 
@@ -44,27 +44,20 @@ function saveEditConfigAsync(configType, configName, configContent) {
 
 function revealNewConfig() {
   return {
-    type: actions.REVEAL_NEW_CONFIG,
+    type: actions.INGESTION_PROFILE_REVEAL_NEW,
   };
 }
 
 function hideNewConfig() {
   return {
-    type: actions.HIDE_NEW_CONFIG,
+    type: actions.INGESTION_PROFILE_HIDE_NEW,
   };
 }
 
-function setNewConfigType(configType) {
+function setNewConfigName(name) {
   return {
-    type: actions.SET_NEW_CONFIG_TYPE,
-    configType,
-  };
-}
-
-function setNewConfigName(configName) {
-  return {
-    type: actions.SET_NEW_CONFIG_NAME,
-    configName,
+    type: actions.INGESTION_PROFILE_SET_NEW_NAME,
+    name,
   };
 }
 
@@ -74,33 +67,32 @@ function deleteConfigAsync(configType, configName) {
 
 function revealConfigDelete() {
   return {
-    type: actions.REVEAL_CONFIG_DELETE,
+    type: actions.INGESTION_PROFILE_REVEAL_DELETE,
   };
 }
 
 function hideConfigDelete() {
   return {
-    type: actions.HIDE_CONFIG_DELETE,
+    type: actions.INGESTION_PROFILE_HIDE_DELETE,
   };
 }
 
-function setConfigDeleteName(configName) {
+function setConfigDeleteName(name) {
   return {
-    type: actions.SET_CONFIG_DELETE_NAME,
-    configName,
+    type: actions.INGESTION_PROFILE_SET_DELETE_NAME,
+    name,
   };
 }
 
 module.exports = {
-  loadEditConfig,
-  loadEditConfigAsync,
+  loadIngestionProfile,
+  loadIngestionProfileAsync,
   setEditConfigContent,
   setEditConfigStatus,
   resetEditConfig,
   saveEditConfigAsync,
   revealNewConfig,
   hideNewConfig,
-  setNewConfigType,
   setNewConfigName,
   revealConfigDelete,
   hideConfigDelete,

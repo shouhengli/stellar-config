@@ -4,7 +4,7 @@ const d3 = require('d3-force');
 const {
   START_GRAPH_SCHEMA_SIMULATION,
   STOP_GRAPH_SCHEMA_SIMULATION,
-  UPDATE_GRAPH_SCHEMA_ELEMENT_POSITIONS,
+  GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS,
 } = require('./force-layout');
 
 const CLASS_FORCE_RADIUS = 125;
@@ -31,7 +31,7 @@ const createLinkForce = (links, distance) =>
 
 const updateGraphSchemaElementPositions = (classNodes, classLinkNodes) => {
   postMessage({
-    type: UPDATE_GRAPH_SCHEMA_ELEMENT_POSITIONS,
+    type: GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS,
     classes: classNodes,
     classLinks: classLinkNodes,
   });

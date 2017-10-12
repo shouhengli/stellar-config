@@ -2,7 +2,7 @@ const {connect} = require('react-redux');
 const P = require('bluebird');
 const Save = require('../components/config-save.jsx');
 
-const {setEditConfigStatus, saveEditConfigAsync} = require('../action-creators/edit');
+const {setEditConfigStatus, saveEditConfigAsync} = require('../action-creators/ingestion-profile');
 
 const {
   CONFIG_STATUS_NORMAL,

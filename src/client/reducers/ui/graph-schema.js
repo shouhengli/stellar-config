@@ -13,7 +13,7 @@ const {ZOOM_STEP, MAX_ZOOM, MIN_ZOOM} = require('../../graph-schema');
  *
  * @type {Map}
  */
-const initialUiState = fromJS({
+const initialState = fromJS({
   drag: {},
   shouldUpdateClassLinkLengths: false,
   dimensions: [0, 0],
@@ -24,15 +24,15 @@ const initialUiState = fromJS({
   zoom: 1,
 });
 
-function reduceUiState(state = initialUiState, action) {
+function reduce(state = initialState, action) {
   switch (action.type) {
-    case actions.LOAD_GRAPH_SCHEMA_ELEMENTS:
+    case actions.GRAPH_SCHEMA_LOAD_ELEMENTS:
       return state
         .set('shouldUpdateClassLinkLengths', false)
         .set('zoom', 1)
         .set('pan', Map({x: 0, y: 0}));
 
-    case actions.START_GRAPH_SCHEMA_CLASS_DRAG:
+    case actions.GRAPH_SCHEMA_START_CLASS_DRAG:
       return state.setIn(
         ['drag', 'class'],
         Map({
@@ -42,7 +42,7 @@ function reduceUiState(state = initialUiState, action) {
         })
       );
 
-    case actions.START_GRAPH_SCHEMA_CLASS_LINK_DRAG:
+    case actions.GRAPH_SCHEMA_START_CLASS_LINK_DRAG:
       return state.setIn(
         ['drag', 'classLink'],
         Map({
@@ -54,7 +54,7 @@ function reduceUiState(state = initialUiState, action) {
         })
       );
 
-    case actions.START_GRAPH_SCHEMA_PAN:
+    case actions.GRAPH_SCHEMA_START_PAN:
       return state.setIn(
         ['drag', 'pan'],
         Map({
@@ -63,13 +63,13 @@ function reduceUiState(state = initialUiState, action) {
         })
       );
 
-    case actions.STOP_GRAPH_SCHEMA_DRAG:
+    case actions.GRAPH_SCHEMA_STOP_DRAG:
       return state.set('drag', Map());
 
-    case actions.UPDATE_GRAPH_SCHEMA_ELEMENT_POSITIONS:
+    case actions.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS:
       return state.set('shouldUpdateClassLinkLengths', true);
 
-    case actions.UPDATE_GRAPH_SCHEMA_CLASS_POSITION:
+    case actions.GRAPH_SCHEMA_UPDATE_CLASS_POSITION:
       return state
         .setIn(
           ['drag', 'class', 'fromX'],
@@ -81,7 +81,7 @@ function reduceUiState(state = initialUiState, action) {
         )
         .set('shouldUpdateClassLinkLengths', true);
 
-    case actions.UPDATE_GRAPH_SCHEMA_CLASS_LINK_POSITION:
+    case actions.GRAPH_SCHEMA_UPDATE_CLASS_LINK_POSITION:
       return state
         .setIn(
           ['drag', 'classLink', 'fromX'],
@@ -93,7 +93,7 @@ function reduceUiState(state = initialUiState, action) {
         )
         .set('shouldUpdateClassLinkLengths', true);
 
-    case actions.UPDATE_GRAPH_SCHEMA_PAN:
+    case actions.GRAPH_SCHEMA_UPDATE_PAN:
       return state
         .setIn(
           ['drag', 'pan', 'fromX'],
@@ -112,15 +112,15 @@ function reduceUiState(state = initialUiState, action) {
           state.getIn(['pan', 'y']) + action.dy
         );
 
-    case actions.UPDATE_GRAPH_SCHEMA_CLASS_LINK_LENGTHS:
+    case actions.GRAPH_SCHEMA_UPDATE_CLASS_LINK_LENGTHS:
       return state.set('shouldUpdateClassLinkLengths', false);
 
-    case actions.SET_GRAPH_SCHEMA_DIMENSIONS_AND_COORDINATES:
+    case actions.GRAPH_SCHEMA_SET_DIMENSIONS_AND_COORDINATES:
       return state
         .set('dimensions', List(action.dimensions))
         .set('coordinates', List(action.coordinates));
 
-    case actions.ZOOM_GRAPH_SCHEMA: {
+    case actions.GRAPH_SCHEMA_ZOOM: {
       const panX = state.getIn(['pan', 'x']);
       const panY = state.getIn(['pan', 'y']);
       const zoom0 = state.get('zoom');
@@ -144,4 +144,4 @@ function reduceUiState(state = initialUiState, action) {
   }
 }
 
-module.exports = reduceUiState;
+module.exports = reduce;

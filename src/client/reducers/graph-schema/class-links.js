@@ -3,18 +3,18 @@ const {fromJS, Map} = require('immutable');
 const actions = require('../../actions');
 const {getClassLinkKey} = require('../../graph-schema');
 
-const initialClassLinksState = Map();
+const initialState = Map();
 
-function reduceClassLinksState(state = initialClassLinksState, action) {
+function reduce(state = initialState, action) {
   switch (action.type) {
-    case actions.LOAD_GRAPH_SCHEMA_ELEMENTS:
+    case actions.GRAPH_SCHEMA_LOAD_ELEMENTS:
       return R.reduce(
         (s, l) => s.set(getClassLinkKey(l), fromJS(l)),
         Map(),
         action.classLinks
       );
 
-    case actions.UPDATE_GRAPH_SCHEMA_ELEMENT_POSITIONS:
+    case actions.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS:
       if (R.any((l) => !state.has(getClassLinkKey(l)), action.classLinks)) {
         return state;
       } else {
@@ -27,7 +27,7 @@ function reduceClassLinksState(state = initialClassLinksState, action) {
         );
       }
 
-    case actions.UPDATE_GRAPH_SCHEMA_CLASS_LINK_POSITION: {
+    case actions.GRAPH_SCHEMA_UPDATE_CLASS_LINK_POSITION: {
       const classLinkKey = getClassLinkKey({
         name: action.name,
         source: action.source,
@@ -45,7 +45,7 @@ function reduceClassLinksState(state = initialClassLinksState, action) {
         );
     }
 
-    case actions.UPDATE_GRAPH_SCHEMA_CLASS_LINK_LENGTHS:
+    case actions.GRAPH_SCHEMA_UPDATE_CLASS_LINK_LENGTHS:
       return state.withMutations((mutableState) => {
         action.classLinks.forEach((classLink) =>
           mutableState.setIn(
@@ -60,4 +60,4 @@ function reduceClassLinksState(state = initialClassLinksState, action) {
   }
 }
 
-module.exports = reduceClassLinksState;
+module.exports = reduce;

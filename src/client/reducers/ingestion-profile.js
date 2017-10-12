@@ -1,47 +1,39 @@
-const {fromJS, List} = require('immutable');
+const {fromJS} = require('immutable');
 const actions = require('../actions');
 
-const initialIngestionProfileState = fromJS({
-  selectedSource: '',
-  newSource: '',
-  newSourceVisible: false,
-  graphSchemas: List(),
-  sourceDeleteVisible: false,
-  sample: null,
+const {
+  CONFIG_STATUS_NORMAL,
+  CONFIG_STATUS_CHANGED,
+} = require('../config-status');
+
+const initialState = fromJS({
+  name: '',
+  sources: [],
+  status: CONFIG_STATUS_NORMAL,
 });
 
-function reduceIngestionProfileState(
-  state = initialIngestionProfileState,
-  action
-) {
+function reduce(state = initialState, action) {
   switch (action.type) {
-    case actions.SET_INGESTION_PROFILE_SELECTED_SOURCE:
-      return state.set('selectedSource', action.selectedSource);
+    case actions.INGESTION_PROFILE_LOAD:
+      return state
+        .set('name', action.name)
+        .set('sources', fromJS(action.content.sources))
+        .set('status', CONFIG_STATUS_NORMAL);
 
-    case actions.SET_INGESTION_PROFILE_NEW_SOURCE:
-      return state.set('newSource', action.newSource);
+    case actions.INGESTION_PROFILE_RESET_STATUS:
+      return state.set('status', CONFIG_STATUS_NORMAL);
 
-    case actions.HIDE_INGESTION_PROFILE_NEW_SOURCE:
-      return state.set('newSourceVisible', false);
+    case actions.INGESTION_PROFILE_RESET:
+      return initialState;
 
-    case actions.REVEAL_INGESTION_PROFILE_NEW_SOURCE:
-      return state.set('newSourceVisible', true);
-
-    case actions.LOAD_INGESTION_PROFILE_GRAPH_SCHEMAS:
-      return state.set('graphSchemas', List(action.graphSchemas));
-
-    case actions.LOAD_INGESTION_PROFILE_SAMPLE:
-      return state.set('sample', fromJS(action.sample));
-
-    case actions.HIDE_INGESTION_PROFILE_SOURCE_DELETE:
-      return state.set('sourceDeleteVisible', false);
-
-    case actions.REVEAL_INGESTION_PROFILE_SOURCE_DELETE:
-      return state.set('sourceDeleteVisible', true);
+    case actions.INGESTION_PROFILE_ADD_SOURCE:
+      return state
+        .set('sources', state.get('sources').push(action.source))
+        .set('status', CONFIG_STATUS_CHANGED);
 
     default:
       return state;
   }
 }
 
-module.exports = reduceIngestionProfileState;
+module.exports = reduce;

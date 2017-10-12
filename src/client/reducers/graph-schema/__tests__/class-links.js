@@ -10,13 +10,13 @@ describe('reducer class-links', () => {
     initialState = Map();
   });
 
-  describe('when LOAD_GRAPH_SCHEMA_ELEMENTS', () => {
+  describe('when GRAPH_SCHEMA_LOAD_ELEMENTS', () => {
     test('forgets previous state', () => {
       const classLink = createClassLink('has', 'Person', 'Car');
       const state = initialState.set(getClassLinkKey(classLink), fromJS(classLink));
 
       const action = {
-        type: actions.LOAD_GRAPH_SCHEMA_ELEMENTS,
+        type: actions.GRAPH_SCHEMA_LOAD_ELEMENTS,
         classLinks: [
           createClassLink('lives-at', 'Person', 'Place'),
           createClassLink('receives', 'Person', 'Package'),
@@ -38,7 +38,7 @@ describe('reducer class-links', () => {
     });
   });
 
-  describe('when UPDATE_GRAPH_SCHEMA_ELEMENT_POSITIONS', () => {
+  describe('when GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS', () => {
     test('updates only position of class links', () => {
       const classLink1 = createClassLink('has', 'Person', 'Car');
       const classLink2 = createClassLink('lives-at', 'Person', 'Place');
@@ -48,7 +48,7 @@ describe('reducer class-links', () => {
         .set(getClassLinkKey(classLink2), fromJS(classLink2));
 
       const action = {
-        type: actions.UPDATE_GRAPH_SCHEMA_ELEMENT_POSITIONS,
+        type: actions.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS,
         classLinks: [
           createClassLink('lives-at', 'Person', 'Place', 10, 100, 1000),
           createClassLink('has', 'Person', 'Car', 9, 99, 999),
@@ -75,7 +75,7 @@ describe('reducer class-links', () => {
         .set(getClassLinkKey(classLink2), fromJS(classLink2));
 
       const action = {
-        type: actions.UPDATE_GRAPH_SCHEMA_ELEMENT_POSITIONS,
+        type: actions.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS,
         classLinks: [
           createClassLink('rents-at', 'Person', 'Place', 10, 100, 1000),
           createClassLink('has', 'Person', 'Car', 9, 99, 999),
@@ -88,7 +88,7 @@ describe('reducer class-links', () => {
     });
   });
 
-  describe('when UPDATE_GRAPH_SCHEMA_CLASS_LINK_POSITION', () => {
+  describe('when GRAPH_SCHEMA_UPDATE_CLASS_LINK_POSITION', () => {
     test('updates only position of matched class', () => {
       const classLink1 = createClassLink('has', 'Person', 'Car', 10, 20);
       const classLink2 = createClassLink('lives-at', 'Person', 'Place');
@@ -98,7 +98,7 @@ describe('reducer class-links', () => {
         .set(getClassLinkKey(classLink2), fromJS(classLink2));
 
       const action = {
-        type: actions.UPDATE_GRAPH_SCHEMA_CLASS_LINK_POSITION,
+        type: actions.GRAPH_SCHEMA_UPDATE_CLASS_LINK_POSITION,
         name: 'has',
         source: 'Person',
         target: 'Car',
@@ -116,7 +116,7 @@ describe('reducer class-links', () => {
     });
   });
 
-  describe('when UPDATE_GRAPH_SCHEMA_CLASS_LINK_LENGTHS', () => {
+  describe('when GRAPH_SCHEMA_UPDATE_CLASS_LINK_LENGTHS', () => {
     test('updates only length of class links', () => {
       const classLink1 = createClassLink('has', 'Person', 'Car');
       const classLink2 = createClassLink('lives-at', 'Person', 'Place');
@@ -126,7 +126,7 @@ describe('reducer class-links', () => {
         .set(getClassLinkKey(classLink2), fromJS(classLink2));
 
       const action = {
-        type: actions.UPDATE_GRAPH_SCHEMA_CLASS_LINK_LENGTHS,
+        type: actions.GRAPH_SCHEMA_UPDATE_CLASS_LINK_LENGTHS,
         classLinks: [
           createClassLink('lives-at', 'Person', 'Place', 10, 100, 1000),
           createClassLink('has', 'Person', 'Car', 9, 99, 999),

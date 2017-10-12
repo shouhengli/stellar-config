@@ -1,72 +1,150 @@
 const R = require('ramda');
 const actions = require('../actions');
 const api = require('../api');
-const {GRAPH_SCHEMA_CONFIG_TYPE} = require('../graph-schema');
+const {INGESTION_PROFILE_CONFIG_TYPE} = require('../ingestion-profile');
 
-function setSelectedSource(selectedSource) {
+function load(name, content) {
   return {
-    type: actions.SET_INGESTION_PROFILE_SELECTED_SOURCE,
-    selectedSource,
+    type: actions.INGESTION_PROFILE_LOAD,
+    name,
+    content,
+  };
+}
+
+function loadAsync(name) {
+  return (dispatch) => api
+    .getConfig(INGESTION_PROFILE_CONFIG_TYPE, name)
+    .then((content) =>
+      dispatch(load(name, content))
+    );
+}
+
+function resetStatus() {
+  return {type: actions.INGESTION_PROFILE_RESET_STATUS};
+}
+
+function saveAsync(name, content) {
+  return (dispatch) => api
+    .postConfig(INGESTION_PROFILE_CONFIG_TYPE, name, content)
+    .then(() => dispatch(resetStatus()));
+}
+
+function revealNewFile() {
+  return {
+    type: actions.INGESTION_PROFILE_REVEAL_NEW,
+  };
+}
+
+function hideNewFile() {
+  return {
+    type: actions.INGESTION_PROFILE_HIDE_NEW,
+  };
+}
+
+function setNewFileName(name) {
+  return {
+    type: actions.INGESTION_PROFILE_SET_NEW_NAME,
+    name,
+  };
+}
+
+function reset() {
+  return {type: actions.INGESTION_PROFILE_RESET};
+}
+
+function deleteFileAsync(name) {
+  return (dispatch) => api
+    .deleteConfig(INGESTION_PROFILE_CONFIG_TYPE, name)
+    .then(() => dispatch(reset()));
+}
+
+function revealDeleteFile() {
+  return {
+    type: actions.INGESTION_PROFILE_REVEAL_DELETE,
+  };
+}
+
+function hideDeleteFile() {
+  return {
+    type: actions.INGESTION_PROFILE_HIDE_DELETE,
+  };
+}
+
+function setDeleteFileName(name) {
+  return {
+    type: actions.INGESTION_PROFILE_SET_DELETE_NAME,
+    name,
+  };
+}
+
+function setSelectedSource(source) {
+  return {
+    type: actions.INGESTION_PROFILE_SET_SELECTED_SOURCE,
+    source,
   };
 }
 
 function revealNewSource() {
-  return {type: actions.REVEAL_INGESTION_PROFILE_NEW_SOURCE};
+  return {type: actions.INGESTION_PROFILE_REVEAL_NEW_SOURCE};
 }
 
 function hideNewSource() {
-  return {type: actions.HIDE_INGESTION_PROFILE_NEW_SOURCE};
+  return {type: actions.INGESTION_PROFILE_HIDE_NEW_SOURCE};
 }
 
-function setNewSource(newSource) {
+function setNewSource(source) {
   return {
-    type: actions.SET_INGESTION_PROFILE_NEW_SOURCE,
-    newSource,
+    type: actions.INGESTION_PROFILE_SET_NEW_SOURCE,
+    source,
   };
 }
 
-function loadGraphSchemas(graphSchemas) {
+function addSource(source) {
   return {
-    type: actions.LOAD_INGESTION_PROFILE_GRAPH_SCHEMAS,
-    graphSchemas,
+    type: actions.INGESTION_PROFILE_ADD_SOURCE,
+    source,
   };
-}
-
-function loadGraphSchemasAsync() {
-  return (dispatch) => api
-    .getConfigNames(GRAPH_SCHEMA_CONFIG_TYPE)
-    .then(R.compose(dispatch, loadGraphSchemas));
 }
 
 function loadSample(sample) {
   return {
-    type: actions.LOAD_INGESTION_PROFILE_SAMPLE,
+    type: actions.INGESTION_PROFILE_LOAD_SAMPLE,
     sample,
   };
 }
 
-function loadSampleAsync(sourceUri) {
+function loadSampleAsync(source) {
   return (dispatch) => api
-    .getIngestionSample(sourceUri)
+    .getIngestionSample(source)
     .then(R.compose(dispatch, loadSample));
 }
 
-function revealSourceDelete() {
-  return {type: actions.REVEAL_INGESTION_PROFILE_SOURCE_DELETE};
+function revealDeleteSource() {
+  return {type: actions.INGESTION_PROFILE_REVEAL_DELETE_SOURCE};
 }
 
-function hideSourceDelete() {
-  return {type: actions.HIDE_INGESTION_PROFILE_SOURCE_DELETE};
+function hideDeleteSource() {
+  return {type: actions.INGESTION_PROFILE_HIDE_DELETE_SOURCE};
 }
 
 module.exports = {
   setSelectedSource,
   setNewSource,
   loadSample,
-  loadGraphSchemasAsync,
   loadSampleAsync,
-  hideSourceDelete,
-  revealSourceDelete,
+  hideDeleteSource,
+  revealDeleteSource,
   revealNewSource,
   hideNewSource,
+  load,
+  loadAsync,
+  saveAsync,
+  revealNewFile,
+  hideNewFile,
+  setNewFileName,
+  revealDeleteFile,
+  hideDeleteFile,
+  deleteFileAsync,
+  setDeleteFileName,
+  addSource,
 };

@@ -49,12 +49,12 @@ function getConfigNames(configType) {
     .then(getBody);
 }
 
-function getIngestionSample(sourceUri) {
+function getIngestionSample(source) {
   return P
     .fromCallback((callback) =>
       request.get(`/ingestion/sample`)
              .accept('json')
-             .query({sourceUri})
+             .query({source})
              .end(callback)
     )
     .then(getBody);

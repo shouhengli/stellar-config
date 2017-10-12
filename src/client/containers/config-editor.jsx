@@ -1,6 +1,6 @@
 const {connect} = require('react-redux');
 const {Map} = require('immutable');
-const {setEditConfigContent} = require('../action-creators/edit');
+const {setEditConfigContent} = require('../action-creators/ingestion-profile');
 const {CONFIG_STATUS_SAVING} = require('../config-status');
 
 require('brace');

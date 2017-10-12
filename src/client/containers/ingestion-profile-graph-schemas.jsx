@@ -1,7 +1,7 @@
 const R = require('ramda');
 const {connect} = require('react-redux');
 const GraphSchemas = require('../components/ingestion-profile-graph-schemas.jsx');
-const {setEditConfigContent} = require('../action-creators/edit');
+const {setEditConfigContent} = require('../action-creators/ingestion-profile');
 
 const {
   loadGraphSchemasAsync,

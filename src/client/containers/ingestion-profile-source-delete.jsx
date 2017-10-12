@@ -3,7 +3,7 @@ const R = require('ramda');
 const {connect} = require('react-redux');
 const SourceDelete = require('../components/ingestion-profile-source-delete.jsx');
 const {defaultToEmptyList} = require('../util');
-const {setEditConfigContent} = require('../action-creators/edit');
+const {setEditConfigContent} = require('../action-creators/ingestion-profile');
 
 const {
   setSelectedSource,

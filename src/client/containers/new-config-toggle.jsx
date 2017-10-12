@@ -1,6 +1,6 @@
 const {connect} = require('react-redux');
 const Toggle = require('../components/new-config-toggle.jsx');
-const {revealNewConfig} = require('../action-creators/edit');
+const {revealNewConfig} = require('../action-creators/ingestion-profile');
 
 function mapDispatchToProps(dispatch) {
   return {

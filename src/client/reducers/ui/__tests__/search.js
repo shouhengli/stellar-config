@@ -1,8 +1,8 @@
 const {List, is, fromJS} = require('immutable');
 const reduceState = require('../search');
-const actions = require('../../actions');
+const actions = require('../../../actions');
 
-describe('reducer search', () => {
+describe('reducer ui/search', () => {
   let initialState;
 
   beforeEach(() => {
@@ -15,17 +15,17 @@ describe('reducer search', () => {
     });
   });
 
-  describe('when LOAD_SEARCH_CONFIG_TYPES', () => {
+  describe('when SEARCH_LOAD_CONFIG_TYPES', () => {
     test('updates active type if needed and possible', () => {
       const state = initialState.set('activeType', 'source');
 
       const action1 = {
-        type: actions.LOAD_SEARCH_CONFIG_TYPES,
+        type: actions.SEARCH_LOAD_CONFIG_TYPES,
         configTypes: ['mapping', 'graph schema'],
       };
 
       const action2 = {
-        type: actions.LOAD_SEARCH_CONFIG_TYPES,
+        type: actions.SEARCH_LOAD_CONFIG_TYPES,
         configTypes: ['source', 'mapping', 'graph schema'],
       };
 
@@ -44,10 +44,10 @@ describe('reducer search', () => {
     });
   });
 
-  describe('when LOAD_SEARCH_CONFIG_NAMES', () => {
+  describe('when SEARCH_LOAD_CONFIG_NAMES', () => {
     test('updates config names', () => {
       const action = {
-        type: actions.LOAD_SEARCH_CONFIG_NAMES,
+        type: actions.SEARCH_LOAD_CONFIG_NAMES,
         configNames: ['people', 'vehicles'],
       };
 
@@ -58,10 +58,10 @@ describe('reducer search', () => {
     });
   });
 
-  describe('when SET_SEARCH_ACTIVE_CONFIG_TYPE', () => {
+  describe('when SEARCH_SET_ACTIVE_CONFIG_TYPE', () => {
     test('updates active type', () => {
       const action = {
-        type: actions.SET_SEARCH_ACTIVE_CONFIG_TYPE,
+        type: actions.SEARCH_SET_ACTIVE_CONFIG_TYPE,
         activeConfigType: 'mapping',
       };
 
@@ -72,10 +72,10 @@ describe('reducer search', () => {
     });
   });
 
-  describe('when SET_SEARCH_TEXT', () => {
+  describe('when SEARCH_SET_TEXT', () => {
     test('updates search text', () => {
       const action = {
-        type: actions.SET_SEARCH_TEXT,
+        type: actions.SEARCH_SET_TEXT,
         searchText: 'people',
       };
 
@@ -86,10 +86,10 @@ describe('reducer search', () => {
     });
   });
 
-  describe('when HIDE_SEARCH', () => {
+  describe('when SEARCH_HIDE', () => {
     test('hides search', () => {
       const state = initialState.set('visible', true);
-      const action = {type: actions.HIDE_SEARCH};
+      const action = {type: actions.SEARCH_HIDE};
       const next = reduceState(state, action);
 
       const expected = state.set('visible', false);
@@ -97,10 +97,10 @@ describe('reducer search', () => {
     });
   });
 
-  describe('when REVEAL_SEARCH', () => {
+  describe('when SEARCH_REVEAL', () => {
     test('reveals search', () => {
       const state = initialState.set('visible', false);
-      const action = {type: actions.REVEAL_SEARCH};
+      const action = {type: actions.SEARCH_REVEAL};
       const next = reduceState(state, action);
 
       const expected = state.set('visible', true);
