@@ -1,4 +1,7 @@
 const INGESTION_PROFILE_CONFIG_TYPE = 'ingestion profile';
+const TAB_SOURCE = 'Source';
+const TAB_GRAPH_SCHEMA = 'Graph Schema';
+const TAB_MAPPING = 'Mapping';
 
 /**
  * Creates a ingestion profile.
@@ -19,4 +22,7 @@ function createIngestionProfile(sources, graphSchema, mapping) {
 module.exports = {
   createIngestionProfile,
   INGESTION_PROFILE_CONFIG_TYPE,
+  TAB_SOURCE,
+  TAB_GRAPH_SCHEMA,
+  TAB_MAPPING,
 };

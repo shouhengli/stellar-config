@@ -42,9 +42,9 @@ describe('reducer ingestion-profile', () => {
     });
   });
 
-  describe('when INGESTION_PROFILE_RESET_STATUS', () => {
+  describe('when INGESTION_PROFILE_SET_STATUS', () => {
     test('sets status to normal', () => {
-      const action = {type: actions.INGESTION_PROFILE_RESET_STATUS};
+      const action = {type: actions.INGESTION_PROFILE_SET_STATUS};
 
       const next = reduceState(
         initialState.set('status', CONFIG_STATUS_CHANGED),

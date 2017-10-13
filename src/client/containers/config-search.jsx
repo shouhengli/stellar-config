@@ -1,23 +1,25 @@
-const React = require('react');
-const {List} = require('immutable');
 const {connect} = require('react-redux');
+const Search = require('../components/config-search.jsx');
 
-const ConfigSearchTab = require('./config-search-tab.jsx');
-const ConfigSearchActiveTab = require('./config-search-active-tab.jsx');
-const ConfigSearchItem = require('./config-search-item.jsx');
-const ConfigSearch = require('../components/config-search.jsx');
+const {
+  configNamesSelector,
+  searchTextSelector,
+} = require('../selectors/search');
 
-const {setSearchText, hideSearch} = require('../action-creators/search');
+const {
+  setSearchText,
+  hideSearch,
+  loadSearchConfigNamesAsync,
+} = require('../action-creators/search');
+
+const {loadAsync} = require('../action-creators/ingestion-profile');
+const {INGESTION_PROFILE_CONFIG_TYPE} = require('../ingestion-profile');
 
 function mapStateToProps(state) {
-  const configTypes = state.getIn(['search', 'types']);
-  const activeConfigType = state.getIn(['search', 'activeType']);
-  const configNames = state.getIn(['search', 'names'], List());
-  const searchText = state.getIn(['search', 'text']);
+  const configNames = configNamesSelector(state);
+  const searchText = searchTextSelector;
 
   return {
-    configTypes,
-    activeConfigType,
     configNames,
     searchText,
   };
@@ -31,13 +33,13 @@ function mapDispatchToProps(dispatch) {
   return {
     handleHideButtonClick,
     handleSearchTextChange,
+
+    handleItemClick: (configName) =>
+      dispatch(loadAsync(configName)).then(() => dispatch(hideSearch())),
+
+    handleComponentDidMount: () =>
+      dispatch(loadSearchConfigNamesAsync(INGESTION_PROFILE_CONFIG_TYPE)),
   };
 }
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(
-  (props) => <ConfigSearch
-               Tab={ConfigSearchTab}
-               ActiveTab={ConfigSearchActiveTab}
-               Item={ConfigSearchItem}
-               {...props} />
-);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(Search);

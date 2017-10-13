@@ -1,9 +1,7 @@
-const R = require('ramda');
 const {fromJS} = require('immutable');
 const actions = require('../../actions');
 
 const initialState = fromJS({
-  types: [],
   names: [],
   activeType: null,
   visible: false,
@@ -12,14 +10,6 @@ const initialState = fromJS({
 
 function reduce(state = initialState, action) {
   switch (action.type) {
-    case actions.SEARCH_LOAD_CONFIG_TYPES:
-      if (action.configTypes.length > 0
-          && !R.contains(state.get('activeType'), action.configTypes)) {
-        state = state.set('activeType', action.configTypes[0]);
-      }
-
-      return state.set('types', fromJS(action.configTypes));
-
     case actions.SEARCH_LOAD_CONFIG_NAMES:
       return state.set('names', fromJS(action.configNames));
 

@@ -6,13 +6,21 @@ const {
 } = require('../config-status');
 
 module.exports =
-  ({configType, configName, configContent, configStatus, handleClick}) => {
+  ({
+    configType,
+    configName,
+    resolveConfigContent,
+    configStatus,
+    handleClick,
+  }) => {
     switch (configStatus) {
       case CONFIG_STATUS_CHANGED:
         return (
           <button
             className="button is-white"
-            onClick={() => handleClick(configType, configName, configContent)}>
+            onClick={
+              () => handleClick(configName, resolveConfigContent())
+            }>
             <span className="icon is-small">
               <i className="fa fa-upload"></i>
             </span>

@@ -1,3 +1,4 @@
+const P = require('bluebird');
 const R = require('ramda');
 const actions = require('../actions');
 const api = require('../api');
@@ -19,29 +20,26 @@ function loadAsync(name) {
     );
 }
 
-function resetStatus() {
-  return {type: actions.INGESTION_PROFILE_RESET_STATUS};
-}
-
 function saveAsync(name, content) {
-  return (dispatch) => api
-    .postConfig(INGESTION_PROFILE_CONFIG_TYPE, name, content)
-    .then(() => dispatch(resetStatus()));
+  return (dispatch) => P
+    .try(() => dispatch({type: actions.INGESTION_PROFILE_SAVE}))
+    .then(() => api.postConfig(INGESTION_PROFILE_CONFIG_TYPE, name, content))
+    .then(() => dispatch({type: actions.INGESTION_PROFILE_SAVE_SUCCESS}));
 }
 
-function revealNewFile() {
+function revealNewConfig() {
   return {
     type: actions.INGESTION_PROFILE_REVEAL_NEW,
   };
 }
 
-function hideNewFile() {
+function hideNewConfig() {
   return {
     type: actions.INGESTION_PROFILE_HIDE_NEW,
   };
 }
 
-function setNewFileName(name) {
+function setNewConfigName(name) {
   return {
     type: actions.INGESTION_PROFILE_SET_NEW_NAME,
     name,
@@ -58,19 +56,19 @@ function deleteFileAsync(name) {
     .then(() => dispatch(reset()));
 }
 
-function revealDeleteFile() {
+function revealDeleteConfig() {
   return {
     type: actions.INGESTION_PROFILE_REVEAL_DELETE,
   };
 }
 
-function hideDeleteFile() {
+function hideDeleteConfig() {
   return {
     type: actions.INGESTION_PROFILE_HIDE_DELETE,
   };
 }
 
-function setDeleteFileName(name) {
+function setDeleteConfigName(name) {
   return {
     type: actions.INGESTION_PROFILE_SET_DELETE_NAME,
     name,
@@ -139,12 +137,12 @@ module.exports = {
   load,
   loadAsync,
   saveAsync,
-  revealNewFile,
-  hideNewFile,
-  setNewFileName,
-  revealDeleteFile,
-  hideDeleteFile,
+  revealNewConfig,
+  hideNewConfig,
+  setNewConfigName,
+  revealDeleteConfig,
+  hideDeleteConfig,
   deleteFileAsync,
-  setDeleteFileName,
+  setDeleteConfigName,
   addSource,
 };

@@ -7,10 +7,10 @@ describe('reducer ui/ingestion-profile', () => {
 
   beforeEach(() => {
     initialState = fromJS({
-      newFileVisible: false,
-      newFileName: '',
-      deleteFileVisible: false,
-      deleteFileName: '',
+      newConfigVisible: false,
+      newConfigName: '',
+      deleteConfigVisible: false,
+      deleteConfigName: '',
       selectedSource: '',
       newSource: '',
       newSourceVisible: false,
@@ -21,22 +21,22 @@ describe('reducer ui/ingestion-profile', () => {
 
   describe('when INGESTION_PROFILE_REVEAL_NEW', () => {
     test('reveals new file UI', () => {
-      const state = initialState.set('newFileVisible', false);
+      const state = initialState.set('newConfigVisible', false);
       const action = {type: actions.INGESTION_PROFILE_REVEAL_NEW};
       const next = reduceState(state, action);
 
-      const expected = state.set('newFileVisible', true);
+      const expected = state.set('newConfigVisible', true);
       expect(is(next, expected)).toBe(true);
     });
   });
 
   describe('when INGESTION_PROFILE_HIDE_NEW', () => {
     test('hides new file UI', () => {
-      const state = initialState.set('newFileVisible', true);
+      const state = initialState.set('newConfigVisible', true);
       const action = {type: actions.INGESTION_PROFILE_HIDE_NEW};
       const next = reduceState(state, action);
 
-      const expected = state.set('newFileVisible', false);
+      const expected = state.set('newConfigVisible', false);
       expect(is(next, expected)).toBe(true);
     });
   });
@@ -50,14 +50,14 @@ describe('reducer ui/ingestion-profile', () => {
 
       const next = reduceState(initialState, action);
 
-      const expected = initialState.set('newFileName', 'people');
+      const expected = initialState.set('newConfigName', 'people');
       expect(is(next, expected)).toBe(true);
     });
   });
 
   describe('when INGESTION_PROFILE_ADD_NEW', () => {
     test('resets name of new file', () => {
-      const state = initialState.set('newFileName', 'people');
+      const state = initialState.set('newConfigName', 'people');
 
       const action = {type: actions.INGESTION_PROFILE_ADD_NEW};
       const next = reduceState(state, action);
@@ -68,22 +68,22 @@ describe('reducer ui/ingestion-profile', () => {
 
   describe('when INGESTION_PROFILE_HIDE_DELETE', () => {
     test('hides delete file UI', () => {
-      const state = initialState.set('deleteFileVisible', true);
+      const state = initialState.set('deleteConfigVisible', true);
       const action = {type: actions.INGESTION_PROFILE_HIDE_DELETE};
       const next = reduceState(state, action);
 
-      const expected = state.set('deleteFileVisible', false);
+      const expected = state.set('deleteConfigVisible', false);
       expect(is(next, expected)).toBe(true);
     });
   });
 
   describe('when INGESTION_PROFILE_REVEAL_DELETE', () => {
     test('reveals delete file UI', () => {
-      const state = initialState.set('deleteFileVisible', false);
+      const state = initialState.set('deleteConfigVisible', false);
       const action = {type: actions.INGESTION_PROFILE_REVEAL_DELETE};
       const next = reduceState(state, action);
 
-      const expected = state.set('deleteFileVisible', true);
+      const expected = state.set('deleteConfigVisible', true);
       expect(is(next, expected)).toBe(true);
     });
   });
@@ -97,7 +97,7 @@ describe('reducer ui/ingestion-profile', () => {
 
       const next = reduceState(initialState, action);
 
-      const expected = initialState.set('deleteFileName', 'people');
+      const expected = initialState.set('deleteConfigName', 'people');
       expect(is(next, expected)).toBe(true);
     });
   });

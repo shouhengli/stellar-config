@@ -2,10 +2,10 @@ const {fromJS} = require('immutable');
 const actions = require('../../actions');
 
 const initialState = fromJS({
-  newFileVisible: false,
-  newFileName: '',
-  deleteFileVisible: false,
-  deleteFileName: '',
+  newConfigVisible: false,
+  newConfigName: '',
+  deleteConfigVisible: false,
+  deleteConfigName: '',
   selectedSource: '',
   newSource: '',
   newSourceVisible: false,
@@ -16,25 +16,25 @@ const initialState = fromJS({
 function reduceState(state = initialState, action) {
   switch (action.type) {
     case actions.INGESTION_PROFILE_REVEAL_NEW:
-      return state.set('newFileVisible', true);
+      return state.set('newConfigVisible', true);
 
     case actions.INGESTION_PROFILE_HIDE_NEW:
-      return state.set('newFileVisible', false);
+      return state.set('newConfigVisible', false);
 
     case actions.INGESTION_PROFILE_SET_NEW_NAME:
-      return state.set('newFileName', action.name);
+      return state.set('newConfigName', action.name);
 
     case actions.INGESTION_PROFILE_ADD_NEW:
-      return state.set('newFileName', '');
+      return state.set('newConfigName', '');
 
     case actions.INGESTION_PROFILE_HIDE_DELETE:
-      return state.set('deleteFileVisible', false);
+      return state.set('deleteConfigVisible', false);
 
     case actions.INGESTION_PROFILE_REVEAL_DELETE:
-      return state.set('deleteFileVisible', true);
+      return state.set('deleteConfigVisible', true);
 
     case actions.INGESTION_PROFILE_SET_DELETE_NAME:
-      return state.set('deleteFileName', action.name);
+      return state.set('deleteConfigName', action.name);
 
     case actions.INGESTION_PROFILE_SET_SELECTED_SOURCE:
       return state.set('selectedSource', action.source);

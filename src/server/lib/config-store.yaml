@@ -3,4 +3,3 @@ redis:
   namespaceSeparator: ':'
   configTypes:
     - ingestion profile
-    - graph schema
