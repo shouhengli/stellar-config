@@ -9,8 +9,8 @@ class ConfigSearch extends React.Component {
 
   render() {
     const {
-      searchText,
-      configNames,
+      text,
+      names,
       handleSearchTextChange,
       handleHideButtonClick,
       handleItemClick,
@@ -24,7 +24,7 @@ class ConfigSearch extends React.Component {
               <input
                 className="input is-medium"
                 type="text"
-                value={searchText}
+                value={text}
                 onChange={(event) => handleSearchTextChange(event.target.value)} />
               <span className="icon is-left">
                 <i className="fa fa-search"></i>
@@ -42,12 +42,12 @@ class ConfigSearch extends React.Component {
           </div>
         </div>
         {
-          configNames
-            .filter((configName) => configName.indexOf(searchText) >= 0)
-            .map((configName) =>
+          names
+            .filter((name) => name.indexOf(text) >= 0)
+            .map((name) =>
               <Item
-                key={configName}
-                name={configName}
+                key={name}
+                name={name}
                 handleClick={handleItemClick} />
             )
         }

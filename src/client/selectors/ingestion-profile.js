@@ -1,7 +1,5 @@
 const {createSelector} = require('reselect');
 
-const ingestionProfileSelector = (state) => state.get('ingestionProfile');
-
 const nameSelector = (state) => state.getIn(['ingestionProfile', 'name']);
 
 const sourcesSelector = (state) => state.getIn(['ingestionProfile', 'sources']);
@@ -25,7 +23,6 @@ const persistentIngestionProfileSelector = createSelector(
 );
 
 module.exports = {
-  ingestionProfileSelector,
   nameSelector,
   sourcesSelector,
   statusSelector,

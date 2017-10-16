@@ -1,22 +1,27 @@
+const React = require('react');
+const R = require('ramda');
 const {connect} = require('react-redux');
 const Nav = require('../components/ingestion-profile-nav.jsx');
+const Search = require('./config-search.jsx');
 
 const {
   saveAsync,
   revealNewConfig,
-  revealConfigDelete,
+  revealDeleteConfig,
 } = require('../action-creators/ingestion-profile');
+
 const {revealSearch} = require('../action-creators/search');
 
 const {
   nameSelector,
   sourcesSelector,
   statusSelector,
+  persistentIngestionProfileSelector,
 } = require('../selectors/ingestion-profile');
 
 const {
-  persistentIngestionProfileSelector,
-} = require('../selectors/ingestion-profile');
+  visibleSelector: searchVisibleSelector,
+} = require('../selectors/ui/search');
 
 const resolveConfigContent = (state) => () => {
   const sources = sourcesSelector(state);
@@ -33,20 +38,22 @@ function mapStateToProps(state) {
     configName: nameSelector(state),
     resolveConfigContent: resolveConfigContent(state),
     configStatus: statusSelector(state),
+    searchVisible: searchVisibleSelector(state),
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    handleSaveClick: (configName, configContent) =>
-      dispatch(saveAsync(configName, configContent)),
+    handleSaveClick: R.compose(dispatch, saveAsync),
 
-    handleSearchToggleClick: () => dispatch(revealSearch()),
+    handleSearchToggleClick: R.compose(dispatch, revealSearch),
 
-    handleNewToggle: () => dispatch(revealNewConfig()),
+    handleNewToggle: R.compose(dispatch, revealNewConfig),
 
-    handleDeleteToggle: () => dispatch(revealConfigDelete()),
+    handleDeleteToggle: R.compose(dispatch, revealDeleteConfig),
   };
 }
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(Nav);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(
+  (props) => <Nav Search={Search} {...props} />
+);

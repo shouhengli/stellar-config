@@ -1,10 +1,11 @@
+const R = require('ramda');
 const {connect} = require('react-redux');
 const Search = require('../components/config-search.jsx');
 
 const {
-  configNamesSelector,
-  searchTextSelector,
-} = require('../selectors/search');
+  namesSelector,
+  textSelector,
+} = require('../selectors/ui/search');
 
 const {
   setSearchText,
@@ -16,29 +17,28 @@ const {loadAsync} = require('../action-creators/ingestion-profile');
 const {INGESTION_PROFILE_CONFIG_TYPE} = require('../ingestion-profile');
 
 function mapStateToProps(state) {
-  const configNames = configNamesSelector(state);
-  const searchText = searchTextSelector;
-
   return {
-    configNames,
-    searchText,
+    names: namesSelector(state),
+    text: textSelector(state),
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  const handleHideButtonClick = () => dispatch(hideSearch());
-  const handleSearchTextChange =
-    (event) => dispatch(setSearchText(event.target.value));
-
   return {
-    handleHideButtonClick,
-    handleSearchTextChange,
+    handleHideButtonClick: R.compose(dispatch, hideSearch),
 
-    handleItemClick: (configName) =>
-      dispatch(loadAsync(configName)).then(() => dispatch(hideSearch())),
+    handleSearchTextChange: R.compose(dispatch, setSearchText),
 
-    handleComponentDidMount: () =>
-      dispatch(loadSearchConfigNamesAsync(INGESTION_PROFILE_CONFIG_TYPE)),
+    handleItemClick: R.pipeP(
+      R.compose(dispatch, loadAsync),
+      R.compose(dispatch, hideSearch)
+    ),
+
+    handleComponentDidMount: R.compose(
+      dispatch,
+      loadSearchConfigNamesAsync,
+      R.always(INGESTION_PROFILE_CONFIG_TYPE)
+    ),
   };
 }
 
