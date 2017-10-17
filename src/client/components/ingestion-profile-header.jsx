@@ -17,16 +17,10 @@ const ActiveTab = ({children}) =>
 const TabLink = ({handleClick, value}) =>
   <a onClick={() => handleClick(value)}>{value}</a>;
 
-module.exports = ({configName, activeTab, handleTabClick}) =>
+module.exports = ({name, activeTab, handleTabClick}) =>
   [
-    <NavItem key="icon">
-      <span className="icon">
-        <i className="fa fa-file-o"></i>
-      </span>
-      {configName}
-    </NavItem>,
     <NavItem key="tabs">
-      <div className="tabs is-toggle">
+      <div className="tabs">
         <ul>
           {
             tabs.map((tab) => {
@@ -40,5 +34,10 @@ module.exports = ({configName, activeTab, handleTabClick}) =>
           }
         </ul>
       </div>
+    </NavItem>,
+    <NavItem key="icon">
+      <span className="tag is-medium is-info">
+        {name}
+      </span>
     </NavItem>,
   ];

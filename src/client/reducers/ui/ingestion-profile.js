@@ -1,40 +1,42 @@
 const {fromJS} = require('immutable');
 const actions = require('../../actions');
+const {TAB_SOURCE} = require('../../ingestion-profile');
 
 const initialState = fromJS({
-  newConfigVisible: false,
-  newConfigName: '',
-  deleteConfigVisible: false,
-  deleteConfigName: '',
+  newVisible: false,
+  newName: '',
+  deleteVisible: false,
+  deleteName: '',
   selectedSource: '',
   newSource: '',
   newSourceVisible: false,
   deleteSourceVisible: false,
   sample: null,
+  activeTab: TAB_SOURCE,
 });
 
 function reduceState(state = initialState, action) {
   switch (action.type) {
     case actions.INGESTION_PROFILE_REVEAL_NEW:
-      return state.set('newConfigVisible', true);
+      return state.set('newVisible', true);
 
     case actions.INGESTION_PROFILE_HIDE_NEW:
-      return state.set('newConfigVisible', false);
+      return state.set('newVisible', false);
 
     case actions.INGESTION_PROFILE_SET_NEW_NAME:
-      return state.set('newConfigName', action.name);
+      return state.set('newName', action.name);
 
     case actions.INGESTION_PROFILE_ADD_NEW:
-      return state.set('newConfigName', '');
+      return state.set('newName', '');
 
     case actions.INGESTION_PROFILE_HIDE_DELETE:
-      return state.set('deleteConfigVisible', false);
+      return state.set('deleteVisible', false);
 
     case actions.INGESTION_PROFILE_REVEAL_DELETE:
-      return state.set('deleteConfigVisible', true);
+      return state.set('deleteVisible', true);
 
     case actions.INGESTION_PROFILE_SET_DELETE_NAME:
-      return state.set('deleteConfigName', action.name);
+      return state.set('deleteName', action.name);
 
     case actions.INGESTION_PROFILE_SET_SELECTED_SOURCE:
       return state.set('selectedSource', action.source);
@@ -61,6 +63,11 @@ function reduceState(state = initialState, action) {
 
     case actions.INGESTION_PROFILE_REVEAL_DELETE_SOURCE:
       return state.set('deleteSourceVisible', true);
+
+    case actions.INGESTION_PROFILE_RESET:
+      return state
+        .set('deleteVisible', false)
+        .set('deleteName', '');
 
     default:
       return state;

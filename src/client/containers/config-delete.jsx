@@ -1,41 +1,39 @@
+const R = require('ramda');
 const {connect} = require('react-redux');
-const ConfigDelete = require('../components/config-delete.jsx');
+const Delete = require('../components/config-delete.jsx');
 
 const {
-  setConfigDeleteName,
-  hideConfigDelete,
-  deleteConfigAsync,
-  resetEditConfig,
+  deleteAsync,
 } = require('../action-creators/ingestion-profile');
 
-function mapStateToProps(state) {
-  const configType = state.getIn(['edit', 'type']);
-  const configName = state.getIn(['edit', 'name']);
-  const configDeleteName = state.getIn(['ui', 'configDeleteName']);
-  const confirmed = configDeleteName === configName;
+const {
+  setDeleteName,
+  hideDelete,
+} = require('../action-creators/ui/ingestion-profile');
 
+const {
+  nameSelector,
+} = require('../selectors/ingestion-profile');
+
+const {
+  deleteNameSelector,
+} = require('../selectors/ui/ingestion-profile');
+
+function mapStateToProps(state) {
   return {
-    configType,
-    configName,
-    configDeleteName,
-    confirmed,
+    name: nameSelector(state),
+    deleteName: deleteNameSelector(state),
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    handleNameChange: (event) =>
-      dispatch(setConfigDeleteName(event.target.value)),
+    handleNameChange: R.compose(dispatch, setDeleteName),
 
-    handleCloseButtonClick: () =>
-      dispatch(hideConfigDelete()),
+    handleCloseButtonClick: R.compose(dispatch, hideDelete),
 
-    handleDeleteButtonClick: (configType, configName) =>
-      dispatch(deleteConfigAsync(configType, configName))
-        .then(() => dispatch(resetEditConfig()))
-        .then(() => dispatch(setConfigDeleteName('')))
-        .then(() => dispatch(hideConfigDelete())),
+    handleDeleteButtonClick: R.compose(dispatch, deleteAsync),
   };
 }
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(ConfigDelete);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(Delete);

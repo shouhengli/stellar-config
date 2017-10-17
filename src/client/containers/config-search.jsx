@@ -8,10 +8,10 @@ const {
 } = require('../selectors/ui/search');
 
 const {
-  setSearchText,
   hideSearch,
-  loadSearchConfigNamesAsync,
-} = require('../action-creators/search');
+  loadSearchNamesAsync,
+  setSearchText,
+} = require('../action-creators/ui/search');
 
 const {loadAsync} = require('../action-creators/ingestion-profile');
 const {INGESTION_PROFILE_CONFIG_TYPE} = require('../ingestion-profile');
@@ -36,7 +36,7 @@ function mapDispatchToProps(dispatch) {
 
     handleComponentDidMount: R.compose(
       dispatch,
-      loadSearchConfigNamesAsync,
+      loadSearchNamesAsync,
       R.always(INGESTION_PROFILE_CONFIG_TYPE)
     ),
   };

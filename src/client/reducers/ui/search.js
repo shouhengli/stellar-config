@@ -3,18 +3,14 @@ const actions = require('../../actions');
 
 const initialState = fromJS({
   names: [],
-  activeType: null,
   visible: false,
   text: '',
 });
 
 function reduce(state = initialState, action) {
   switch (action.type) {
-    case actions.SEARCH_LOAD_CONFIG_NAMES:
+    case actions.SEARCH_LOAD_NAMES:
       return state.set('names', fromJS(action.configNames));
-
-    case actions.SEARCH_SET_ACTIVE_CONFIG_TYPE:
-      return state.set('activeType', action.activeConfigType);
 
     case actions.SEARCH_SET_TEXT:
       return state.set('text', action.searchText);

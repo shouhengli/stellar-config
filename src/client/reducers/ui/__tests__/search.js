@@ -44,30 +44,16 @@ describe('reducer ui/search', () => {
     });
   });
 
-  describe('when SEARCH_LOAD_CONFIG_NAMES', () => {
+  describe('when SEARCH_LOAD_NAMES', () => {
     test('updates config names', () => {
       const action = {
-        type: actions.SEARCH_LOAD_CONFIG_NAMES,
+        type: actions.SEARCH_LOAD_NAMES,
         configNames: ['people', 'vehicles'],
       };
 
       const next = reduceState(initialState, action);
 
       const expected = initialState.set('names', List(action.configNames));
-      expect(is(next, expected)).toBe(true);
-    });
-  });
-
-  describe('when SEARCH_SET_ACTIVE_CONFIG_TYPE', () => {
-    test('updates active type', () => {
-      const action = {
-        type: actions.SEARCH_SET_ACTIVE_CONFIG_TYPE,
-        activeConfigType: 'mapping',
-      };
-
-      const next = reduceState(initialState, action);
-
-      const expected = initialState.set('activeType', action.activeConfigType);
       expect(is(next, expected)).toBe(true);
     });
   });

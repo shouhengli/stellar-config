@@ -1,14 +1,10 @@
 const React = require('react');
-const Confirmation = require('./config-delete-confirmation.jsx');
 const Close = require('./delete-button.jsx');
-const Yes = require('./config-delete-yes.jsx');
 
 module.exports = (props) => {
   const {
-    configType,
-    configName,
-    configDeleteName,
-    confirmed,
+    name,
+    deleteName,
     handleNameChange,
     handleCloseButtonClick,
     handleDeleteButtonClick,
@@ -26,24 +22,29 @@ module.exports = (props) => {
         </p>
         <div className="field has-addons">
           <div className="control is-expanded">
-            <Confirmation
-              configDeleteName={configDeleteName}
-              handleChange={handleNameChange} />
+            <input
+              className="input is-danger"
+              type="text"
+              value={deleteName}
+              onChange={(event) => handleNameChange(event.target.value)} />
           </div>
           <div className="control">
             {
-              confirmed
-              ?
-              <Yes
-                configType={configType}
-                configName={configName}
-                handleClick={handleDeleteButtonClick} />
-              :
-              <button
-                className="button is-danger"
-                disabled={true}>
-                Delete
-              </button>
+              name === deleteName
+              ? (
+                <button
+                  className="button is-danger"
+                  onClick={() => handleDeleteButtonClick(name)}>
+                  Delete
+                </button>
+              )
+              : (
+                <button
+                  className="button is-danger"
+                  disabled={true}>
+                  Delete
+                </button>
+              )
             }
           </div>
         </div>

@@ -3,14 +3,19 @@ const R = require('ramda');
 const {connect} = require('react-redux');
 const Nav = require('../components/ingestion-profile-nav.jsx');
 const Search = require('./config-search.jsx');
+const New = require('./config-new.jsx');
+const Delete = require('./config-delete.jsx');
 
 const {
   saveAsync,
-  revealNewConfig,
-  revealDeleteConfig,
 } = require('../action-creators/ingestion-profile');
 
-const {revealSearch} = require('../action-creators/search');
+const {
+  revealNew,
+  revealDelete,
+} = require('../action-creators/ui/ingestion-profile');
+
+const {revealSearch} = require('../action-creators/ui/search');
 
 const {
   nameSelector,
@@ -23,7 +28,13 @@ const {
   visibleSelector: searchVisibleSelector,
 } = require('../selectors/ui/search');
 
-const resolveConfigContent = (state) => () => {
+const {
+  newVisibleSelector,
+  deleteVisibleSelector,
+  activeTabSelector,
+} = require('../selectors/ui/ingestion-profile');
+
+const resolveContent = (state) => () => {
   const sources = sourcesSelector(state);
   const graphSchema = persistentIngestionProfileSelector(state);
 
@@ -35,10 +46,13 @@ const resolveConfigContent = (state) => () => {
 
 function mapStateToProps(state) {
   return {
-    configName: nameSelector(state),
-    resolveConfigContent: resolveConfigContent(state),
-    configStatus: statusSelector(state),
+    name: nameSelector(state),
+    resolveContent: resolveContent(state),
+    status: statusSelector(state),
     searchVisible: searchVisibleSelector(state),
+    newVisible: newVisibleSelector(state),
+    deleteVisible: deleteVisibleSelector(state),
+    activeTab: activeTabSelector(state),
   };
 }
 
@@ -48,12 +62,12 @@ function mapDispatchToProps(dispatch) {
 
     handleSearchToggleClick: R.compose(dispatch, revealSearch),
 
-    handleNewToggle: R.compose(dispatch, revealNewConfig),
+    handleNewToggleClick: R.compose(dispatch, revealNew),
 
-    handleDeleteToggle: R.compose(dispatch, revealDeleteConfig),
+    handleDeleteToggleClick: R.compose(dispatch, revealDelete),
   };
 }
 
 module.exports = connect(mapStateToProps, mapDispatchToProps)(
-  (props) => <Nav Search={Search} {...props} />
+  (props) => <Nav Search={Search} New={New} Delete={Delete} {...props} />
 );
