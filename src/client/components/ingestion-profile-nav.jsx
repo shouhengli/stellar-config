@@ -23,6 +23,7 @@ module.exports =
     newVisible,
     deleteVisible,
     activeTab,
+    handleTabClick,
     handleSaveClick,
     handleSearchToggleClick,
     handleNewToggleClick,
@@ -41,7 +42,10 @@ module.exports =
         <NavMenuEnd>
           {
             isNotEmpty(name) &&
-            <Header name={name} activeTab={activeTab} />
+            <Header
+              name={name}
+              activeTab={activeTab}
+              handleTabClick={handleTabClick} />
           }
           <NavItem>
             <Save

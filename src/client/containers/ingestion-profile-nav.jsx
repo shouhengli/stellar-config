@@ -13,6 +13,7 @@ const {
 const {
   revealNew,
   revealDelete,
+  setActiveTab,
 } = require('../action-creators/ui/ingestion-profile');
 
 const {revealSearch} = require('../action-creators/ui/search');
@@ -65,6 +66,8 @@ function mapDispatchToProps(dispatch) {
     handleNewToggleClick: R.compose(dispatch, revealNew),
 
     handleDeleteToggleClick: R.compose(dispatch, revealDelete),
+
+    handleTabClick: R.compose(dispatch, setActiveTab),
   };
 }
 

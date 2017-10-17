@@ -15,6 +15,7 @@
 @import '../../node_modules/bulma/sass/grid/columns';
 
 $tabs-link-padding: 0.25em 1em;
+$tabs-border-bottom-color: $white;
 @import '../../node_modules/bulma/sass/components/tabs';
 
 $table-cell-padding: 0.5em 1.5em;

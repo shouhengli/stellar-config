@@ -69,6 +69,9 @@ function reduceState(state = initialState, action) {
         .set('deleteVisible', false)
         .set('deleteName', '');
 
+    case actions.INGESTION_PROFILE_SET_ACTIVE_TAB:
+      return state.set('activeTab', action.tab);
+
     default:
       return state;
   }

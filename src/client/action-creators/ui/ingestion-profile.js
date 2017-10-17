@@ -68,6 +68,13 @@ function hideDeleteSource() {
   return {type: actions.INGESTION_PROFILE_HIDE_DELETE_SOURCE};
 }
 
+function setActiveTab(tab) {
+  return {
+    type: actions.INGESTION_PROFILE_SET_ACTIVE_TAB,
+    tab,
+  };
+}
+
 module.exports = {
   setSelectedSource,
   setNewSource,
@@ -81,4 +88,5 @@ module.exports = {
   revealDelete,
   hideDelete,
   setDeleteName,
+  setActiveTab,
 };
