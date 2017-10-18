@@ -1,4 +1,5 @@
-const {fromJS} = require('immutable');
+const R = require('ramda');
+const {fromJS, is} = require('immutable');
 const actions = require('../actions');
 
 const {
@@ -6,6 +7,11 @@ const {
   CONFIG_STATUS_CHANGED,
   CONFIG_STATUS_SAVING,
 } = require('../config-status');
+
+const {
+  defaultToEmptyList,
+  defaultToEmptyMap,
+} = require('../util');
 
 const initialState = fromJS({
   name: '',
@@ -22,7 +28,8 @@ function reduce(state = initialState, action) {
     case actions.INGESTION_PROFILE_LOAD:
       return state
         .set('name', action.name)
-        .set('sources', fromJS(action.content.sources))
+        .set('sources', defaultToEmptyList(fromJS(action.content.sources)))
+        .set('graphSchema', defaultToEmptyMap(fromJS(action.content.graphSchema)))
         .set('status', CONFIG_STATUS_NORMAL);
 
     case actions.INGESTION_PROFILE_SAVE:
@@ -37,6 +44,11 @@ function reduce(state = initialState, action) {
     case actions.INGESTION_PROFILE_ADD_SOURCE:
       return state
         .set('sources', state.get('sources').push(action.source))
+        .set('status', CONFIG_STATUS_CHANGED);
+
+    case actions.INGESTION_PROFILE_DELETE_SOURCE:
+      return state
+        .set('sources', state.get('sources').filterNot(R.curry(is)(action.source)))
         .set('status', CONFIG_STATUS_CHANGED);
 
     case actions.GRAPH_SCHEMA_LOAD_ELEMENTS:

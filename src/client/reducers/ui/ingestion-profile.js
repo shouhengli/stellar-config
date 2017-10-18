@@ -17,6 +17,9 @@ const initialState = fromJS({
 
 function reduceState(state = initialState, action) {
   switch (action.type) {
+    case actions.INGESTION_PROFILE_LOAD:
+      return initialState;
+
     case actions.INGESTION_PROFILE_REVEAL_NEW:
       return state.set('newVisible', true);
 
@@ -25,9 +28,6 @@ function reduceState(state = initialState, action) {
 
     case actions.INGESTION_PROFILE_SET_NEW_NAME:
       return state.set('newName', action.name);
-
-    case actions.INGESTION_PROFILE_ADD_NEW:
-      return state.set('newName', '');
 
     case actions.INGESTION_PROFILE_HIDE_DELETE:
       return state.set('deleteVisible', false);
@@ -57,6 +57,11 @@ function reduceState(state = initialState, action) {
 
     case actions.INGESTION_PROFILE_LOAD_SAMPLE:
       return state.set('sample', fromJS(action.sample));
+
+    case actions.INGESTION_PROFILE_DELETE_SOURCE:
+      return state
+        .set('selectedSource', '')
+        .set('deleteSourceVisible', false);
 
     case actions.INGESTION_PROFILE_HIDE_DELETE_SOURCE:
       return state.set('deleteSourceVisible', false);

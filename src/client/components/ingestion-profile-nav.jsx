@@ -18,7 +18,7 @@ module.exports =
   ({
     name,
     status,
-    resolveContent,
+    content,
     searchVisible,
     newVisible,
     deleteVisible,
@@ -51,7 +51,7 @@ module.exports =
             <Save
               name={name}
               status={status}
-              resolveContent={resolveContent}
+              content={content}
               handleClick={handleSaveClick} />
             <SearchToggle handleClick={handleSearchToggleClick} />
             <NewToggle handleClick={handleNewToggleClick} />

@@ -20,7 +20,6 @@ const {revealSearch} = require('../action-creators/ui/search');
 
 const {
   nameSelector,
-  sourcesSelector,
   statusSelector,
   persistentIngestionProfileSelector,
 } = require('../selectors/ingestion-profile');
@@ -35,20 +34,10 @@ const {
   activeTabSelector,
 } = require('../selectors/ui/ingestion-profile');
 
-const resolveContent = (state) => () => {
-  const sources = sourcesSelector(state);
-  const graphSchema = persistentIngestionProfileSelector(state);
-
-  return {
-    sources,
-    graphSchema,
-  };
-};
-
 function mapStateToProps(state) {
   return {
     name: nameSelector(state),
-    resolveContent: resolveContent(state),
+    content: persistentIngestionProfileSelector(state),
     status: statusSelector(state),
     searchVisible: searchVisibleSelector(state),
     newVisible: newVisibleSelector(state),

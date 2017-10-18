@@ -55,17 +55,6 @@ describe('reducer ui/ingestion-profile', () => {
     });
   });
 
-  describe('when INGESTION_PROFILE_ADD_NEW', () => {
-    test('resets name of new file', () => {
-      const state = initialState.set('newConfigName', 'people');
-
-      const action = {type: actions.INGESTION_PROFILE_ADD_NEW};
-      const next = reduceState(state, action);
-
-      expect(is(next, initialState)).toBe(true);
-    });
-  });
-
   describe('when INGESTION_PROFILE_HIDE_DELETE', () => {
     test('hides delete file UI', () => {
       const state = initialState.set('deleteConfigVisible', true);

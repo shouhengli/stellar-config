@@ -1,3 +1,5 @@
+const R = require('ramda');
+const api = require('../../api');
 const actions = require('../../actions');
 
 function revealNew() {
@@ -75,6 +77,19 @@ function setActiveTab(tab) {
   };
 }
 
+function loadSample(sample) {
+  return {
+    type: actions.INGESTION_PROFILE_LOAD_SAMPLE,
+    sample,
+  };
+}
+
+function loadSampleAsync(source) {
+  return (dispatch) => api
+    .getIngestionSample(source)
+    .then(R.compose(dispatch, loadSample));
+}
+
 module.exports = {
   setSelectedSource,
   setNewSource,
@@ -89,4 +104,6 @@ module.exports = {
   hideDelete,
   setDeleteName,
   setActiveTab,
+  loadSample,
+  loadSampleAsync,
 };

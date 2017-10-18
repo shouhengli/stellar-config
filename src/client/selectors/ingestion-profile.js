@@ -18,7 +18,10 @@ const persistentIngestionProfileSelector = createSelector(
   sourcesSelector,
   graphSchemaSelector,
   (sources, graphSchema) => {
-    throw new Error('Not implemented.');
+    return {
+      sources: sources.toJS(),
+      graphSchema: graphSchema.toJS(),
+    };
   }
 );
 

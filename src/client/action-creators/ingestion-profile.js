@@ -1,5 +1,4 @@
 const P = require('bluebird');
-const R = require('ramda');
 const actions = require('../actions');
 const api = require('../api');
 const {INGESTION_PROFILE_CONFIG_TYPE} = require('../ingestion-profile');
@@ -44,25 +43,18 @@ function addSource(source) {
   };
 }
 
-function loadSample(sample) {
+function deleteSource(source) {
   return {
-    type: actions.INGESTION_PROFILE_LOAD_SAMPLE,
-    sample,
+    type: actions.INGESTION_PROFILE_DELETE_SOURCE,
+    source,
   };
 }
 
-function loadSampleAsync(source) {
-  return (dispatch) => api
-    .getIngestionSample(source)
-    .then(R.compose(dispatch, loadSample));
-}
-
 module.exports = {
-  loadSample,
-  loadSampleAsync,
   load,
   loadAsync,
   saveAsync,
   deleteAsync,
   addSource,
+  deleteSource,
 };

@@ -3,17 +3,16 @@ const Close = require('./delete-button.jsx');
 
 module.exports = (props) => {
   const {
-    configContent,
     selectedSource,
-    handleCloseButtonClick,
     handleYesButtonClick,
+    handleCancelButtonClick,
   } = props;
 
   return (
     <div className="message is-danger">
       <div className="message-header">
         Confirmation
-        <Close handleClick={handleCloseButtonClick} />
+        <Close handleClick={handleCancelButtonClick} />
       </div>
       <div className="message-body">
         <div className="content">
@@ -28,14 +27,14 @@ module.exports = (props) => {
           <div className="control">
             <button
               className="button is-danger"
-              onClick={() => handleYesButtonClick(configContent, selectedSource)}>
+              onClick={() => handleYesButtonClick(selectedSource)}>
               Yes
             </button>
           </div>
           <div className="control">
             <button
               className="button"
-              onClick={handleCloseButtonClick}>
+              onClick={handleCancelButtonClick}>
               No
             </button>
           </div>

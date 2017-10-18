@@ -1,6 +1,5 @@
 const React = require('react');
-
-const {defaultToEmptyList} = require('../util');
+const {List} = require('immutable');
 
 module.exports = ({sample}) => {
   return (
@@ -8,7 +7,7 @@ module.exports = ({sample}) => {
       <thead>
         <tr>
           {
-            defaultToEmptyList(sample.get('headers')).map((header, i) =>
+            sample.get('headers', List()).map((header, i) =>
               <th key={i}>
                 {header}
               </th>
@@ -18,7 +17,7 @@ module.exports = ({sample}) => {
       </thead>
       <tbody>
         {
-          defaultToEmptyList(sample.get('rows')).map((row, i) =>
+          sample.get('rows', List()).map((row, i) =>
             <tr key={i}>
               {
                 row.map((cell, i) =>

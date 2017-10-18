@@ -7,19 +7,18 @@ const {
 
 module.exports =
   ({
-    configType,
-    configName,
-    resolveConfigContent,
-    configStatus,
+    name,
+    content,
+    status,
     handleClick,
   }) => {
-    switch (configStatus) {
+    switch (status) {
       case CONFIG_STATUS_CHANGED:
         return (
           <button
             className="button is-white"
             onClick={
-              () => handleClick(configName, resolveConfigContent())
+              () => handleClick(name, content)
             }>
             <span className="icon is-small">
               <i className="fa fa-upload"></i>

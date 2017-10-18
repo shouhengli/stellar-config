@@ -1,6 +1,6 @@
 const R = require('ramda');
 const React = require('react');
-const {defaultToEmptyList} = require('../util');
+const NewSource = require('./ingestion-profile-new-source.jsx');
 
 class Sources extends React.Component {
   constructor(props) {
@@ -9,13 +9,16 @@ class Sources extends React.Component {
 
   render() {
     const {
-      NewSource,
-      configContent,
+      sources,
       selectedSource,
-      handleSourceChange,
-      handleDeleteSource,
-      handleRevealNewSource,
       newSourceVisible,
+      newSource,
+      handleSourceChange,
+      handleDeleteButtonClick,
+      handleAddButtonClick,
+      handleNewSourceChange,
+      handleNewSourceAddButtonClick,
+      handleNewSourceCancelButtonClick,
     } = this.props;
 
     return (
@@ -30,7 +33,11 @@ class Sources extends React.Component {
             {
               newSourceVisible
               ? (
-                <NewSource configContent={configContent} />
+                <NewSource
+                  newSource={newSource}
+                  handleNewSourceChange={handleNewSourceChange}
+                  handleAddButtonClick={handleNewSourceAddButtonClick}
+                  handleCancelButtonClick={handleNewSourceCancelButtonClick} />
               )
               : [
                 <div key="list" className="control">
@@ -40,10 +47,9 @@ class Sources extends React.Component {
                       onChange={(event) => handleSourceChange(event.target.value)}>
                       <option value=''>(None)</option>
                       {
-                        defaultToEmptyList(configContent.get('sources'))
-                          .map((s, i) =>
-                            <option key={i} value={s}>{s}</option>
-                          )
+                        sources.map((s, i) =>
+                          <option key={i} value={s}>{s}</option>
+                        )
                       }
                     </select>
                   </div>
@@ -51,7 +57,7 @@ class Sources extends React.Component {
                 <div key="add" className="control">
                   <button
                     className="button"
-                    onClick={() => handleRevealNewSource()}>
+                    onClick={() => handleAddButtonClick()}>
                     Add
                   </button>
                 </div>,
@@ -59,7 +65,7 @@ class Sources extends React.Component {
                   <button
                     className="button is-outlined is-danger"
                     disabled={R.isEmpty(selectedSource)}
-                    onClick={() => handleDeleteSource()}>
+                    onClick={() => handleDeleteButtonClick()}>
                     Delete
                   </button>
                 </div>,
