@@ -18,14 +18,14 @@ describe('reducer ui/graph-schema', () => {
     });
   });
 
-  describe('when GRAPH_SCHEMA_LOAD_ELEMENTS', () => {
+  describe('when GRAPH_SCHEMA_UPDATE_CONTENT', () => {
     test('resets some state fields', () => {
       const state = initialState
         .set('shouldUpdateClassLinkLengths', true)
         .set('pan', Map({x: 100, y: 200}))
         .set('zoom', 2);
 
-      const action = {type: actions.GRAPH_SCHEMA_LOAD_ELEMENTS};
+      const action = {type: actions.GRAPH_SCHEMA_UPDATE_CONTENT};
 
       const next = reduceState(state, action);
 

@@ -10,13 +10,13 @@ describe('reducer class-links', () => {
     initialState = Map();
   });
 
-  describe('when GRAPH_SCHEMA_LOAD_ELEMENTS', () => {
+  describe('when GRAPH_SCHEMA_UPDATE_CONTENT', () => {
     test('forgets previous state', () => {
       const classLink = createClassLink('has', 'Person', 'Car');
       const state = initialState.set(getClassLinkKey(classLink), fromJS(classLink));
 
       const action = {
-        type: actions.GRAPH_SCHEMA_LOAD_ELEMENTS,
+        type: actions.GRAPH_SCHEMA_UPDATE_CONTENT,
         classLinks: [
           createClassLink('lives-at', 'Person', 'Place'),
           createClassLink('receives', 'Person', 'Package'),

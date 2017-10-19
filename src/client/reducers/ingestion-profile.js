@@ -51,11 +51,14 @@ function reduce(state = initialState, action) {
         .set('sources', state.get('sources').filterNot(R.curry(is)(action.source)))
         .set('status', CONFIG_STATUS_CHANGED);
 
-    case actions.GRAPH_SCHEMA_LOAD_ELEMENTS:
+    case actions.GRAPH_SCHEMA_UPDATE_CONTENT:
       return state.set('graphSchema', fromJS({
         classes: action.classes,
         classLinks: action.classLinks,
       }));
+
+    case actions.GRAPH_SCHEMA_SET_EDITOR_CONTENT:
+      return state.set('status', CONFIG_STATUS_CHANGED);
 
     default:
       return state;

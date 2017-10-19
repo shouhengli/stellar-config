@@ -1,15 +1,7 @@
 const P = require('bluebird');
-const actions = require('../actions');
-const layout = require('../force-layout');
+const actions = require('../../actions');
+const layout = require('../../force-layout');
 const layoutWorker = new Worker('/force-layout-worker.js');
-
-function loadGraphSchemaElements(classes, classLinks) {
-  return {
-    type: actions.GRAPH_SCHEMA_LOAD_ELEMENTS,
-    classes,
-    classLinks,
-  };
-}
 
 function startClassDrag(name, fromX, fromY) {
   return {
@@ -169,8 +161,14 @@ function zoom(offset, w, h) {
   };
 }
 
+function setEditorContent(content) {
+  return {
+    type: actions.GRAPH_SCHEMA_SET_EDITOR_CONTENT,
+    content,
+  };
+}
+
 module.exports = {
-  loadGraphSchemaElements,
   startClassDrag,
   startClassLinkDrag,
   startPan,
@@ -187,4 +185,5 @@ module.exports = {
   updateClassLinkPosition,
   updatePan,
   zoom,
+  setEditorContent,
 };

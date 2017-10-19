@@ -17,10 +17,15 @@ const classNamesSelector = createSelector(
 const persistentIngestionProfileSelector = createSelector(
   sourcesSelector,
   graphSchemaSelector,
-  (sources, graphSchema) => {
+  require('./ui/graph-schema').editorContentSelector,
+  (sources, graphSchema, editorContent) => {
     return {
       sources: sources.toJS(),
       graphSchema: graphSchema.toJS(),
+      // This is just a temporary workaround for using an editor to build graph schema.
+      // Changes will be introduced to replace the editor with form controls. This field will then
+      // beremoved.
+      editorContent,
     };
   }
 );

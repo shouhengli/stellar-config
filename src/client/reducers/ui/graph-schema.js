@@ -14,9 +14,11 @@ const {ZOOM_STEP, MAX_ZOOM, MIN_ZOOM} = require('../../graph-schema');
  * @type {Map}
  */
 const initialState = fromJS({
+  editorContent: '',
   drag: {},
   shouldUpdateClassLinkLengths: false,
   dimensions: [0, 0],
+  coordinates: [0, 0],
   pan: {
     x: 0,
     y: 0,
@@ -26,7 +28,13 @@ const initialState = fromJS({
 
 function reduce(state = initialState, action) {
   switch (action.type) {
-    case actions.GRAPH_SCHEMA_LOAD_ELEMENTS:
+    case actions.INGESTION_PROFILE_LOAD:
+      return state.set('editorContent', action.content.editorContent);
+
+    case actions.GRAPH_SCHEMA_SET_EDITOR_CONTENT:
+      return state.set('editorContent', action.content);
+
+    case actions.GRAPH_SCHEMA_UPDATE_CONTENT:
       return state
         .set('shouldUpdateClassLinkLengths', false)
         .set('zoom', 1)

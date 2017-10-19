@@ -7,7 +7,7 @@ const initialState = Map();
 
 function reduce(state = initialState, action) {
   switch (action.type) {
-    case actions.GRAPH_SCHEMA_LOAD_ELEMENTS:
+    case actions.GRAPH_SCHEMA_UPDATE_CONTENT:
       return R.reduce(
         (s, l) => s.set(getClassLinkKey(l), fromJS(l)),
         Map(),

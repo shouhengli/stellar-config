@@ -10,12 +10,12 @@ describe('reducer classes', () => {
     initialState = Map();
   });
 
-  describe('when GRAPH_SCHEMA_LOAD_ELEMENTS', () => {
+  describe('when GRAPH_SCHEMA_UPDATE_CONTENT', () => {
     test('forgets previous state', () => {
       const state = initialState.set('Dog', fromJS(createClass('Dog')));
 
       const action = {
-        type: actions.GRAPH_SCHEMA_LOAD_ELEMENTS,
+        type: actions.GRAPH_SCHEMA_UPDATE_CONTENT,
         classes: [
           createClass('Person', {name: 'string', age: 'integer'}),
           createClass('Package', {id: 'string'}, 10, 20, undefined, 200),

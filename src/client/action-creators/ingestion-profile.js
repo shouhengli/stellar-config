@@ -50,6 +50,14 @@ function deleteSource(source) {
   };
 }
 
+function loadGraphSchemaContent(classes, classLinks) {
+  return {
+    type: actions.GRAPH_SCHEMA_UPDATE_CONTENT,
+    classes,
+    classLinks,
+  };
+}
+
 module.exports = {
   load,
   loadAsync,
@@ -57,4 +65,5 @@ module.exports = {
   deleteAsync,
   addSource,
   deleteSource,
+  loadGraphSchemaContent,
 };

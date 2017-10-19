@@ -17,7 +17,19 @@ const {
 } = require('../graph-schema');
 
 const {
-  loadGraphSchemaElements,
+  editorContentSelector,
+  shouldUpdateClassLinkLengthsSelector,
+  dimensionsSelector,
+  coordinatesSelector,
+  panSelector,
+  zoomSelector,
+  dragSelector,
+} = require('../selectors/ui/graph-schema');
+
+const {classesSelector} = require('../selectors/ui/graph-schema-classes');
+const {classLinksSelector} = require('../selectors/ui/graph-schema-class-links');
+
+const {
   setLayoutDimensionsAndCoordinates,
   startLayoutAsync,
   startPan,
@@ -28,34 +40,23 @@ const {
   updateClassPosition,
   updatePan,
   zoom,
-} = require('../action-creators/graph-schema');
+} = require('../action-creators/ui/graph-schema');
 
+const {
+  loadGraphSchemaContent,
+} = require('../action-creators/ingestion-profile');
 
 function mapStateToProps(state) {
-  const editorContent = state.getIn(['edit', 'content']);
-
-  const graphSchemaState = state.get('graphSchema');
-  const classes = graphSchemaState.get('classes');
-  const classLinks = graphSchemaState.get('classLinks');
-
-  const uiState = graphSchemaState.get('ui');
-  const shouldUpdateClassLinkLengths = uiState.get('shouldUpdateClassLinkLengths');
-  const dimensions = uiState.get('dimensions');
-  const coordinates = uiState.get('coordinates');
-  const drag = uiState.get('drag');
-  const zoom = uiState.get('zoom');
-  const pan = uiState.get('pan');
-
   return {
-    editorContent,
-    classes,
-    classLinks,
-    shouldUpdateClassLinkLengths,
-    dimensions,
-    coordinates,
-    drag,
-    zoom,
-    pan,
+    editorContent: editorContentSelector(state),
+    classes: classesSelector(state),
+    classLinks: classLinksSelector(state),
+    shouldUpdateClassLinkLengths: shouldUpdateClassLinkLengthsSelector(state),
+    dimensions: dimensionsSelector(state),
+    coordinates: coordinatesSelector(state),
+    drag: dragSelector(state),
+    zoom: zoomSelector(state),
+    pan: panSelector(state),
   };
 }
 
@@ -67,7 +68,7 @@ function handleEditorContentChange(
   currentClassLinks = Map()
 ) {
   dispatch(stopLayoutAsync())
-    .then(() => parseYaml(editorContent.get('yaml')))
+    .then(() => parseYaml(editorContent))
     .then(({classes, classLinks}) => {
       const [defaultX, defaultY] = layoutDimensions.map((d) => d / 2);
 
@@ -88,7 +89,7 @@ function handleEditorContentChange(
         );
       });
 
-      dispatch(loadGraphSchemaElements(classes, classLinks));
+      dispatch(loadGraphSchemaContent(classes, classLinks));
 
       return {classes, classLinks};
     })

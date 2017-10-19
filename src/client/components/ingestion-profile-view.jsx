@@ -1,17 +1,20 @@
 const React = require('react');
-const FullView = require('./full-view.jsx');
+const SplitView = require('./split-view.jsx');
 
 const {
   TAB_SOURCE,
+  TAB_GRAPH_SCHEMA,
 } = require('../ingestion-profile');
 
 const {isNotEmpty} = require('../util');
 
-module.exports = ({name, activeTab, SourceView}) => {
+module.exports = ({name, activeTab, SourceView, GraphSchema, ConfigEditor}) => {
   if (isNotEmpty(name)) {
     switch (activeTab) {
       case TAB_SOURCE:
-        return <FullView><SourceView /></FullView>;
+        return <SourceView />;
+      case TAB_GRAPH_SCHEMA:
+        return <SplitView><ConfigEditor /><GraphSchema /></SplitView>;
     }
   }
 

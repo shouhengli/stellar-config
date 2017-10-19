@@ -1,14 +1,14 @@
 const {connect} = require('react-redux');
 
 const {startClassDrag, stopLayoutAsync} =
-  require('../action-creators/graph-schema');
+  require('../action-creators/ui/graph-schema');
 
 const ClassName = require('../components/graph-schema-class-name.jsx');
 
+const {zoomSelector} = require('../selectors/ui/graph-schema');
+
 function mapStateToProps(state) {
-  return {
-    zoom: state.getIn(['graphSchema', 'ui', 'zoom']),
-  };
+  return {zoom: zoomSelector(state)};
 }
 
 function mapDispatchToProps(dispatch) {

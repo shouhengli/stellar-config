@@ -2,7 +2,7 @@ const React = require('react');
 const {connect} = require('react-redux');
 const R = require('ramda');
 const anime = require('animejs');
-const {updateClassOuterRadius} = require('../action-creators/graph-schema');
+const {updateClassOuterRadius} = require('../action-creators/ui/graph-schema');
 const {CLASS_OUTER_RADIUS, CLASS_INNER_RADIUS} = require('../graph-schema');
 
 const ClassName = require('./graph-schema-class-name.jsx');

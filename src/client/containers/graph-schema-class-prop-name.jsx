@@ -5,7 +5,7 @@ const ClassPropName = require('../components/graph-schema-class-prop-name.jsx');
 const {
   revealClassPropTooltip,
   hideClassPropTooltip,
-} = require('../action-creators/graph-schema');
+} = require('../action-creators/ui/graph-schema');
 
 function mapDispatchToProps(dispatch) {
   return {
