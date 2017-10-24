@@ -12,6 +12,8 @@ const initialState = fromJS({
   newSourceVisible: false,
   deleteSourceVisible: false,
   sample: null,
+  newNodeVisible: false,
+  newLinkVisible: false,
   activeTab: TAB_SOURCE,
 });
 
@@ -76,6 +78,12 @@ function reduceState(state = initialState, action) {
 
     case actions.INGESTION_PROFILE_SET_ACTIVE_TAB:
       return state.set('activeTab', action.tab);
+
+    case actions.INGESTION_PROFILE_REVEAL_NEW_NODE:
+      return state.set('newNodeVisible', true);
+
+    case actions.INGESTION_PROFILE_REVEAL_NEW_LINK:
+      return state.set('newLinkVisible', true);
 
     default:
       return state;

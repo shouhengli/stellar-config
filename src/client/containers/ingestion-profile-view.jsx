@@ -5,6 +5,7 @@ const View = require('../components/ingestion-profile-view.jsx');
 const SourceView = require('./ingestion-profile-source-view.jsx');
 const GraphSchema = require('./graph-schema.jsx');
 const ConfigEditor = require('./config-editor.jsx');
+const MappingView = require('./ingestion-profile-mapping-view.jsx');
 
 const {activeTabSelector} = require('../selectors/ui/ingestion-profile');
 const {nameSelector} = require('../selectors/ingestion-profile');
@@ -22,5 +23,6 @@ module.exports = connect(mapStateToProps)(
       SourceView={SourceView}
       GraphSchema={GraphSchema}
       ConfigEditor={ConfigEditor}
+      MappingView={MappingView}
       {...props} />
 );

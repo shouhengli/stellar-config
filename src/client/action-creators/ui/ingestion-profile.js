@@ -90,6 +90,14 @@ function loadSampleAsync(source) {
     .then(R.compose(dispatch, loadSample));
 }
 
+function revealNewNode() {
+  return {type: actions.INGESTION_PROFILE_REVEAL_NEW_NODE};
+}
+
+function revealNewLink() {
+  return {type: actions.INGESTION_PROFILE_REVEAL_NEW_LINK};
+}
+
 module.exports = {
   setSelectedSource,
   setNewSource,
@@ -106,4 +114,6 @@ module.exports = {
   setActiveTab,
   loadSample,
   loadSampleAsync,
+  revealNewNode,
+  revealNewLink,
 };

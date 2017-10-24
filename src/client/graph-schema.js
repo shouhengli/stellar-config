@@ -61,6 +61,18 @@ function createClass(
 }
 
 /**
+ * Extracts properties of a class for persistence.
+ * @param {object} cls 
+ * @return {object}
+ */
+function createPersistentClass(cls) {
+  return {
+    name: cls.name,
+    props: R.clone(cls.props),
+  };
+}
+
+/**
  * Creates a class link.
  *
  * Name, source and target together form a unique identifier for a class link.
@@ -97,6 +109,19 @@ function createClassLink(
   }
 
   return classLink;
+}
+
+/**
+ * Extracts properties of a class link for persistence.
+ * @param {object} classLink 
+ * @return {object}
+ */
+function createPersistentClassLink(classLink) {
+  return {
+    name: classLink.name,
+    source: classLink.source,
+    target: classLink.target,
+  };
 }
 
 /**
@@ -191,7 +216,9 @@ function parseYaml(yamlDoc) {
 
 module.exports = {
   createClass,
+  createPersistentClass,
   createClassLink,
+  createPersistentClassLink,
   getClassLinkId,
   getClassLinkKey,
   parseYaml,

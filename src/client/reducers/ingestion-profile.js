@@ -13,6 +13,11 @@ const {
   defaultToEmptyMap,
 } = require('../util');
 
+const {
+  createPersistentClass,
+  createPersistentClassLink,
+} = require('../graph-schema');
+
 const initialState = fromJS({
   name: '',
   sources: [],
@@ -53,8 +58,8 @@ function reduce(state = initialState, action) {
 
     case actions.GRAPH_SCHEMA_UPDATE_CONTENT:
       return state.set('graphSchema', fromJS({
-        classes: action.classes,
-        classLinks: action.classLinks,
+        classes: R.defaultTo([], action.classes).map(createPersistentClass),
+        classLinks: R.defaultTo([], action.classLinks).map(createPersistentClassLink),
       }));
 
     case actions.GRAPH_SCHEMA_SET_EDITOR_CONTENT:

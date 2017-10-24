@@ -6,8 +6,8 @@ const DeleteSource = require('./ingestion-profile-delete-source.jsx');
 const FullView = require('./full-view.jsx');
 const {isNotEmpty} = require('../util');
 
-module.exports = (props) => {
-  const {
+module.exports =
+  ({
     newSourceVisible,
     newSource,
     deleteSourceVisible,
@@ -23,11 +23,9 @@ module.exports = (props) => {
     handleNewSourceCancelButtonClick,
     handleDeleteSourceYesButtonClick,
     handleDeleteSourceCancelButtonClick,
-  } = props;
-
-  return (
+  }) =>
     <FullView>
-      <div className="ingestion-profile">
+      <div className="ingestion-profile-source-view">
         <div className="control-pane">
           <div className="box">
             <Sources
@@ -64,6 +62,4 @@ module.exports = (props) => {
           )
         }
       </div>
-    </FullView>
-  );
-};
+    </FullView>;

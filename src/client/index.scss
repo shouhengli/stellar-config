@@ -6,12 +6,15 @@
 @import '../../node_modules/bulma/sass/elements/tag';
 @import '../../node_modules/bulma/sass/elements/box';
 @import '../../node_modules/bulma/sass/elements/content';
+@import '../../node_modules/bulma/sass/elements/container';
+@import '../../node_modules/bulma/sass/elements/title';
 @import '../../node_modules/bulma/sass/elements/other';
 @import '../../node_modules/bulma/sass/components/navbar';
 @import '../../node_modules/bulma/sass/components/panel';
 @import '../../node_modules/bulma/sass/components/message';
 @import '../../node_modules/bulma/sass/components/dropdown';
 @import '../../node_modules/bulma/sass/components/menu';
+@import '../../node_modules/bulma/sass/components/card';
 @import '../../node_modules/bulma/sass/grid/columns';
 
 $tabs-link-padding: 0.25em 1em;
@@ -169,7 +172,7 @@ div.view {
   }
 }
 
-.ingestion-profile {
+.ingestion-profile-source-view {
   padding-top: 1rem;
   padding-bottom: 1rem;
   display: flex;
@@ -202,6 +205,45 @@ div.view {
           white-space: nowrap;
         }
       }
+    }
+  }
+}
+
+.ingestion-profile-mapping-view {
+  padding: 1rem;
+
+  .control-panel {
+    margin-bottom: 0.75rem;
+  }
+
+  .card-content {
+    overflow: hidden;
+
+    .source {
+      padding: 1rem;
+      background-color: $background;
+      border-radius: $radius;
+      margin-bottom: 0.5rem;
+      white-space: pre;
+      overflow-x: scroll;
+      -ms-overflow-style: -ms-autohiding-scrollbar;
+    }
+
+    .title {
+      margin-bottom: 0.5rem;
+    }
+
+    .link-title {
+      margin-bottom: 0.5rem;
+
+      .link-column {
+        margin-left: 0.5rem;
+      }
+    }
+
+    hr {
+      height: 0;
+      margin: 0.75rem 0;
     }
   }
 }

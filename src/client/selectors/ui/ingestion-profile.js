@@ -28,6 +28,12 @@ const selectedSourceSelector = (state) =>
 const sampleSelector = (state) =>
   state.getIn(['ui', 'ingestionProfile', 'sample']);
 
+const newNodeVisibleSelector = (state) =>
+  state.getIn(['ui', 'ingestionProfile', 'newNodeVisible']);
+
+const newLinkVisibleSelector = (state) =>
+  state.getIn(['ui', 'ingestionProfile', 'newLinkVisible']);
+
 module.exports = {
   newNameSelector,
   newVisibleSelector,
@@ -39,4 +45,6 @@ module.exports = {
   deleteSourceVisibleSelector,
   selectedSourceSelector,
   sampleSelector,
+  newNodeVisibleSelector,
+  newLinkVisibleSelector,
 };
