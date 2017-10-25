@@ -212,45 +212,77 @@ div.view {
 .ingestion-profile-mapping-view {
   padding: 1rem;
 
-  .control-panel {
-    margin-bottom: 0.75rem;
+  .header {
+    margin-bottom: 1.5rem;
   }
 
-  .card-content {
-    overflow: hidden;
+  .card {
+    margin-bottom: 1.5rem;
 
-    .source {
-      padding: 1rem;
-      background-color: $background;
-      border-radius: $radius;
-      margin-bottom: 0.5rem;
-      white-space: pre;
-      overflow-x: scroll;
-      -ms-overflow-style: -ms-autohiding-scrollbar;
-    }
-
-    .title {
-      margin-bottom: 0.5rem;
-    }
-
-    .link-title {
-      margin-bottom: 0.5rem;
-
-      .link-column {
-        margin-left: 0.5rem;
+    .card-content {
+      .source {
+        padding: 0.5rem;
+        background-color: $background;
+        border-radius: $radius;
+        margin-bottom: 0.5rem;
+        white-space: pre;
+        overflow-x: scroll;
+        -ms-overflow-style: -ms-autohiding-scrollbar;
       }
-    }
 
-    hr {
-      height: 0;
-      margin: 0.75rem 0;
+      .title {
+        margin-bottom: 0.5rem;
+      }
+
+      .link-title {
+        margin-bottom: 0.5rem;
+
+        .link-column {
+          margin-left: 0.5rem;
+        }
+      }
+
+      hr {
+        height: 0;
+        margin: 0.75rem 0;
+      }
+
+      .dropdown {
+        max-width: 100%;
+
+        .dropdown-trigger {
+          max-width: 100%;
+
+          button {
+            max-width: 100%;
+            overflow: hidden;
+            justify-content: flex-end;
+          }
+        }
+      }
+
+      table {
+        table-layout: fixed;
+
+        th, td {
+          padding-left: 0.5rem;
+          padding-right: 0.5rem;
+          // width: 50%;
+          word-wrap: break-word;
+        }
+      }
+
+      .delete-section-button {
+        float: right;
+      }
     }
   }
 }
 
-.menu {
+.dropdown-content {
   font-weight: normal;
-  overflow-y: scroll;
-  white-space: nowrap;
+  overflow-y: auto;
   max-height: 20rem;
+  min-width: 30rem;
+  white-space: nowrap;
 }

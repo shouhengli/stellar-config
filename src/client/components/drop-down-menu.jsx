@@ -13,6 +13,9 @@ const ActiveDropDownButton = ({handleClick, children}) =>
     className="button is-active"
     onClick={() => handleClick()}>
     <span>{children}</span>
+    <span className="icon is-small">
+      <i className="fa fa-angle-down"></i>
+    </span>
   </button>;
 
 const InactiveDropDownButton = ({handleClick, children}) =>
@@ -20,6 +23,9 @@ const InactiveDropDownButton = ({handleClick, children}) =>
     className="button"
     onClick={() => handleClick()}>
     <span>{children}</span>
+    <span className="icon is-small">
+      <i className="fa fa-angle-down"></i>
+    </span>
   </button>;
 
 const MenuContainer = ({children}) => <ul>{children}</ul>;
@@ -85,7 +91,7 @@ const MenuItemList =
 
 const DropDownMenu =
   ({
-    buttonText,
+    children,
     active,
     itemLists,
     activeItems,
@@ -102,9 +108,9 @@ const DropDownMenu =
 
     return (
       <DropDownContainer>
-        <div>
+        <div className="dropdown-trigger">
           <DropDownButton handleClick={() => handleButtonClick(!active)}>
-            {buttonText}
+            {children}
           </DropDownButton>
         </div>
         <div className="dropdown-menu">
