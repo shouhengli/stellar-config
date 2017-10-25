@@ -12,7 +12,7 @@ const ActiveDropDownButton = ({handleClick, children}) =>
   <button
     className="button is-active"
     onClick={() => handleClick()}>
-    <span>{children}</span>
+    {children}
     <span className="icon is-small">
       <i className="fa fa-angle-down"></i>
     </span>
@@ -22,7 +22,7 @@ const InactiveDropDownButton = ({handleClick, children}) =>
   <button
     className="button"
     onClick={() => handleClick()}>
-    <span>{children}</span>
+    {children}
     <span className="icon is-small">
       <i className="fa fa-angle-down"></i>
     </span>

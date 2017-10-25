@@ -251,12 +251,16 @@ div.view {
         max-width: 100%;
 
         .dropdown-trigger {
-          max-width: 100%;
+          width: 100%;
 
           button {
-            max-width: 100%;
+            width: 100%;
             overflow: hidden;
             justify-content: flex-end;
+
+            span:not(:first-child) {
+              margin-left: 0.5rem;
+            }
           }
         }
       }
