@@ -8,7 +8,7 @@ const {
   newSourceSelector,
   deleteSourceVisibleSelector,
   selectedSourceSelector,
-  sampleSelector,
+  sampleOfSelectedSourceSelector,
 } = require('../selectors/ui/ingestion-profile');
 
 const {
@@ -17,21 +17,18 @@ const {
 
 const {
   setSelectedSource,
-  loadSampleAsync,
-  loadSample,
   revealDeleteSource,
   revealNewSource,
   setNewSource,
   hideNewSource,
   hideDeleteSource,
+  addSampleAsync,
 } = require('../action-creators/ui/ingestion-profile');
 
 const {
   addSource,
   deleteSource,
 } = require('../action-creators/ingestion-profile');
-
-const {isNotEmpty} = require('../util');
 
 function mapStateToProps(state) {
   return {
@@ -40,7 +37,7 @@ function mapStateToProps(state) {
     deleteSourceVisible: deleteSourceVisibleSelector(state),
     sources: sourcesSelector(state),
     selectedSource: selectedSourceSelector(state),
-    sample: sampleSelector(state),
+    sample: sampleOfSelectedSourceSelector(state),
   };
 }
 
@@ -48,19 +45,16 @@ function mapDispatchToProps(dispatch) {
   return {
     handleSourceChange: R.compose(dispatch, setSelectedSource),
 
-    handleSourceDidChange: R.ifElse(
-      isNotEmpty,
-      R.compose(dispatch, loadSampleAsync),
-      R.compose(dispatch, R.partial(loadSample, [null]))
-    ),
-
     handleDeleteButtonClick: R.compose(dispatch, revealDeleteSource),
 
     handleAddButtonClick: R.compose(dispatch, revealNewSource),
 
     handleNewSourceChange: R.compose(dispatch, setNewSource),
 
-    handleNewSourceAddButtonClick: R.compose(dispatch, addSource),
+    handleNewSourceAddButtonClick: (source) => R.pipeP(
+      R.compose(dispatch, R.partial(addSampleAsync, [source])),
+      R.compose(dispatch, R.partial(addSource, [source]))
+    )(),
 
     handleNewSourceCancelButtonClick: R.compose(dispatch, hideNewSource),
 

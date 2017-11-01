@@ -15,7 +15,6 @@ module.exports =
     selectedSource,
     sample,
     handleSourceChange,
-    handleSourceDidChange,
     handleDeleteButtonClick,
     handleAddButtonClick,
     handleNewSourceChange,
@@ -34,7 +33,6 @@ module.exports =
               sources={sources}
               selectedSource={selectedSource}
               handleSourceChange={handleSourceChange}
-              handleSourceDidChange={handleSourceDidChange}
               handleDeleteButtonClick={handleDeleteButtonClick}
               handleAddButtonClick={handleAddButtonClick}
               handleNewSourceChange={handleNewSourceChange}

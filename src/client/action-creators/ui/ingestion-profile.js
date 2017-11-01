@@ -1,3 +1,4 @@
+const P = require('bluebird');
 const R = require('ramda');
 const api = require('../../api');
 const actions = require('../../actions');
@@ -77,17 +78,32 @@ function setActiveTab(tab) {
   };
 }
 
-function loadSample(sample) {
+function addSample(source, sample) {
   return {
-    type: actions.INGESTION_PROFILE_LOAD_SAMPLE,
+    type: actions.INGESTION_PROFILE_ADD_SAMPLE,
+    source,
     sample,
   };
 }
 
-function loadSampleAsync(source) {
+function addSampleAsync(source) {
   return (dispatch) => api
     .getIngestionSample(source)
-    .then(R.compose(dispatch, loadSample));
+    .then(R.partial(R.compose(dispatch, addSample), [source]));
+}
+
+function loadSamples(samples) {
+  return {
+    type: actions.INGESTION_PROFILE_LOAD_SAMPLES,
+    samples,
+  };
+}
+
+function loadSamplesAsync(sources) {
+  return (dispatch) => P
+    .all(sources.map(api.getIngestionSample))
+    .then((samples) => R.pipe(R.zip, R.fromPairs)(sources.toJS(), samples))
+    .then(R.compose(dispatch, loadSamples));
 }
 
 function revealNewNode() {
@@ -96,6 +112,51 @@ function revealNewNode() {
 
 function revealNewLink() {
   return {type: actions.INGESTION_PROFILE_REVEAL_NEW_LINK};
+}
+
+function toggleNewNodeActivePropKey(key) {
+  return {
+    type: actions.INGESTION_PROFILE_TOGGLE_NEW_NODE_ACTIVE_PROP_KEY,
+    key,
+  };
+}
+
+function toggleNewNodeActivePropValue(key) {
+  return {
+    type: actions.INGESTION_PROFILE_TOGGLE_NEW_NODE_ACTIVE_PROP_VALUE,
+    key,
+  };
+}
+
+function addNewNodeProp() {
+  return {type: actions.INGESTION_PROFILE_ADD_NEW_NODE_PROP};
+}
+
+function deleteNewNodeProp(key) {
+  return {
+    type: actions.INGESTION_PROFILE_DELETE_NEW_NODE_PROP,
+    key,
+  };
+}
+
+function setNewNodePropKey(key, prevKey) {
+  return {
+    type: actions.INGESTION_PROFILE_SET_NEW_NODE_PROP_KEY,
+    key,
+    prevKey,
+  };
+}
+
+function setNewNodePropValue(key, value) {
+  return {
+    type: actions.INGESTION_PROFILE_SET_NEW_NODE_PROP_VALUE,
+    key,
+    value,
+  };
+}
+
+function resetNewNode() {
+  return {type: actions.INGESTION_PROFILE_RESET_NEW_NODE};
 }
 
 module.exports = {
@@ -112,8 +173,15 @@ module.exports = {
   hideDelete,
   setDeleteName,
   setActiveTab,
-  loadSample,
-  loadSampleAsync,
+  loadSamplesAsync,
+  addSampleAsync,
   revealNewNode,
   revealNewLink,
+  toggleNewNodeActivePropKey,
+  toggleNewNodeActivePropValue,
+  addNewNodeProp,
+  deleteNewNodeProp,
+  setNewNodePropKey,
+  setNewNodePropValue,
+  resetNewNode,
 };

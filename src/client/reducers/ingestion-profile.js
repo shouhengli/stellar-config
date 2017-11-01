@@ -1,5 +1,5 @@
 const R = require('ramda');
-const {fromJS, is} = require('immutable');
+const {fromJS, is, Map} = require('immutable');
 const actions = require('../actions');
 
 const {
@@ -10,12 +10,14 @@ const {
 
 const {
   defaultToEmptyList,
-  defaultToEmptyMap,
+  defaultToEmptyArray,
+  defaultToEmptyObject,
 } = require('../util');
 
 const {
   createPersistentClass,
   createPersistentClassLink,
+  getClassLinkKey,
 } = require('../graph-schema');
 
 const initialState = fromJS({
@@ -26,7 +28,57 @@ const initialState = fromJS({
     classes: {},
     classLinks: {},
   },
+  mapping: {
+    nodes: [],
+    links: [],
+  },
 });
+
+function loadGraphSchema(graphSchema) {
+  return Map(
+    R.evolve(
+      {
+        classes: R.pipe(
+          defaultToEmptyArray,
+          R.map((cls) => [cls.name, cls]),
+          R.fromPairs,
+          fromJS
+        ),
+        classLinks: R.pipe(
+          defaultToEmptyArray,
+          R.reduce((s, l) => s.set(getClassLinkKey(l), fromJS(l)), Map())
+        ),
+      },
+      defaultToEmptyObject(graphSchema)
+    )
+  );
+}
+
+function updateGraphSchema(graphSchema) {
+  return Map(
+    R.evolve(
+      {
+        classes: R.pipe(
+          defaultToEmptyArray,
+          R.map((cls) => [cls.name, createPersistentClass(cls)]),
+          R.fromPairs,
+          fromJS
+        ),
+        classLinks: R.pipe(
+          defaultToEmptyArray,
+          R.reduce(
+            (s, l) => s.set(
+              getClassLinkKey(l),
+              fromJS(createPersistentClassLink(l))
+            ),
+            Map()
+          )
+        ),
+      },
+      graphSchema
+    )
+  );
+}
 
 function reduce(state = initialState, action) {
   switch (action.type) {
@@ -34,7 +86,7 @@ function reduce(state = initialState, action) {
       return state
         .set('name', action.name)
         .set('sources', defaultToEmptyList(fromJS(action.content.sources)))
-        .set('graphSchema', defaultToEmptyMap(fromJS(action.content.graphSchema)))
+        .set('graphSchema', loadGraphSchema(action.content.graphSchema))
         .set('status', CONFIG_STATUS_NORMAL);
 
     case actions.INGESTION_PROFILE_SAVE:
@@ -57,10 +109,7 @@ function reduce(state = initialState, action) {
         .set('status', CONFIG_STATUS_CHANGED);
 
     case actions.GRAPH_SCHEMA_UPDATE_CONTENT:
-      return state.set('graphSchema', fromJS({
-        classes: R.defaultTo([], action.classes).map(createPersistentClass),
-        classLinks: R.defaultTo([], action.classLinks).map(createPersistentClassLink),
-      }));
+      return state.set('graphSchema', updateGraphSchema(action));
 
     case actions.GRAPH_SCHEMA_SET_EDITOR_CONTENT:
       return state.set('status', CONFIG_STATUS_CHANGED);

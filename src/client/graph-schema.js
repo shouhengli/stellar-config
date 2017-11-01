@@ -62,7 +62,7 @@ function createClass(
 
 /**
  * Extracts properties of a class for persistence.
- * @param {object} cls 
+ * @param {object} cls
  * @return {object}
  */
 function createPersistentClass(cls) {
@@ -113,7 +113,7 @@ function createClassLink(
 
 /**
  * Extracts properties of a class link for persistence.
- * @param {object} classLink 
+ * @param {object} classLink
  * @return {object}
  */
 function createPersistentClassLink(classLink) {
@@ -158,60 +158,62 @@ class GraphSchemaFormatError extends ClientError {
 const graphSchemaPrimitiveTypes = ['string', 'boolean', 'integer', 'float'];
 const isInGraphSchemaPrimitiveTypes = R.contains(R.__, graphSchemaPrimitiveTypes);
 
+function convertGraphSchemaToClassesAndLinks(graphSchema) {
+  if (R.type(graphSchema) !== 'Object') {
+    throw new GraphSchemaFormatError('Graph schema is not a mapping.');
+  }
+
+  const [classes, classLinkLists] = R.pipe(
+    R.toPairs,
+    R.map(([className, classProps]) => {
+      if (R.type(classProps) !== 'Object') {
+        throw new GraphSchemaFormatError(
+          `Properties of class "${className}" is not a mapping.`
+        );
+      }
+
+      const [primitivePropPairs, linkPropPairs] =
+        R.partition(
+          ([n, t]) => isInGraphSchemaPrimitiveTypes(t),
+          R.toPairs(classProps)
+        );
+
+      const cls = createClass(className, R.fromPairs(primitivePropPairs));
+
+      const classLinks =
+        linkPropPairs.map(([n, t]) => createClassLink(n, className, t));
+
+      return [
+        cls,
+        classLinks,
+      ];
+    }),
+    R.transpose
+  )(graphSchema);
+
+  const classLinks = R.unnest(classLinkLists);
+
+  classLinks.forEach((l) => {
+    if (!R.has(l.target, graphSchema)) {
+      throw new GraphSchemaFormatError(
+        `Cannot find class link target "${l.target}".`
+      );
+    }
+  });
+
+  return {
+    classes,
+    classLinks,
+  };
+}
+
 function parseYaml(yamlDoc) {
   return P
     .try(() => yaml.safeLoad(yamlDoc))
     .catch((error) => {
       throw new GraphSchemaFormatError(error);
     })
-    .then((graphSchema) => {
-      if (R.type(graphSchema) !== 'Object') {
-        throw new GraphSchemaFormatError('Graph schema is not a mapping.');
-      }
-
-      const [classes, classLinkLists] = R.pipe(
-        R.toPairs,
-        R.map(([className, classProps]) => {
-          if (R.type(classProps) !== 'Object') {
-            throw new GraphSchemaFormatError(
-              `Properties of class "${className}" is not a mapping.`
-            );
-          }
-
-          const [primitivePropPairs, linkPropPairs] =
-            R.partition(
-              ([n, t]) => isInGraphSchemaPrimitiveTypes(t),
-              R.toPairs(classProps)
-            );
-
-          const cls = createClass(className, R.fromPairs(primitivePropPairs));
-
-          const classLinks =
-            linkPropPairs.map(([n, t]) => createClassLink(n, className, t));
-
-          return [
-            cls,
-            classLinks,
-          ];
-        }),
-        R.transpose
-      )(graphSchema);
-
-      const classLinks = R.unnest(classLinkLists);
-
-      classLinks.forEach((l) => {
-        if (!R.has(l.target, graphSchema)) {
-          throw new GraphSchemaFormatError(
-            `Cannot find class link target "${l.target}".`
-          );
-        }
-      });
-
-      return {
-        classes,
-        classLinks,
-      };
-    });
+    .then(convertGraphSchemaToClassesAndLinks);
 }
 
 module.exports = {
@@ -222,6 +224,7 @@ module.exports = {
   getClassLinkId,
   getClassLinkKey,
   parseYaml,
+  convertGraphSchemaToClassesAndLinks,
   GraphSchemaFormatError,
   FONT_SIZE,
   CLASS_INNER_RADIUS,

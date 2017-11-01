@@ -1,38 +1,98 @@
-const newNameSelector = (state) =>
-  state.getIn(['ui', 'ingestionProfile', 'newName']);
+const {List} = require('immutable');
+const {createSelector} = require('reselect');
 
-const newVisibleSelector = (state) =>
-  state.getIn(['ui', 'ingestionProfile', 'newVisible']);
+const ingestionProfileUiSelector = (state) =>
+  state.getIn(['ui', 'ingestionProfile']);
 
-const deleteVisibleSelector = (state) =>
-  state.getIn(['ui', 'ingestionProfile', 'deleteVisible']);
+const newNameSelector = createSelector(
+  ingestionProfileUiSelector,
+  (ingestionProfileUi) => ingestionProfileUi.get('newName')
+);
 
-const deleteNameSelector = (state) =>
-  state.getIn(['ui', 'ingestionProfile', 'deleteName']);
+const newVisibleSelector = createSelector(
+  ingestionProfileUiSelector,
+  (ingestionProfileUi) => ingestionProfileUi.get('newVisible')
+);
 
-const activeTabSelector = (state) =>
-  state.getIn(['ui', 'ingestionProfile', 'activeTab']);
+const deleteVisibleSelector = createSelector(
+  ingestionProfileUiSelector,
+  (ingestionProfileUi) => ingestionProfileUi.get('deleteVisible')
+);
 
-const newSourceVisibleSelector = (state) =>
-  state.getIn(['ui', 'ingestionProfile', 'newSourceVisible']);
+const deleteNameSelector = createSelector(
+  ingestionProfileUiSelector,
+  (ingestionProfileUi) => ingestionProfileUi.get('deleteName')
+);
 
-const newSourceSelector = (state) =>
-  state.getIn(['ui', 'ingestionProfile', 'newSource']);
+const activeTabSelector = createSelector(
+  ingestionProfileUiSelector,
+  (ingestionProfileUi) => ingestionProfileUi.get('activeTab')
+);
 
-const deleteSourceVisibleSelector = (state) =>
-  state.getIn(['ui', 'ingestionProfile', 'deleteSourceVisible']);
+const newSourceVisibleSelector = createSelector(
+  ingestionProfileUiSelector,
+  (ingestionProfileUi) => ingestionProfileUi.get('newSourceVisible')
+);
 
-const selectedSourceSelector = (state) =>
-  state.getIn(['ui', 'ingestionProfile', 'selectedSource']);
+const newSourceSelector = createSelector(
+  ingestionProfileUiSelector,
+  (ingestionProfileUi) => ingestionProfileUi.get('newSource')
+);
 
-const sampleSelector = (state) =>
-  state.getIn(['ui', 'ingestionProfile', 'sample']);
+const deleteSourceVisibleSelector = createSelector(
+  ingestionProfileUiSelector,
+  (ingestionProfileUi) => ingestionProfileUi.get('deleteSourceVisible')
+);
 
-const newNodeVisibleSelector = (state) =>
-  state.getIn(['ui', 'ingestionProfile', 'newNodeVisible']);
+const selectedSourceSelector = createSelector(
+  ingestionProfileUiSelector,
+  (ingestionProfileUi) => ingestionProfileUi.get('selectedSource')
+);
 
-const newLinkVisibleSelector = (state) =>
-  state.getIn(['ui', 'ingestionProfile', 'newLinkVisible']);
+const samplesSelector = createSelector(
+  ingestionProfileUiSelector,
+  (ingestionProfileUi) => ingestionProfileUi.get('samples')
+);
+
+const sampleOfSelectedSourceSelector = createSelector(
+  samplesSelector,
+  selectedSourceSelector,
+  (samples, selectedSource) => samples.get(selectedSource)
+);
+
+const newNodeVisibleSelector = createSelector(
+  ingestionProfileUiSelector,
+  (ingestionProfileUi) => ingestionProfileUi.get('newNodeVisible')
+);
+
+const newLinkVisibleSelector = createSelector(
+  ingestionProfileUiSelector,
+  (ingestionProfileUi) => ingestionProfileUi.get('newLinkVisible')
+);
+
+const newNodeSelector = createSelector(
+  ingestionProfileUiSelector,
+  (ingestionProfileUi) => ingestionProfileUi.get('newNode')
+);
+
+const newNodeActivePropSelector = createSelector(
+  ingestionProfileUiSelector,
+  (ingestionProfileUi) => ingestionProfileUi.get('newNodeActiveProp')
+);
+
+const columnOptionsSelector = createSelector(
+  samplesSelector,
+  newNodeSelector,
+  newNodeActivePropSelector,
+  (samples, newNode, activeProp) =>
+    samples.getIn(
+      [
+        newNode.getIn([activeProp.get('key'), 'source'], ''),
+        'headers',
+      ],
+      List()
+    )
+);
 
 module.exports = {
   newNameSelector,
@@ -44,7 +104,11 @@ module.exports = {
   newSourceSelector,
   deleteSourceVisibleSelector,
   selectedSourceSelector,
-  sampleSelector,
+  samplesSelector,
+  sampleOfSelectedSourceSelector,
   newNodeVisibleSelector,
   newLinkVisibleSelector,
+  newNodeSelector,
+  newNodeActivePropSelector,
+  columnOptionsSelector,
 };

@@ -59,7 +59,6 @@ function loadGraphSchemaContent(classes, classLinks) {
 }
 
 module.exports = {
-  load,
   loadAsync,
   saveAsync,
   deleteAsync,
