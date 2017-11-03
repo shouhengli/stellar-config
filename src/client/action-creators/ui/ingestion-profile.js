@@ -101,7 +101,7 @@ function loadSamples(samples) {
 
 function loadSamplesAsync(sources) {
   return (dispatch) => P
-    .all(sources.map(api.getIngestionSample))
+    .all(sources.toJS().map(api.getIngestionSample))
     .then((samples) => R.pipe(R.zip, R.fromPairs)(sources.toJS(), samples))
     .then(R.compose(dispatch, loadSamples));
 }
