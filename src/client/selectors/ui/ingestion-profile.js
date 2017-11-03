@@ -118,6 +118,16 @@ const newNodeSaveEnabledSelector = createSelector(
   }
 );
 
+const newLinkSelector = createSelector(
+  ingestionProfileUiSelector,
+  (ingestionProfileUi) => ingestionProfileUi.get('newLink')
+);
+
+const newLinkActivePropSelector = createSelector(
+  ingestionProfileUiSelector,
+  (ingestionProfileUi) => ingestionProfileUi.get('newLinkActiveProp')
+);
+
 module.exports = {
   newNameSelector,
   newVisibleSelector,
@@ -133,7 +143,9 @@ module.exports = {
   newNodeVisibleSelector,
   newLinkVisibleSelector,
   newNodeSelector,
+  newLinkSelector,
   newNodeActivePropSelector,
+  newLinkActivePropSelector,
   columnOptionsSelector,
   newNodeSaveEnabledSelector,
 };

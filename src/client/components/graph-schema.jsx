@@ -2,7 +2,7 @@ const React = require('react');
 const R = require('ramda');
 const {is} = require('immutable');
 
-const {getClassLinkKey} = require('../graph-schema');
+const {getClassLinkKey} = require('../ingestion-profile');
 
 class GraphSchema extends React.Component {
   constructor(props) {

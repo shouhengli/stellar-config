@@ -30,6 +30,11 @@ const classNamesSelector = createSelector(
   (graphSchema) => graphSchema.get('classes').keySeq()
 );
 
+const classLinkKeysSelector = createSelector(
+  graphSchemaSelector,
+  (graphSchema) => graphSchema.get('classLinks').keySeq()
+);
+
 const mappingSelector = createSelector(
   ingestionProfileSelector,
   (ingestionProfile) => ingestionProfile.get('mapping')
@@ -82,6 +87,7 @@ module.exports = {
   sourcesSelector,
   statusSelector,
   classNamesSelector,
+  classLinkKeysSelector,
   persistentIngestionProfileSelector,
   mappingNodesSelector,
   newMappingNodePropOptionsSelector,

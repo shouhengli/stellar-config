@@ -3,6 +3,7 @@ const R = require('ramda');
 const {connect} = require('react-redux');
 const MappingView = require('../components/ingestion-profile-mapping-view.jsx');
 const NodeEditor = require('./ingestion-profile-mapping-node-editor.jsx');
+const LinkEditor = require('./ingestion-profile-mapping-link-editor.jsx');
 
 const {
   newNodeVisibleSelector,
@@ -36,5 +37,5 @@ function mapDispatchToProps(dispatch) {
 }
 
 module.exports = connect(mapStateToProps, mapDispatchToProps)(
-  (props) => <MappingView NodeEditor={NodeEditor} {...props} />
+  (props) => <MappingView NodeEditor={NodeEditor} LinkEditor={LinkEditor} {...props} />
 );

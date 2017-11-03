@@ -1,7 +1,7 @@
 const {fromJS, List, Map} = require('immutable');
 const actions = require('../../actions');
 
-const {ZOOM_STEP, MAX_ZOOM, MIN_ZOOM} = require('../../graph-schema');
+const {ZOOM_STEP, MAX_ZOOM, MIN_ZOOM} = require('../../ingestion-profile');
 
 /**
  * Initial UI state.

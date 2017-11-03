@@ -7,7 +7,7 @@ const {
   CLASS_INNER_RADIUS,
   CLASS_PAD_ANGLE,
   FONT_SIZE,
-} = require('../graph-schema');
+} = require('../ingestion-profile');
 
 const getLengthSum = R.compose(R.sum, R.map((x) => x.length));
 

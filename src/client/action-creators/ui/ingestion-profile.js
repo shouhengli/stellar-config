@@ -110,10 +110,6 @@ function revealNewNode() {
   return {type: actions.INGESTION_PROFILE_REVEAL_NEW_NODE};
 }
 
-function revealNewLink() {
-  return {type: actions.INGESTION_PROFILE_REVEAL_NEW_LINK};
-}
-
 function toggleNewNodeActivePropKey(key) {
   return {
     type: actions.INGESTION_PROFILE_TOGGLE_NEW_NODE_ACTIVE_PROP_KEY,
@@ -159,6 +155,17 @@ function resetNewNode() {
   return {type: actions.INGESTION_PROFILE_RESET_NEW_NODE};
 }
 
+function revealNewLink() {
+  return {type: actions.INGESTION_PROFILE_REVEAL_NEW_LINK};
+}
+
+function toggleNewLinkActivePropValue(key) {
+  return {
+    type: actions.INGESTION_PROFILE_TOGGLE_NEW_LINK_ACTIVE_PROP_VALUE,
+    key,
+  };
+}
+
 module.exports = {
   setSelectedSource,
   setNewSource,
@@ -176,7 +183,6 @@ module.exports = {
   loadSamplesAsync,
   addSampleAsync,
   revealNewNode,
-  revealNewLink,
   toggleNewNodeActivePropKey,
   toggleNewNodeActivePropValue,
   addNewNodeProp,
@@ -184,4 +190,6 @@ module.exports = {
   setNewNodePropKey,
   setNewNodePropValue,
   resetNewNode,
+  revealNewLink,
+  toggleNewLinkActivePropValue,
 };

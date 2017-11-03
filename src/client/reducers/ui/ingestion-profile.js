@@ -1,4 +1,4 @@
-const {fromJS, Map} = require('immutable');
+const {is, fromJS, Map} = require('immutable');
 const actions = require('../../actions');
 const {TAB_SOURCE} = require('../../ingestion-profile');
 
@@ -16,7 +16,12 @@ const initialState = fromJS({
   newNodeVisible: false,
   newLinkVisible: false,
   newNode: {},
+  newLink: {},
   newNodeActiveProp: {
+    key: null,
+    valueActive: false,
+  },
+  newLinkActiveProp: {
     key: null,
     valueActive: false,
   },
@@ -90,9 +95,6 @@ function reduceState(state = initialState, action) {
     case actions.INGESTION_PROFILE_REVEAL_NEW_NODE:
       return state.set('newNodeVisible', true);
 
-    case actions.INGESTION_PROFILE_REVEAL_NEW_LINK:
-      return state.set('newLinkVisible', true);
-
     case actions.INGESTION_PROFILE_TOGGLE_NEW_NODE_ACTIVE_PROP_KEY:
       if (action.key === state.getIn(['newNodeActiveProp', 'key'])) {
         return state.set('newNodeActiveProp', initialState.get('newNodeActiveProp'));
@@ -160,6 +162,25 @@ function reduceState(state = initialState, action) {
         .set('newNodeVisible', initialState.get('newNodeVisible'))
         .set('newNode', initialState.get('newNode'))
         .set('newNodeActiveProp', initialState.get('newNodeActiveProp'));
+
+    case actions.INGESTION_PROFILE_REVEAL_NEW_LINK:
+      return state.set('newLinkVisible', true);
+
+    case actions.INGESTION_PROFILE_TOGGLE_NEW_LINK_ACTIVE_PROP_VALUE:
+      if (
+        is(state.getIn(['newLinkActiveProp', 'key']), action.key)
+        && state.getIn(['newLinkActiveProp', 'valueActive'])
+      ) {
+        return state.set('newLinkActiveProp', initialState.get('newLinkActiveProp'));
+      }
+
+      return state.set(
+        'newLinkActiveProp',
+        Map({
+          key: action.key,
+          valueActive: true,
+        })
+      );
 
     default:
       return state;

@@ -14,7 +14,7 @@ const {
   GraphSchemaFormatError,
   getClassLinkKey,
   parseYaml,
-} = require('../graph-schema');
+} = require('../ingestion-profile');
 
 const {
   editorContentSelector,

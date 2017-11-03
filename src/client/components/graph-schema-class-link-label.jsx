@@ -1,6 +1,6 @@
 const React = require('react');
 
-const {CLASS_LINK_LABEL_MARGIN} = require('../graph-schema');
+const {CLASS_LINK_LABEL_MARGIN} = require('../ingestion-profile');
 
 module.exports = (props) => {
   const {

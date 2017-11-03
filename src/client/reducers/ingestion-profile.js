@@ -18,7 +18,7 @@ const {
   createPersistentClass,
   createPersistentClassLink,
   getClassLinkKey,
-} = require('../graph-schema');
+} = require('../ingestion-profile');
 
 const initialState = fromJS({
   name: '',

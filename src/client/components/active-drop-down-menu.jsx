@@ -2,24 +2,39 @@ const React = require('react');
 const R = require('ramda');
 const {List} = require('immutable');
 const {isNotEmpty} = require('../util');
+const {defaultToEmptyList} = require('../util');
 
 const MenuContainer = ({children}) => <ul>{children}</ul>;
 const RootMenuContainer = ({children}) => <ul className="menu-list">{children}</ul>;
 
-const InactiveMenuItem = ({handleClick, depth, item}) =>
-  <li><a onClick={() => handleClick(depth, item)}>{item}</a></li>;
+const InactiveMenuItem = ({ItemComponent, depth, item, handleClick}) =>
+  <li>
+    <a onClick={() => handleClick(depth, item)}>
+      {
+        R.isNil(ItemComponent)
+          ? item
+          : <ItemComponent item={item} />
+      }
+    </a>
+  </li>;
 
 const ActiveMenuItem =
   ({
+    ItemComponent,
     depth,
     item,
+    subItemComponents,
     subItemLists,
     activeSubItems,
     handleClick,
   }) =>
     <li>
       <a className="is-active">
-        {item}
+        {
+          R.isNil(ItemComponent)
+            ? item
+            : <ItemComponent item={item} />
+        }
       </a>
       {
         !subItemLists.isEmpty() && (
@@ -27,6 +42,7 @@ const ActiveMenuItem =
             <MenuItemList
               itemLists={subItemLists}
               activeItems={activeSubItems}
+              itemComponents={subItemComponents}
               depth={depth + 1}
               handleClick={handleClick} />
           </MenuContainer>
@@ -39,6 +55,7 @@ const MenuItemList =
     depth,
     itemLists,
     activeItems,
+    itemComponents,
     handleClick,
   }) =>
     itemLists
@@ -51,11 +68,14 @@ const MenuItemList =
               key={item}
               depth={depth}
               item={item}
+              ItemComponent={itemComponents.get(0)}
+              subItemComponents={itemComponents.shift()}
               subItemLists={itemLists.shift()}
               activeSubItems={activeItems.shift()}
               handleClick={handleClick} />,
           (item) =>
             <InactiveMenuItem
+              ItemComponent={itemComponents.get(0)}
               key={item}
               depth={depth}
               item={item}
@@ -68,6 +88,7 @@ const ActiveDropDownMenu =
     children,
     itemLists,
     activeItems,
+    itemComponents,
     handleItemClick,
     handleButtonClick,
   }) =>
@@ -91,8 +112,9 @@ const ActiveDropDownMenu =
                   <RootMenuContainer>
                     <MenuItemList
                       depth={0}
-                      itemLists={itemLists}
-                      activeItems={activeItems}
+                      itemLists={defaultToEmptyList(itemLists)}
+                      activeItems={defaultToEmptyList(activeItems)}
+                      itemComponents={defaultToEmptyList(itemComponents)}
                       handleClick={R.partial(handleItemClick, [itemLists, activeItems])} />
                   </RootMenuContainer>
                 </div>

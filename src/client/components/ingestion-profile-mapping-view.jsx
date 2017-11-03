@@ -97,6 +97,7 @@ const Link = ({name, src, dest, propMappings}) =>
 module.exports =
   ({
     NodeEditor,
+    LinkEditor,
     nodes,
     links,
     newNodeVisible,
@@ -127,6 +128,11 @@ module.exports =
               <Header
                 title="Links"
                 handleAddButtonClick={() => handleAddLinkButtonClick()} />
+                {
+                  newLinkVisible && (
+                    <LinkEditor />
+                  )
+                }
                 {
                   links.map((link, i) =>
                     <Link

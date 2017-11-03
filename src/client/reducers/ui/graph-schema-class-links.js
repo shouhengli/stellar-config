@@ -1,7 +1,7 @@
 const R = require('ramda');
 const {fromJS, Map} = require('immutable');
 const actions = require('../../actions');
-const {getClassLinkKey} = require('../../graph-schema');
+const {getClassLinkKey} = require('../../ingestion-profile');
 
 const initialState = Map();
 

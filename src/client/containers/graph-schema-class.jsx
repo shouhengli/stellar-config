@@ -3,7 +3,7 @@ const {connect} = require('react-redux');
 const R = require('ramda');
 const anime = require('animejs');
 const {updateClassOuterRadius} = require('../action-creators/ui/graph-schema');
-const {CLASS_OUTER_RADIUS, CLASS_INNER_RADIUS} = require('../graph-schema');
+const {CLASS_OUTER_RADIUS, CLASS_INNER_RADIUS} = require('../ingestion-profile');
 
 const ClassName = require('./graph-schema-class-name.jsx');
 const ClassArc = require('./graph-schema-class-arc.jsx');
