@@ -1,6 +1,12 @@
 const React = require('react');
-const R = require('ramda');
+
 const FullView = require('./full-view.jsx');
+const SourceColumnLabel = require('./ingestion-profile-mapping-source-column-label.jsx');
+
+const {
+  MAPPING_NODE_TYPE_KEY,
+  MAPPING_NODE_ID_KEY,
+} = require('../ingestion-profile');
 
 const Header = ({title, handleAddButtonClick}) =>
   <div className="header">
@@ -14,36 +20,11 @@ const Header = ({title, handleAddButtonClick}) =>
     </h3>
   </div>;
 
-const PropMappings = ({propMappings}) =>
-  R.toPairs(propMappings).map(([source, mappings]) => [
-    <p key={`source-${source}`} className="source">
-      {source}
-    </p>,
-    <table key={`mappings-${source}`} className="table is-fullwidth">
-      <thead>
-        <tr>
-          <th>Property</th>
-          <th>Column</th>
-        </tr>
-      </thead>
-      <tbody>
-        {
-          R.toPairs(mappings).map(([prop, column]) =>
-            <tr key={prop}>
-              <td>{prop}</td>
-              <td>{column}</td>
-            </tr>
-          )
-        }
-      </tbody>
-    </table>,
-  ]);
-
-const Node = ({name, propMappings}) =>
+const Node = ({node}) =>
   <div className="card">
     <header className="card-header">
       <p className="card-header-title">
-        {name}
+        {node.get(MAPPING_NODE_TYPE_KEY)}
       </p>
       <a className="card-header-icon">
         <span className="icon">
@@ -52,8 +33,23 @@ const Node = ({name, propMappings}) =>
       </a>
     </header>
     <div className="card-content">
-      <h6 className="title is-6">Property Mappings</h6>
-      <PropMappings propMappings={propMappings} />
+      <h6 key="propKey" className="title is-6">
+        {MAPPING_NODE_ID_KEY}
+      </h6>
+      <p key="propValue" className="source-column-label">
+        <SourceColumnLabel
+          source={node.getIn([MAPPING_NODE_ID_KEY, 'source'])}
+          column={node.getIn([MAPPING_NODE_ID_KEY, 'column'])} />
+      </p>
+      {
+        node.delete(MAPPING_NODE_TYPE_KEY).delete(MAPPING_NODE_ID_KEY).map((value, key) => [
+          <h6 key="propKey" className="title is-6">{key}</h6>,
+          <p key="propvalue" className="source-column-label">
+            <SourceColumnLabel source={value.get('source')} column={value.get('column')} />
+          </p>,
+        ])
+        .valueSeq()
+      }
     </div>
   </div>;
 
@@ -95,7 +91,6 @@ const Link = ({name, src, dest, propMappings}) =>
       </p>
       <hr />
       <h6 className="title is-6">Property Mappings</h6>
-      <PropMappings propMappings={propMappings} />
     </div>
   </div>;
 
@@ -124,10 +119,7 @@ module.exports =
               }
               {
                 nodes.map((node, i) =>
-                  <Node
-                    key={i}
-                    name={node.get('type')}
-                    propMappings={node.get('props')} />
+                  <Node key={i} node={node} />
                 )
               }
             </div>

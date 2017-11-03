@@ -155,6 +155,7 @@ function reduceState(state = initialState, action) {
     }
 
     case actions.INGESTION_PROFILE_RESET_NEW_NODE:
+    case actions.INGESTION_PROFILE_ADD_NEW_NODE:
       return state
         .set('newNodeVisible', initialState.get('newNodeVisible'))
         .set('newNode', initialState.get('newNode'))

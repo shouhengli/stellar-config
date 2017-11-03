@@ -1,5 +1,5 @@
 const R = require('ramda');
-const {fromJS, is, Map} = require('immutable');
+const {fromJS, is, Map, List} = require('immutable');
 const actions = require('../actions');
 
 const {
@@ -80,6 +80,24 @@ function updateGraphSchema(graphSchema) {
   );
 }
 
+function loadMapping(mapping) {
+  return Map(
+    R.evolve(
+      {
+        nodes: R.pipe(
+          defaultToEmptyArray,
+          fromJS
+        ),
+        links: R.pipe(
+          defaultToEmptyArray,
+          fromJS
+        ),
+      },
+      mapping
+    )
+  );
+}
+
 function reduce(state = initialState, action) {
   switch (action.type) {
     case actions.INGESTION_PROFILE_LOAD:
@@ -87,6 +105,7 @@ function reduce(state = initialState, action) {
         .set('name', action.name)
         .set('sources', defaultToEmptyList(fromJS(action.content.sources)))
         .set('graphSchema', loadGraphSchema(action.content.graphSchema))
+        .set('mapping', loadMapping(action.content.mapping))
         .set('status', CONFIG_STATUS_NORMAL);
 
     case actions.INGESTION_PROFILE_SAVE:
@@ -113,6 +132,15 @@ function reduce(state = initialState, action) {
 
     case actions.GRAPH_SCHEMA_SET_EDITOR_CONTENT:
       return state.set('status', CONFIG_STATUS_CHANGED);
+
+    case actions.INGESTION_PROFILE_ADD_NEW_NODE:
+      return state
+        .updateIn(
+          ['mapping', 'nodes'],
+          List(),
+          (nodes) => nodes.push(fromJS(action.node))
+        )
+        .set('status', CONFIG_STATUS_CHANGED);
 
     default:
       return state;

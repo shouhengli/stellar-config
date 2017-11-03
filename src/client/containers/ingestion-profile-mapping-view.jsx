@@ -10,13 +10,17 @@ const {
 } = require('../selectors/ui/ingestion-profile');
 
 const {
+  mappingNodesSelector,
+} = require('../selectors/ingestion-profile');
+
+const {
   revealNewNode,
   revealNewLink,
 } = require('../action-creators/ui/ingestion-profile');
 
 function mapStateToProps(state) {
   return {
-    nodes: [],
+    nodes: mappingNodesSelector(state),
     links: [],
     newNodeVisible: newNodeVisibleSelector(state),
     newLinkVisible: newLinkVisibleSelector(state),

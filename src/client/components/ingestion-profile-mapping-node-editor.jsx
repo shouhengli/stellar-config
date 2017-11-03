@@ -4,6 +4,8 @@ const {List} = require('immutable');
 
 const ActiveDropDownMenu = require('./active-drop-down-menu.jsx');
 const InactiveDropDownMenu = require('./inactive-drop-down-menu.jsx');
+const SourceColumnLabel = require('./ingestion-profile-mapping-source-column-label.jsx');
+
 const {isNotEmpty} = require('../util');
 
 const {
@@ -12,31 +14,11 @@ const {
 } = require('../ingestion-profile');
 
 const DeleteSectionButton = ({handleClick}) =>
-  <a className="delete-section-button" onClick={() => handleClick()}>
-    <span className="icon">
-      <i className="fa fa-times"></i>
-    </span>
+  <a
+    className="button is-small is-danger is-outlined delete-section-button"
+    onClick={() => handleClick()}>
+    Delete
   </a>;
-
-const SourceColumnLabel =
-  R.ifElse(
-    ({source, column}) => isNotEmpty(source) && isNotEmpty(column),
-    ({source, column}) => [
-      <span key="source-icon" className="icon">
-        <i className="fa fa-file-o"></i>
-      </span>,
-      <span key="source">
-        {source}
-      </span>,
-      <span key="column-icon" className="icon">
-        <i className="fa fa-columns"></i>
-      </span>,
-      <span key="column">
-        {column}
-      </span>,
-    ],
-    () => <span>(None)</span>
-  );
 
 const PropLabel = ({label}) =>
   isNotEmpty(label) ? label : <span>(None)</span>;
@@ -49,6 +31,7 @@ module.exports =
     nodePropOptions,
     sourceOptions,
     columnOptions,
+    saveEnabled,
     handleNodePropKeyMenuItemClick,
     handleNodePropKeyButtonClick,
     handleNodePropValueMenuItemClick,
@@ -56,6 +39,7 @@ module.exports =
     handleDeleteSectionButtonClick,
     handleAddNodePropButtonClick,
     handleCancelButtonClick,
+    handleSaveButtonClick,
   }) =>
     <div className="card">
       <header className="card-header">
@@ -230,6 +214,14 @@ module.exports =
       </div>
       <footer className="card-footer">
         <a className="card-footer-item" onClick={() => handleAddNodePropButtonClick()}>Add</a>
-        <a className="card-footer-item">Save</a>
+        {
+          saveEnabled
+          ? (
+            <a className="card-footer-item" onClick={() => handleSaveButtonClick(node)}>Save</a>
+          )
+          : (
+            <span className="card-footer-item">Save</span>
+          )
+        }
       </footer>
     </div>;

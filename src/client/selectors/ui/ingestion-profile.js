@@ -1,4 +1,5 @@
-const {List} = require('immutable');
+const {Map, List} = require('immutable');
+const R = require('ramda');
 const {createSelector} = require('reselect');
 
 const ingestionProfileUiSelector = (state) =>
@@ -94,6 +95,29 @@ const columnOptionsSelector = createSelector(
     )
 );
 
+const newNodeSaveEnabledSelector = createSelector(
+  newNodeSelector,
+  (newNode) => {
+    if (newNode.has('')) {
+      return false;
+    }
+
+    const valueEmpty = newNode.some(
+      R.ifElse(
+        R.is(Map),
+        (value) => value.get('source') === '' || value.get('column') === '',
+        (value) => R.isNil(value) || R.isEmpty(value)
+      )
+    );
+
+    if (valueEmpty) {
+      return false;
+    }
+
+    return true;
+  }
+);
+
 module.exports = {
   newNameSelector,
   newVisibleSelector,
@@ -111,4 +135,5 @@ module.exports = {
   newNodeSelector,
   newNodeActivePropSelector,
   columnOptionsSelector,
+  newNodeSaveEnabledSelector,
 };

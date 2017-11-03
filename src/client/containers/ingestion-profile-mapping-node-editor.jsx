@@ -17,9 +17,14 @@ const {
 } = require('../action-creators/ui/ingestion-profile');
 
 const {
+  addNewMappingNode,
+} = require('../action-creators/ingestion-profile');
+
+const {
   newNodeSelector,
   newNodeActivePropSelector,
   columnOptionsSelector,
+  newNodeSaveEnabledSelector,
 } = require('../selectors/ui/ingestion-profile');
 
 const {
@@ -36,6 +41,7 @@ function mapStateToProps(state) {
     nodePropOptions: newMappingNodePropOptionsSelector(state),
     sourceOptions: sourcesSelector(state),
     columnOptions: columnOptionsSelector(state),
+    saveEnabled: newNodeSaveEnabledSelector(state),
   };
 }
 
@@ -76,6 +82,8 @@ function mapDispatchToProps(dispatch) {
     handleAddNodePropButtonClick: R.compose(dispatch, addNewNodeProp),
 
     handleCancelButtonClick: R.compose(dispatch, resetNewNode),
+
+    handleSaveButtonClick: R.compose(dispatch, addNewMappingNode),
   };
 }
 

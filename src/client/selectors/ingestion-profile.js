@@ -1,33 +1,53 @@
 const {createSelector} = require('reselect');
-const {Map} = require('immutable');
+const {List, Map} = require('immutable');
 const {newNodeSelector} = require('./ui/ingestion-profile');
 const {MAPPING_NODE_TYPE_KEY} = require('../ingestion-profile');
 
-const nameSelector = (state) => state.getIn(['ingestionProfile', 'name']);
+const ingestionProfileSelector = (state) => state.get('ingestionProfile');
 
-const sourcesSelector = (state) => state.getIn(['ingestionProfile', 'sources']);
+const nameSelector = createSelector(
+  ingestionProfileSelector,
+  (ingestionProfile) => ingestionProfile.get('name')
+);
 
-const statusSelector = (state) => state.getIn(['ingestionProfile', 'status']);
+const sourcesSelector = createSelector(
+  ingestionProfileSelector,
+  (ingestionProfile) => ingestionProfile.get('sources')
+);
 
-const graphSchemaSelector = (state) =>
-  state.getIn(['ingestionProfile', 'graphSchema']);
+const statusSelector = createSelector(
+  ingestionProfileSelector,
+  (ingestionProfile) => ingestionProfile.get('status')
+);
+
+const graphSchemaSelector = createSelector(
+  ingestionProfileSelector,
+  (ingestionProfile) => ingestionProfile.get('graphSchema')
+);
 
 const classNamesSelector = createSelector(
   graphSchemaSelector,
   (graphSchema) => graphSchema.get('classes').keySeq()
 );
 
+const mappingSelector = createSelector(
+  ingestionProfileSelector,
+  (ingestionProfile) => ingestionProfile.get('mapping')
+);
+
 const persistentIngestionProfileSelector = createSelector(
   sourcesSelector,
   graphSchemaSelector,
+  mappingSelector,
   require('./ui/graph-schema').editorContentSelector,
-  (sources, graphSchema, editorContent) => {
+  (sources, graphSchema, mapping, editorContent) => {
     return {
       sources: sources.toJS(),
       graphSchema: {
         classes: graphSchema.get('classes').valueSeq().toJS(),
         classLinks: graphSchema.get('classLinks').valueSeq().toJS(),
       },
+      mapping: mapping.toJS(),
       // This is just a temporary workaround for using an editor to build graph schema.
       // Changes will be introduced to replace the editor with form controls. This field will then
       // beremoved.
@@ -37,7 +57,7 @@ const persistentIngestionProfileSelector = createSelector(
 );
 
 const mappingNodesSelector = (state) =>
-  state.getIn(['ingestionProfile', 'mapping', 'nodes']);
+  state.getIn(['ingestionProfile', 'mapping', 'nodes'], List());
 
 const newMappingNodePropOptionsSelector = createSelector(
   graphSchemaSelector,

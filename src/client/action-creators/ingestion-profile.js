@@ -58,6 +58,13 @@ function loadGraphSchemaContent(classes, classLinks) {
   };
 }
 
+function addNewMappingNode(node) {
+  return {
+    type: actions.INGESTION_PROFILE_ADD_NEW_NODE,
+    node,
+  };
+}
+
 module.exports = {
   loadAsync,
   saveAsync,
@@ -65,4 +72,5 @@ module.exports = {
   addSource,
   deleteSource,
   loadGraphSchemaContent,
+  addNewMappingNode,
 };

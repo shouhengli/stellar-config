@@ -220,7 +220,7 @@ div.view {
     margin-bottom: 1.5rem;
 
     .card-content {
-      .source {
+      .source-column-label {
         padding: 0.5rem;
         background-color: $background;
         border-radius: $radius;
@@ -230,8 +230,13 @@ div.view {
         -ms-overflow-style: -ms-autohiding-scrollbar;
       }
 
-      .title {
+      .title.is-6 {
+        margin-top: 1.5rem;
         margin-bottom: 0.5rem;
+
+        &:first-child {
+          margin-top: 0;
+        }
       }
 
       .link-title {
@@ -255,7 +260,6 @@ div.view {
           button {
             width: 100%;
             overflow: hidden;
-            justify-content: flex-end;
 
             span:not(:first-child) {
               margin-left: 0.5rem;
