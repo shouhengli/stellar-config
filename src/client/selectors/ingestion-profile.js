@@ -1,7 +1,11 @@
 const {createSelector} = require('reselect');
 const {List, Map} = require('immutable');
-const {newNodeSelector} = require('./ui/ingestion-profile');
 const {MAPPING_NODE_TYPE_KEY} = require('../ingestion-profile');
+
+const {
+  newNodeSelector,
+  newLinkSelector,
+} = require('./ui/ingestion-profile');
 
 const ingestionProfileSelector = (state) => state.get('ingestionProfile');
 
@@ -27,12 +31,12 @@ const graphSchemaSelector = createSelector(
 
 const classNamesSelector = createSelector(
   graphSchemaSelector,
-  (graphSchema) => graphSchema.get('classes').keySeq()
+  (graphSchema) => graphSchema.get('classes', List()).keySeq()
 );
 
 const classLinkKeysSelector = createSelector(
   graphSchemaSelector,
-  (graphSchema) => graphSchema.get('classLinks').keySeq()
+  (graphSchema) => graphSchema.get('classLinks', List()).keySeq()
 );
 
 const mappingSelector = createSelector(
@@ -49,8 +53,8 @@ const persistentIngestionProfileSelector = createSelector(
     return {
       sources: sources.toJS(),
       graphSchema: {
-        classes: graphSchema.get('classes').valueSeq().toJS(),
-        classLinks: graphSchema.get('classLinks').valueSeq().toJS(),
+        classes: graphSchema.get('classes', List()).valueSeq().toJS(),
+        classLinks: graphSchema.get('classLinks', List()).valueSeq().toJS(),
       },
       mapping: mapping.toJS(),
       // This is just a temporary workaround for using an editor to build graph schema.
@@ -61,8 +65,15 @@ const persistentIngestionProfileSelector = createSelector(
   }
 );
 
-const mappingNodesSelector = (state) =>
-  state.getIn(['ingestionProfile', 'mapping', 'nodes'], List());
+const mappingNodesSelector = createSelector(
+  mappingSelector,
+  (mapping) => mapping.get('nodes', List())
+);
+
+const mappingLinksSelector = createSelector(
+  mappingSelector,
+  (mapping) => mapping.get('links', List())
+);
 
 const newMappingNodePropOptionsSelector = createSelector(
   graphSchemaSelector,
@@ -72,7 +83,7 @@ const newMappingNodePropOptionsSelector = createSelector(
       .getIn(
         [
           'classes',
-          newNode.get(MAPPING_NODE_TYPE_KEY, ''),
+          newNode.get(MAPPING_NODE_TYPE_KEY),
           'props',
         ],
         Map()
@@ -80,6 +91,24 @@ const newMappingNodePropOptionsSelector = createSelector(
       .keySeq()
       .toSet()
       .subtract(newNode.keySeq())
+);
+
+const newMappingLinkPropOptionsSelector = createSelector(
+  graphSchemaSelector,
+  newLinkSelector,
+  (graphSchema, newLink) =>
+    graphSchema
+      .getIn(
+        [
+          'classLinks',
+          newLink.get(MAPPING_NODE_TYPE_KEY),
+          'props',
+        ],
+        Map()
+      )
+      .keySeq()
+      .toSet()
+      .subtract(newLink.keySeq())
 );
 
 module.exports = {
@@ -90,5 +119,7 @@ module.exports = {
   classLinkKeysSelector,
   persistentIngestionProfileSelector,
   mappingNodesSelector,
+  mappingLinksSelector,
   newMappingNodePropOptionsSelector,
+  newMappingLinkPropOptionsSelector,
 };

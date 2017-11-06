@@ -143,11 +143,12 @@ function setNewNodePropKey(key, prevKey) {
   };
 }
 
-function setNewNodePropValue(key, value) {
+function setNewNodePropValue(key, value, shouldResetActiveProp = true) {
   return {
     type: actions.INGESTION_PROFILE_SET_NEW_NODE_PROP_VALUE,
     key,
     value,
+    shouldResetActiveProp,
   };
 }
 
@@ -159,10 +160,49 @@ function revealNewLink() {
   return {type: actions.INGESTION_PROFILE_REVEAL_NEW_LINK};
 }
 
+function toggleNewLinkActivePropKey(key) {
+  return {
+    type: actions.INGESTION_PROFILE_TOGGLE_NEW_LINK_ACTIVE_PROP_KEY,
+    key,
+  };
+}
+
 function toggleNewLinkActivePropValue(key) {
   return {
     type: actions.INGESTION_PROFILE_TOGGLE_NEW_LINK_ACTIVE_PROP_VALUE,
     key,
+  };
+}
+
+function setNewLinkPropValue(key, value, shouldResetActiveLink = true) {
+  return {
+    type: actions.INGESTION_PROFILE_SET_NEW_LINK_PROP_VALUE,
+    key,
+    value,
+    shouldResetActiveLink,
+  };
+}
+
+function resetNewLink() {
+  return {type: actions.INGESTION_PROFILE_RESET_NEW_LINK};
+}
+
+function deleteNewLinkProp(key) {
+  return {
+    type: actions.INGESTION_PROFILE_DELETE_NEW_LINK_PROP,
+    key,
+  };
+}
+
+function addNewLinkProp() {
+  return {type: actions.INGESTION_PROFILE_ADD_NEW_LINK_PROP};
+}
+
+function setNewLinkPropKey(key, prevKey) {
+  return {
+    type: actions.INGESTION_PROFILE_SET_NEW_LINK_PROP_KEY,
+    key,
+    prevKey,
   };
 }
 
@@ -191,5 +231,11 @@ module.exports = {
   setNewNodePropValue,
   resetNewNode,
   revealNewLink,
+  toggleNewLinkActivePropKey,
   toggleNewLinkActivePropValue,
+  setNewLinkPropValue,
+  resetNewLink,
+  deleteNewLinkProp,
+  addNewLinkProp,
+  setNewLinkPropKey,
 };

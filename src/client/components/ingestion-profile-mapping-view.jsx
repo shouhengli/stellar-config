@@ -2,10 +2,14 @@ const React = require('react');
 
 const FullView = require('./full-view.jsx');
 const SourceColumnLabel = require('./ingestion-profile-mapping-source-column-label.jsx');
+const LinkTypeLabel = require('./ingestion-profile-mapping-link-type-label.jsx');
 
 const {
   MAPPING_NODE_TYPE_KEY,
   MAPPING_NODE_ID_KEY,
+  MAPPING_LINK_TYPE_KEY,
+  MAPPING_LINK_SOURCE_KEY,
+  MAPPING_LINK_DESTINATION_KEY,
 } = require('../ingestion-profile');
 
 const Header = ({title, handleAddButtonClick}) =>
@@ -33,10 +37,10 @@ const Node = ({node}) =>
       </a>
     </header>
     <div className="card-content">
-      <h6 key="propKey" className="title is-6">
+      <h6 className="title is-6">
         {MAPPING_NODE_ID_KEY}
       </h6>
-      <p key="propValue" className="source-column-label">
+      <p className="source-column-label">
         <SourceColumnLabel
           source={node.getIn([MAPPING_NODE_ID_KEY, 'source'])}
           column={node.getIn([MAPPING_NODE_ID_KEY, 'column'])} />
@@ -53,11 +57,13 @@ const Node = ({node}) =>
     </div>
   </div>;
 
-const Link = ({name, src, dest, propMappings}) =>
+const Link = ({link}) =>
   <div className="card">
     <header className="card-header">
       <p className="card-header-title">
-        {name}
+        <LinkTypeLabel
+          source={link.getIn([MAPPING_LINK_TYPE_KEY, 'source'])}
+          name={link.getIn([MAPPING_LINK_TYPE_KEY, 'name'])} />
       </p>
       <a className="card-header-icon">
         <span className="icon">
@@ -66,31 +72,35 @@ const Link = ({name, src, dest, propMappings}) =>
       </a>
     </header>
     <div className="card-content">
-      <p className="link-title">
-        <span className="icon">
-          <i className="fa fa-lg fa-sign-out"></i>
-        </span>
-        <span className="link-column">
-          {src.column}
-        </span>
+      <h6 className="title is-6">
+        {MAPPING_LINK_SOURCE_KEY}
+      </h6>
+      <p className="source-column-label">
+        <SourceColumnLabel
+          source={link.getIn([MAPPING_LINK_SOURCE_KEY, 'source'])}
+          column={link.getIn([MAPPING_LINK_SOURCE_KEY, 'column'])} />
       </p>
-      <p className="source">
-        {src.source}
+      <h6 className="title is-6">
+        {MAPPING_LINK_DESTINATION_KEY}
+      </h6>
+      <p className="source-column-label">
+        <SourceColumnLabel
+          source={link.getIn([MAPPING_LINK_DESTINATION_KEY, 'source'])}
+          column={link.getIn([MAPPING_LINK_DESTINATION_KEY, 'column'])} />
       </p>
-      <hr />
-      <p className="link-title">
-        <span className="icon">
-          <i className="fa fa-lg fa-sign-in"></i>
-        </span>
-        <span className="link-column">
-          {dest.column}
-        </span>
-      </p>
-      <p className="source">
-        {dest.source}
-      </p>
-      <hr />
-      <h6 className="title is-6">Property Mappings</h6>
+      {
+        link
+          .delete(MAPPING_LINK_TYPE_KEY)
+          .delete(MAPPING_LINK_SOURCE_KEY)
+          .delete(MAPPING_LINK_DESTINATION_KEY)
+          .map((value, key) => [
+            <h6 key="propKey" className="title is-6">{key}</h6>,
+            <p key="propvalue" className="source-column-label">
+              <SourceColumnLabel source={value.get('source')} column={value.get('column')} />
+            </p>,
+          ])
+          .valueSeq()
+      }
     </div>
   </div>;
 
@@ -135,12 +145,7 @@ module.exports =
                 }
                 {
                   links.map((link, i) =>
-                    <Link
-                      key={i}
-                      name={link.get('type')}
-                      src={link.get('src')}
-                      dest={link.get('dest')}
-                      propMappings={link.get('props')} />
+                    <Link key={i} link={link} />
                   )
                 }
             </div>

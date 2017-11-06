@@ -142,6 +142,15 @@ function reduce(state = initialState, action) {
         )
         .set('status', CONFIG_STATUS_CHANGED);
 
+    case actions.INGESTION_PROFILE_ADD_NEW_LINK:
+      return state
+        .updateIn(
+          ['mapping', 'links'],
+          List(),
+          (links) => links.push(fromJS(action.link))
+        )
+        .set('status', CONFIG_STATUS_CHANGED);
+
     default:
       return state;
   }

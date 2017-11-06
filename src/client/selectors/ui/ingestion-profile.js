@@ -2,6 +2,14 @@ const {Map, List} = require('immutable');
 const R = require('ramda');
 const {createSelector} = require('reselect');
 
+const {
+  MAPPING_NODE_ID_KEY,
+  MAPPING_NODE_TYPE_KEY,
+  MAPPING_LINK_TYPE_KEY,
+  MAPPING_LINK_SOURCE_KEY,
+  MAPPING_LINK_DESTINATION_KEY,
+} = require('../../ingestion-profile');
+
 const ingestionProfileUiSelector = (state) =>
   state.getIn(['ui', 'ingestionProfile']);
 
@@ -81,7 +89,7 @@ const newNodeActivePropSelector = createSelector(
   (ingestionProfileUi) => ingestionProfileUi.get('newNodeActiveProp')
 );
 
-const columnOptionsSelector = createSelector(
+const newNodeColumnOptionsSelector = createSelector(
   samplesSelector,
   newNodeSelector,
   newNodeActivePropSelector,
@@ -98,6 +106,13 @@ const columnOptionsSelector = createSelector(
 const newNodeSaveEnabledSelector = createSelector(
   newNodeSelector,
   (newNode) => {
+    if (
+      !newNode.has(MAPPING_NODE_ID_KEY)
+      || !newNode.has(MAPPING_NODE_TYPE_KEY)
+    ) {
+      return false;
+    }
+
     if (newNode.has('')) {
       return false;
     }
@@ -128,6 +143,55 @@ const newLinkActivePropSelector = createSelector(
   (ingestionProfileUi) => ingestionProfileUi.get('newLinkActiveProp')
 );
 
+const newLinkColumnOptionsSelector = createSelector(
+  samplesSelector,
+  newLinkSelector,
+  newLinkActivePropSelector,
+  (samples, newNode, activeProp) =>
+    samples.getIn(
+      [
+        newNode.getIn([activeProp.get('key'), 'source'], ''),
+        'headers',
+      ],
+      List()
+    )
+);
+
+const newLinkSaveEnabledSelector = createSelector(
+  newLinkSelector,
+  (newLink) => {
+    if (
+      !newLink.has(MAPPING_LINK_TYPE_KEY)
+      || !newLink.has(MAPPING_LINK_SOURCE_KEY)
+      || !newLink.has(MAPPING_LINK_DESTINATION_KEY)
+    ) {
+      return false;
+    }
+
+    if (newLink.has('')) {
+      return false;
+    }
+
+    const valueEmpty = newLink.some(
+      R.ifElse(
+        R.is(Map),
+        R.ifElse(
+          (value) => value.has('source'),
+          (value) => value.get('source') === '' || value.get('column') === '',
+          R.isNil
+        ),
+        (value) => R.isNil(value) || R.isEmpty(value)
+      )
+    );
+
+    if (valueEmpty) {
+      return false;
+    }
+
+    return true;
+  }
+);
+
 module.exports = {
   newNameSelector,
   newVisibleSelector,
@@ -146,6 +210,8 @@ module.exports = {
   newLinkSelector,
   newNodeActivePropSelector,
   newLinkActivePropSelector,
-  columnOptionsSelector,
+  newNodeColumnOptionsSelector,
+  newLinkColumnOptionsSelector,
   newNodeSaveEnabledSelector,
+  newLinkSaveEnabledSelector,
 };

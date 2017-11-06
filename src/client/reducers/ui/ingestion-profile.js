@@ -143,17 +143,13 @@ function reduceState(state = initialState, action) {
     }
 
     case actions.INGESTION_PROFILE_SET_NEW_NODE_PROP_VALUE: {
-      const prevValue = state.getIn(['newNode', action.key], Map());
       state = state.setIn(['newNode', action.key], fromJS(action.value));
 
-      if (
-        prevValue instanceof Map
-        && prevValue.get('source') !== state.getIn(['newNode', action.key, 'source'])
-      ) {
-        return state;
+      if (action.shouldResetActiveProp) {
+        return state.set('newNodeActiveProp', initialState.get('newNodeActiveProp'));
       }
 
-      return state.set('newNodeActiveProp', initialState.get('newNodeActiveProp'));
+      return state;
     }
 
     case actions.INGESTION_PROFILE_RESET_NEW_NODE:
@@ -165,6 +161,19 @@ function reduceState(state = initialState, action) {
 
     case actions.INGESTION_PROFILE_REVEAL_NEW_LINK:
       return state.set('newLinkVisible', true);
+
+    case actions.INGESTION_PROFILE_TOGGLE_NEW_LINK_ACTIVE_PROP_KEY:
+      if (action.key === state.getIn(['newLinkActiveProp', 'key'])) {
+        return state.set('newLinkActiveProp', initialState.get('newLinkActiveProp'));
+      }
+
+      return state.set(
+        'newLinkActiveProp',
+        Map({
+          key: action.key,
+          valueActive: false,
+        })
+      );
 
     case actions.INGESTION_PROFILE_TOGGLE_NEW_LINK_ACTIVE_PROP_VALUE:
       if (
@@ -181,6 +190,40 @@ function reduceState(state = initialState, action) {
           valueActive: true,
         })
       );
+
+    case actions.INGESTION_PROFILE_SET_NEW_LINK_PROP_VALUE:
+      state = state.setIn(['newLink', action.key], fromJS(action.value));
+
+      if (action.shouldResetActiveLink) {
+        return state.set('newLinkActiveProp', initialState.get('newLinkActiveProp'));
+      }
+
+      return state;
+
+    case actions.INGESTION_PROFILE_RESET_NEW_LINK:
+    case actions.INGESTION_PROFILE_ADD_NEW_LINK:
+      return state
+        .set('newLinkVisible', initialState.get('newLinkVisible'))
+        .set('newLink', initialState.get('newLink'))
+        .set('newLinkActiveProp', initialState.get('newLinkActiveProp'));
+
+    case actions.INGESTION_PROFILE_DELETE_NEW_LINK_PROP:
+      return state.deleteIn(['newLink', action.key]);
+
+    case actions.INGESTION_PROFILE_ADD_NEW_LINK_PROP:
+      if (!state.hasIn(['newLink', ''])) {
+        return state.setIn(['newLink', ''], Map({source: '', column: ''}));
+      }
+
+      return state;
+
+    case actions.INGESTION_PROFILE_SET_NEW_LINK_PROP_KEY: {
+      const prevValue = state.getIn(['newLink', action.prevKey]);
+      return state
+        .deleteIn(['newLink', action.prevKey])
+        .setIn(['newLink', action.key], prevValue)
+        .set('newLinkActiveProp', initialState.get('newLinkActiveProp'));
+    }
 
     default:
       return state;

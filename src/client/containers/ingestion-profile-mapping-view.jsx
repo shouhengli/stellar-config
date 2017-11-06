@@ -12,6 +12,7 @@ const {
 
 const {
   mappingNodesSelector,
+  mappingLinksSelector,
 } = require('../selectors/ingestion-profile');
 
 const {
@@ -22,7 +23,7 @@ const {
 function mapStateToProps(state) {
   return {
     nodes: mappingNodesSelector(state),
-    links: [],
+    links: mappingLinksSelector(state),
     newNodeVisible: newNodeVisibleSelector(state),
     newLinkVisible: newLinkVisibleSelector(state),
   };

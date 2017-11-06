@@ -23,7 +23,7 @@ const {
 const {
   newNodeSelector,
   newNodeActivePropSelector,
-  columnOptionsSelector,
+  newNodeColumnOptionsSelector,
   newNodeSaveEnabledSelector,
 } = require('../selectors/ui/ingestion-profile');
 
@@ -40,7 +40,7 @@ function mapStateToProps(state) {
     nodeTypeOptions: classNamesSelector(state),
     nodePropOptions: newMappingNodePropOptionsSelector(state),
     sourceOptions: sourcesSelector(state),
-    columnOptions: columnOptionsSelector(state),
+    columnOptions: newNodeColumnOptionsSelector(state),
     saveEnabled: newNodeSaveEnabledSelector(state),
   };
 }
@@ -59,7 +59,8 @@ function mapDispatchToProps(dispatch) {
             propKey,
             {
               source: item,
-            }
+            },
+            false
           ));
         } else {
           dispatch(setNewNodePropValue(
