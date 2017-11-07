@@ -7,55 +7,59 @@ const {
 } = require('../ingestion-profile');
 
 const {
-  toggleNewNodeActivePropKey,
-  toggleNewNodeActivePropValue,
-  addNewNodeProp,
-  deleteNewNodeProp,
-  setNewNodePropKey,
-  setNewNodePropValue,
-  resetNewNode,
+  toggleMappingNodeActivePropKey,
+  toggleMappingNodeActivePropValue,
+  addMappingNodeProp,
+  deleteMappingNodeProp,
+  setMappingNodePropKey,
+  setMappingNodePropValue,
+  resetMappingNode,
 } = require('../action-creators/ui/ingestion-profile');
 
 const {
-  addNewMappingNode,
+  addMappingNode,
+  updateMappingNode,
+  deleteMappingNode,
 } = require('../action-creators/ingestion-profile');
 
 const {
-  newNodeSelector,
-  newNodeActivePropSelector,
-  newNodeColumnOptionsSelector,
-  newNodeSaveEnabledSelector,
+  mappingNodeSelector,
+  editingNodeIndexSelector,
+  mappingNodeActivePropSelector,
+  mappingNodeColumnOptionsSelector,
+  mappingNodeSaveEnabledSelector,
 } = require('../selectors/ui/ingestion-profile');
 
 const {
-  newMappingNodePropOptionsSelector,
+  mappingNodePropOptionsSelector,
   classNamesSelector,
   sourcesSelector,
 } = require('../selectors/ingestion-profile');
 
 function mapStateToProps(state) {
   return {
-    node: newNodeSelector(state),
-    activeNodeProp: newNodeActivePropSelector(state),
+    node: mappingNodeSelector(state),
+    index: editingNodeIndexSelector(state),
+    activeNodeProp: mappingNodeActivePropSelector(state),
     nodeTypeOptions: classNamesSelector(state),
-    nodePropOptions: newMappingNodePropOptionsSelector(state),
+    nodePropOptions: mappingNodePropOptionsSelector(state),
     sourceOptions: sourcesSelector(state),
-    columnOptions: newNodeColumnOptionsSelector(state),
-    saveEnabled: newNodeSaveEnabledSelector(state),
+    columnOptions: mappingNodeColumnOptionsSelector(state),
+    saveEnabled: mappingNodeSaveEnabledSelector(state),
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     handleNodePropKeyMenuItemClick: (itemLists, activeItems, depth, item, propKey) =>
-      dispatch(setNewNodePropKey(item, propKey)),
+      dispatch(setMappingNodePropKey(item, propKey)),
 
     handleNodePropValueMenuItemClick: (itemLists, activeItems, depth, item, propKey) => {
       if (propKey === MAPPING_NODE_TYPE_KEY) {
-        dispatch(setNewNodePropValue(propKey, item));
+        dispatch(setMappingNodePropValue(propKey, item));
       } else {
         if (depth === 0) {
-          dispatch(setNewNodePropValue(
+          dispatch(setMappingNodePropValue(
             propKey,
             {
               source: item,
@@ -63,7 +67,7 @@ function mapDispatchToProps(dispatch) {
             false
           ));
         } else {
-          dispatch(setNewNodePropValue(
+          dispatch(setMappingNodePropValue(
             propKey,
             {
               source: activeItems.get(0),
@@ -74,17 +78,25 @@ function mapDispatchToProps(dispatch) {
       }
     },
 
-    handleNodePropKeyButtonClick: R.compose(dispatch, toggleNewNodeActivePropKey),
+    handleNodePropKeyButtonClick: R.compose(dispatch, toggleMappingNodeActivePropKey),
 
-    handleNodePropValueButtonClick: R.compose(dispatch, toggleNewNodeActivePropValue),
+    handleNodePropValueButtonClick: R.compose(dispatch, toggleMappingNodeActivePropValue),
 
-    handleDeleteSectionButtonClick: R.compose(dispatch, deleteNewNodeProp),
+    handleDeleteSectionButtonClick: R.compose(dispatch, deleteMappingNodeProp),
 
-    handleAddNodePropButtonClick: R.compose(dispatch, addNewNodeProp),
+    handleAddNodePropButtonClick: R.compose(dispatch, addMappingNodeProp),
 
-    handleCancelButtonClick: R.compose(dispatch, resetNewNode),
+    handleCancelButtonClick: R.compose(dispatch, resetMappingNode),
 
-    handleSaveButtonClick: R.compose(dispatch, addNewMappingNode),
+    handleSaveButtonClick: (node, index) => {
+      if (index >= 0) {
+        dispatch(updateMappingNode(node, index));
+      } else {
+        dispatch(addMappingNode(node));
+      }
+    },
+
+    handleDeleteButtonClick: R.compose(dispatch, deleteMappingNode),
   };
 }
 

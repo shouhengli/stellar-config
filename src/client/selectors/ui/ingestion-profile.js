@@ -79,45 +79,45 @@ const newLinkVisibleSelector = createSelector(
   (ingestionProfileUi) => ingestionProfileUi.get('newLinkVisible')
 );
 
-const newNodeSelector = createSelector(
+const mappingNodeSelector = createSelector(
   ingestionProfileUiSelector,
-  (ingestionProfileUi) => ingestionProfileUi.get('newNode')
+  (ingestionProfileUi) => ingestionProfileUi.get('mappingNode')
 );
 
-const newNodeActivePropSelector = createSelector(
+const mappingNodeActivePropSelector = createSelector(
   ingestionProfileUiSelector,
-  (ingestionProfileUi) => ingestionProfileUi.get('newNodeActiveProp')
+  (ingestionProfileUi) => ingestionProfileUi.get('mappingNodeActiveProp')
 );
 
-const newNodeColumnOptionsSelector = createSelector(
+const mappingNodeColumnOptionsSelector = createSelector(
   samplesSelector,
-  newNodeSelector,
-  newNodeActivePropSelector,
-  (samples, newNode, activeProp) =>
+  mappingNodeSelector,
+  mappingNodeActivePropSelector,
+  (samples, mappingNode, activeProp) =>
     samples.getIn(
       [
-        newNode.getIn([activeProp.get('key'), 'source'], ''),
+        mappingNode.getIn([activeProp.get('key'), 'source'], ''),
         'headers',
       ],
       List()
     )
 );
 
-const newNodeSaveEnabledSelector = createSelector(
-  newNodeSelector,
-  (newNode) => {
+const mappingNodeSaveEnabledSelector = createSelector(
+  mappingNodeSelector,
+  (mappingNode) => {
     if (
-      !newNode.has(MAPPING_NODE_ID_KEY)
-      || !newNode.has(MAPPING_NODE_TYPE_KEY)
+      !mappingNode.has(MAPPING_NODE_ID_KEY)
+      || !mappingNode.has(MAPPING_NODE_TYPE_KEY)
     ) {
       return false;
     }
 
-    if (newNode.has('')) {
+    if (mappingNode.has('')) {
       return false;
     }
 
-    const valueEmpty = newNode.some(
+    const valueEmpty = mappingNode.some(
       R.ifElse(
         R.is(Map),
         (value) => value.get('source') === '' || value.get('column') === '',
@@ -131,6 +131,11 @@ const newNodeSaveEnabledSelector = createSelector(
 
     return true;
   }
+);
+
+const editingNodeIndexSelector = createSelector(
+  ingestionProfileUiSelector,
+  (ingestionProfileUi) => ingestionProfileUi.get('editingNodeIndex')
 );
 
 const newLinkSelector = createSelector(
@@ -205,13 +210,14 @@ module.exports = {
   samplesSelector,
   sampleOfSelectedSourceSelector,
   newNodeVisibleSelector,
+  mappingNodeSelector,
+  mappingNodeActivePropSelector,
+  mappingNodeColumnOptionsSelector,
+  mappingNodeSaveEnabledSelector,
+  editingNodeIndexSelector,
   newLinkVisibleSelector,
-  newNodeSelector,
   newLinkSelector,
-  newNodeActivePropSelector,
   newLinkActivePropSelector,
-  newNodeColumnOptionsSelector,
   newLinkColumnOptionsSelector,
-  newNodeSaveEnabledSelector,
   newLinkSaveEnabledSelector,
 };

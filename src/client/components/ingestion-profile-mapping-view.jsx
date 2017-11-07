@@ -24,13 +24,15 @@ const Header = ({title, handleAddButtonClick}) =>
     </h3>
   </div>;
 
-const Node = ({node}) =>
+const Node = ({node, index, handleEditButtonClick}) =>
   <div className="card">
     <header className="card-header">
       <p className="card-header-title">
         {node.get(MAPPING_NODE_TYPE_KEY)}
       </p>
-      <a className="card-header-icon">
+      <a
+        className="card-header-icon"
+        onClick={() => handleEditButtonClick(node, index)}>
         <span className="icon">
           <i className="fa fa-pencil-square-o"></i>
         </span>
@@ -112,8 +114,10 @@ module.exports =
     links,
     newNodeVisible,
     newLinkVisible,
+    editingNodeIndex,
     handleAddNodeButtonClick,
     handleAddLinkButtonClick,
+    handleEditNodeButtonClick,
   }) =>
     <FullView>
       <div className="ingestion-profile-mapping-view">
@@ -130,7 +134,13 @@ module.exports =
               }
               {
                 nodes.map((node, i) =>
-                  <Node key={i} node={node} />
+                  i === editingNodeIndex
+                    ? <NodeEditor key={i} />
+                    : <Node
+                        key={i}
+                        node={node}
+                        index={i}
+                        handleEditButtonClick={handleEditNodeButtonClick} />
                 )
               }
             </div>

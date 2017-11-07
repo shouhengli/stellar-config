@@ -9,6 +9,8 @@ const defaultToEmptyObject = R.defaultTo({});
 
 const isNotEmpty = (value) => !R.isNil(value) && !R.isEmpty(value);
 
+const noop = () => {};
+
 module.exports = {
   defaultToEmptyList,
   defaultToEmptyString,
@@ -16,4 +18,5 @@ module.exports = {
   defaultToEmptyArray,
   defaultToEmptyObject,
   isNotEmpty,
+  noop,
 };

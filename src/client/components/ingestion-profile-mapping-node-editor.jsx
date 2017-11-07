@@ -26,6 +26,7 @@ const PropLabel = ({label}) =>
 module.exports =
   ({
     node,
+    index,
     activeNodeProp,
     nodeTypeOptions,
     nodePropOptions,
@@ -39,12 +40,13 @@ module.exports =
     handleDeleteSectionButtonClick,
     handleAddNodePropButtonClick,
     handleCancelButtonClick,
+    handleDeleteButtonClick,
     handleSaveButtonClick,
   }) =>
     <div className="card">
       <header className="card-header">
         <p className="card-header-title">
-          New Node
+          {node.get(MAPPING_NODE_TYPE_KEY, 'New Node')}
         </p>
         <a className="card-header-icon" onClick={() => handleCancelButtonClick()}>
           <span className="icon">
@@ -213,11 +215,24 @@ module.exports =
         }
       </div>
       <footer className="card-footer">
+        {
+          index >= 0 && (
+            <a
+              className="card-footer-item has-text-danger"
+              onClick={() => handleDeleteButtonClick(index)}>
+              Delete
+            </a>
+          )
+        }
         <a className="card-footer-item" onClick={() => handleAddNodePropButtonClick()}>Add</a>
         {
           saveEnabled
           ? (
-            <a className="card-footer-item" onClick={() => handleSaveButtonClick(node)}>Save</a>
+            <a
+              className="card-footer-item"
+              onClick={() => handleSaveButtonClick(node, index)}>
+              Save
+            </a>
           )
           : (
             <span className="card-footer-item">Save</span>

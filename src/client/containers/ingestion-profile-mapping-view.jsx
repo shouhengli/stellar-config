@@ -8,6 +8,7 @@ const LinkEditor = require('./ingestion-profile-mapping-link-editor.jsx');
 const {
   newNodeVisibleSelector,
   newLinkVisibleSelector,
+  editingNodeIndexSelector,
 } = require('../selectors/ui/ingestion-profile');
 
 const {
@@ -18,6 +19,7 @@ const {
 const {
   revealNewNode,
   revealNewLink,
+  editMappingNode,
 } = require('../action-creators/ui/ingestion-profile');
 
 function mapStateToProps(state) {
@@ -26,6 +28,7 @@ function mapStateToProps(state) {
     links: mappingLinksSelector(state),
     newNodeVisible: newNodeVisibleSelector(state),
     newLinkVisible: newLinkVisibleSelector(state),
+    editingNodeIndex: editingNodeIndexSelector(state),
   };
 }
 
@@ -34,6 +37,8 @@ function mapDispatchToProps(dispatch) {
     handleAddNodeButtonClick: R.compose(dispatch, revealNewNode),
 
     handleAddLinkButtonClick: R.compose(dispatch, revealNewLink),
+
+    handleEditNodeButtonClick: R.compose(dispatch, editMappingNode),
   };
 }
 

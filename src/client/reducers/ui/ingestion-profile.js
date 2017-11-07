@@ -1,4 +1,4 @@
-const {is, fromJS, Map} = require('immutable');
+const {is, fromJS, Map, OrderedMap} = require('immutable');
 const actions = require('../../actions');
 const {TAB_SOURCE} = require('../../ingestion-profile');
 
@@ -14,10 +14,11 @@ const initialState = fromJS({
   deleteSourceVisible: false,
   samples: {},
   newNodeVisible: false,
+  editingNodeIndex: -1,
   newLinkVisible: false,
-  newNode: {},
+  mappingNode: OrderedMap(),
   newLink: {},
-  newNodeActiveProp: {
+  mappingNodeActiveProp: {
     key: null,
     valueActive: false,
   },
@@ -93,71 +94,84 @@ function reduceState(state = initialState, action) {
       return state.set('activeTab', action.tab);
 
     case actions.INGESTION_PROFILE_REVEAL_NEW_NODE:
-      return state.set('newNodeVisible', true);
+      return state
+        .set('newNodeVisible', true)
+        .set('editingNodeIndex', initialState.get('editingNodeIndex'))
+        .set('mappingNode', initialState.get('mappingNode'))
+        .set('mappingNodeActiveProp', initialState.get('mappingNodeActiveProp'));
 
-    case actions.INGESTION_PROFILE_TOGGLE_NEW_NODE_ACTIVE_PROP_KEY:
-      if (action.key === state.getIn(['newNodeActiveProp', 'key'])) {
-        return state.set('newNodeActiveProp', initialState.get('newNodeActiveProp'));
+    case actions.INGESTION_PROFILE_TOGGLE_MAPPING_NODE_ACTIVE_PROP_KEY:
+      if (action.key === state.getIn(['mappingNodeActiveProp', 'key'])) {
+        return state.set('mappingNodeActiveProp', initialState.get('mappingNodeActiveProp'));
       }
 
       return state.set(
-        'newNodeActiveProp',
+        'mappingNodeActiveProp',
         Map({
           key: action.key,
           valueActive: false,
         })
       );
 
-    case actions.INGESTION_PROFILE_TOGGLE_NEW_NODE_ACTIVE_PROP_VALUE:
+    case actions.INGESTION_PROFILE_TOGGLE_MAPPING_NODE_ACTIVE_PROP_VALUE:
       if (
-        action.key === state.getIn(['newNodeActiveProp', 'key'])
-        && state.getIn(['newNodeActiveProp', 'valueActive'])
+        action.key === state.getIn(['mappingNodeActiveProp', 'key'])
+        && state.getIn(['mappingNodeActiveProp', 'valueActive'])
       ) {
-        return state.set('newNodeActiveProp', initialState.get('newNodeActiveProp'));
+        return state.set('mappingNodeActiveProp', initialState.get('mappingNodeActiveProp'));
       }
 
       return state.set(
-        'newNodeActiveProp',
+        'mappingNodeActiveProp',
         Map({
           key: action.key,
           valueActive: true,
         })
       );
 
-    case actions.INGESTION_PROFILE_ADD_NEW_NODE_PROP:
-      if (!state.hasIn(['newNode', ''])) {
-        return state.setIn(['newNode', ''], Map({source: '', column: ''}));
+    case actions.INGESTION_PROFILE_ADD_MAPPING_NODE_PROP:
+      if (!state.hasIn(['mappingNode', ''])) {
+        return state.setIn(['mappingNode', ''], Map({source: '', column: ''}));
       }
 
       return state;
 
-    case actions.INGESTION_PROFILE_DELETE_NEW_NODE_PROP:
-      return state.deleteIn(['newNode', action.key]);
+    case actions.INGESTION_PROFILE_DELETE_MAPPING_NODE_PROP:
+      return state.deleteIn(['mappingNode', action.key]);
 
-    case actions.INGESTION_PROFILE_SET_NEW_NODE_PROP_KEY: {
-      const prevValue = state.getIn(['newNode', action.prevKey]);
+    case actions.INGESTION_PROFILE_SET_MAPPING_NODE_PROP_KEY: {
+      const prevValue = state.getIn(['mappingNode', action.prevKey]);
       return state
-        .deleteIn(['newNode', action.prevKey])
-        .setIn(['newNode', action.key], prevValue)
-        .set('newNodeActiveProp', initialState.get('newNodeActiveProp'));
+        .deleteIn(['mappingNode', action.prevKey])
+        .setIn(['mappingNode', action.key], prevValue)
+        .set('mappingNodeActiveProp', initialState.get('mappingNodeActiveProp'));
     }
 
-    case actions.INGESTION_PROFILE_SET_NEW_NODE_PROP_VALUE: {
-      state = state.setIn(['newNode', action.key], fromJS(action.value));
+    case actions.INGESTION_PROFILE_SET_MAPPING_NODE_PROP_VALUE: {
+      state = state.setIn(['mappingNode', action.key], fromJS(action.value));
 
       if (action.shouldResetActiveProp) {
-        return state.set('newNodeActiveProp', initialState.get('newNodeActiveProp'));
+        return state.set('mappingNodeActiveProp', initialState.get('mappingNodeActiveProp'));
       }
 
       return state;
     }
 
-    case actions.INGESTION_PROFILE_RESET_NEW_NODE:
-    case actions.INGESTION_PROFILE_ADD_NEW_NODE:
+    case actions.INGESTION_PROFILE_RESET_MAPPING_NODE:
+    case actions.INGESTION_PROFILE_ADD_MAPPING_NODE:
+    case actions.INGESTION_PROFILE_UPDATE_MAPPING_NODE:
+    case actions.INGESTION_PROFILE_DELETE_MAPPING_NODE:
       return state
         .set('newNodeVisible', initialState.get('newNodeVisible'))
-        .set('newNode', initialState.get('newNode'))
-        .set('newNodeActiveProp', initialState.get('newNodeActiveProp'));
+        .set('editingNodeIndex', initialState.get('editingNodeIndex'))
+        .set('mappingNode', initialState.get('mappingNode'))
+        .set('mappingNodeActiveProp', initialState.get('mappingNodeActiveProp'));
+
+    case actions.INGESTION_PROFILE_EDIT_MAPPING_NODE:
+      return state
+        .set('editingNodeIndex', action.index)
+        .set('mappingNode', action.node)
+        .set('newNodeVisible', initialState.get('newNodeVisible'));
 
     case actions.INGESTION_PROFILE_REVEAL_NEW_LINK:
       return state.set('newLinkVisible', true);

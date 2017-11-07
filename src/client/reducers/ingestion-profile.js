@@ -1,5 +1,5 @@
 const R = require('ramda');
-const {fromJS, is, Map, List} = require('immutable');
+const {fromJS, is, Map, List, OrderedMap} = require('immutable');
 const actions = require('../actions');
 
 const {
@@ -86,7 +86,9 @@ function loadMapping(mapping) {
       {
         nodes: R.pipe(
           defaultToEmptyArray,
-          fromJS
+          R.map(fromJS),
+          R.map(OrderedMap),
+          List
         ),
         links: R.pipe(
           defaultToEmptyArray,
@@ -133,13 +135,23 @@ function reduce(state = initialState, action) {
     case actions.GRAPH_SCHEMA_SET_EDITOR_CONTENT:
       return state.set('status', CONFIG_STATUS_CHANGED);
 
-    case actions.INGESTION_PROFILE_ADD_NEW_NODE:
+    case actions.INGESTION_PROFILE_ADD_MAPPING_NODE:
       return state
         .updateIn(
           ['mapping', 'nodes'],
           List(),
-          (nodes) => nodes.push(fromJS(action.node))
+          (nodes) => nodes.push(action.node)
         )
+        .set('status', CONFIG_STATUS_CHANGED);
+
+    case actions.INGESTION_PROFILE_UPDATE_MAPPING_NODE:
+      return state
+        .setIn(['mapping', 'nodes', action.index], action.node)
+        .set('status', CONFIG_STATUS_CHANGED);
+
+    case actions.INGESTION_PROFILE_DELETE_MAPPING_NODE:
+      return state
+        .deleteIn(['mapping', 'nodes', action.index])
         .set('status', CONFIG_STATUS_CHANGED);
 
     case actions.INGESTION_PROFILE_ADD_NEW_LINK:
@@ -147,7 +159,7 @@ function reduce(state = initialState, action) {
         .updateIn(
           ['mapping', 'links'],
           List(),
-          (links) => links.push(fromJS(action.link))
+          (links) => links.push(action.link)
         )
         .set('status', CONFIG_STATUS_CHANGED);
 

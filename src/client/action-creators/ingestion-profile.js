@@ -58,10 +58,25 @@ function loadGraphSchemaContent(classes, classLinks) {
   };
 }
 
-function addNewMappingNode(node) {
+function addMappingNode(node) {
   return {
-    type: actions.INGESTION_PROFILE_ADD_NEW_NODE,
+    type: actions.INGESTION_PROFILE_ADD_MAPPING_NODE,
     node,
+  };
+}
+
+function updateMappingNode(node, index) {
+  return {
+    type: actions.INGESTION_PROFILE_UPDATE_MAPPING_NODE,
+    node,
+    index,
+  };
+}
+
+function deleteMappingNode(index) {
+  return {
+    type: actions.INGESTION_PROFILE_DELETE_MAPPING_NODE,
+    index,
   };
 }
 
@@ -79,6 +94,8 @@ module.exports = {
   addSource,
   deleteSource,
   loadGraphSchemaContent,
-  addNewMappingNode,
+  addMappingNode,
+  updateMappingNode,
+  deleteMappingNode,
   addNewMappingLink,
 };
