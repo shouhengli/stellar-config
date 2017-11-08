@@ -92,7 +92,9 @@ function loadMapping(mapping) {
         ),
         links: R.pipe(
           defaultToEmptyArray,
-          fromJS
+          R.map(fromJS),
+          R.map(OrderedMap),
+          List
         ),
       },
       mapping
@@ -154,13 +156,23 @@ function reduce(state = initialState, action) {
         .deleteIn(['mapping', 'nodes', action.index])
         .set('status', CONFIG_STATUS_CHANGED);
 
-    case actions.INGESTION_PROFILE_ADD_NEW_LINK:
+    case actions.INGESTION_PROFILE_ADD_MAPPING_LINK:
       return state
         .updateIn(
           ['mapping', 'links'],
           List(),
           (links) => links.push(action.link)
         )
+        .set('status', CONFIG_STATUS_CHANGED);
+
+    case actions.INGESTION_PROFILE_UPDATE_MAPPING_LINK:
+      return state
+        .setIn(['mapping', 'links', action.index], action.link)
+        .set('status', CONFIG_STATUS_CHANGED);
+
+    case actions.INGESTION_PROFILE_DELETE_MAPPING_LINK:
+      return state
+        .deleteIn(['mapping', 'links', action.index])
         .set('status', CONFIG_STATUS_CHANGED);
 
     default:

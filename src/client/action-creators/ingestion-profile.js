@@ -80,10 +80,25 @@ function deleteMappingNode(index) {
   };
 }
 
-function addNewMappingLink(link) {
+function addMappingLink(link) {
   return {
-    type: actions.INGESTION_PROFILE_ADD_NEW_LINK,
+    type: actions.INGESTION_PROFILE_ADD_MAPPING_LINK,
     link,
+  };
+}
+
+function updateMappingLink(link, index) {
+  return {
+    type: actions.INGESTION_PROFILE_UPDATE_MAPPING_LINK,
+    link,
+    index,
+  };
+}
+
+function deleteMappingLink(index) {
+  return {
+    type: actions.INGESTION_PROFILE_DELETE_MAPPING_LINK,
+    index,
   };
 }
 
@@ -97,5 +112,7 @@ module.exports = {
   addMappingNode,
   updateMappingNode,
   deleteMappingNode,
-  addNewMappingLink,
+  addMappingLink,
+  updateMappingLink,
+  deleteMappingLink,
 };

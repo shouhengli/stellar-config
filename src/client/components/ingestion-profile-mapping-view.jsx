@@ -48,18 +48,21 @@ const Node = ({node, index, handleEditButtonClick}) =>
           column={node.getIn([MAPPING_NODE_ID_KEY, 'column'])} />
       </p>
       {
-        node.delete(MAPPING_NODE_TYPE_KEY).delete(MAPPING_NODE_ID_KEY).map((value, key) => [
-          <h6 key="propKey" className="title is-6">{key}</h6>,
-          <p key="propvalue" className="source-column-label">
-            <SourceColumnLabel source={value.get('source')} column={value.get('column')} />
-          </p>,
-        ])
-        .valueSeq()
+        node
+          .delete(MAPPING_NODE_TYPE_KEY)
+          .delete(MAPPING_NODE_ID_KEY)
+          .map((value, key) => [
+            <h6 key="propKey" className="title is-6">{key}</h6>,
+            <p key="propvalue" className="source-column-label">
+              <SourceColumnLabel source={value.get('source')} column={value.get('column')} />
+            </p>,
+          ])
+          .valueSeq()
       }
     </div>
   </div>;
 
-const Link = ({link}) =>
+const Link = ({link, index, handleEditButtonClick}) =>
   <div className="card">
     <header className="card-header">
       <p className="card-header-title">
@@ -67,7 +70,9 @@ const Link = ({link}) =>
           source={link.getIn([MAPPING_LINK_TYPE_KEY, 'source'])}
           name={link.getIn([MAPPING_LINK_TYPE_KEY, 'name'])} />
       </p>
-      <a className="card-header-icon">
+      <a
+        className="card-header-icon"
+        onClick={() => handleEditButtonClick(link, index)}>
         <span className="icon">
           <i className="fa fa-pencil-square-o"></i>
         </span>
@@ -115,9 +120,11 @@ module.exports =
     newNodeVisible,
     newLinkVisible,
     editingNodeIndex,
+    editingLinkIndex,
     handleAddNodeButtonClick,
     handleAddLinkButtonClick,
     handleEditNodeButtonClick,
+    handleEditLinkButtonClick,
   }) =>
     <FullView>
       <div className="ingestion-profile-mapping-view">
@@ -155,7 +162,13 @@ module.exports =
                 }
                 {
                   links.map((link, i) =>
-                    <Link key={i} link={link} />
+                    i === editingLinkIndex
+                    ? <LinkEditor key={i} />
+                    : <Link
+                        key={i}
+                        link={link}
+                        index={i}
+                        handleEditButtonClick={handleEditLinkButtonClick} />
                   )
                 }
             </div>

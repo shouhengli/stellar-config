@@ -231,11 +231,11 @@ module.exports =
             <a
               className="card-footer-item"
               onClick={() => handleSaveButtonClick(node, index)}>
-              Save
+              Done
             </a>
           )
           : (
-            <span className="card-footer-item">Save</span>
+            <span className="card-footer-item">Done</span>
           )
         }
       </footer>

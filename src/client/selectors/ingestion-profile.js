@@ -4,7 +4,7 @@ const {MAPPING_NODE_TYPE_KEY} = require('../ingestion-profile');
 
 const {
   mappingNodeSelector,
-  newLinkSelector,
+  mappingLinkSelector,
 } = require('./ui/ingestion-profile');
 
 const ingestionProfileSelector = (state) => state.get('ingestionProfile');
@@ -93,22 +93,22 @@ const mappingNodePropOptionsSelector = createSelector(
       .subtract(mappingNode.keySeq())
 );
 
-const newMappingLinkPropOptionsSelector = createSelector(
+const mappingLinkPropOptionsSelector = createSelector(
   graphSchemaSelector,
-  newLinkSelector,
-  (graphSchema, newLink) =>
+  mappingLinkSelector,
+  (graphSchema, mappingLink) =>
     graphSchema
       .getIn(
         [
           'classLinks',
-          newLink.get(MAPPING_NODE_TYPE_KEY),
+          mappingLink.get(MAPPING_NODE_TYPE_KEY),
           'props',
         ],
         Map()
       )
       .keySeq()
       .toSet()
-      .subtract(newLink.keySeq())
+      .subtract(mappingLink.keySeq())
 );
 
 module.exports = {
@@ -121,5 +121,5 @@ module.exports = {
   mappingNodesSelector,
   mappingLinksSelector,
   mappingNodePropOptionsSelector,
-  newMappingLinkPropOptionsSelector,
+  mappingLinkPropOptionsSelector,
 };

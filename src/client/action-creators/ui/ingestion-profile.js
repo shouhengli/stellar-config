@@ -168,49 +168,57 @@ function revealNewLink() {
   return {type: actions.INGESTION_PROFILE_REVEAL_NEW_LINK};
 }
 
-function toggleNewLinkActivePropKey(key) {
+function toggleMappingLinkActivePropKey(key) {
   return {
-    type: actions.INGESTION_PROFILE_TOGGLE_NEW_LINK_ACTIVE_PROP_KEY,
+    type: actions.INGESTION_PROFILE_TOGGLE_MAPPING_LINK_ACTIVE_PROP_KEY,
     key,
   };
 }
 
-function toggleNewLinkActivePropValue(key) {
+function toggleMappingLinkActivePropValue(key) {
   return {
-    type: actions.INGESTION_PROFILE_TOGGLE_NEW_LINK_ACTIVE_PROP_VALUE,
+    type: actions.INGESTION_PROFILE_TOGGLE_MAPPING_LINK_ACTIVE_PROP_VALUE,
     key,
   };
 }
 
-function setNewLinkPropValue(key, value, shouldResetActiveLink = true) {
+function setMappingLinkPropValue(key, value, shouldResetActiveLink = true) {
   return {
-    type: actions.INGESTION_PROFILE_SET_NEW_LINK_PROP_VALUE,
+    type: actions.INGESTION_PROFILE_SET_MAPPING_LINK_PROP_VALUE,
     key,
     value,
     shouldResetActiveLink,
   };
 }
 
-function resetNewLink() {
-  return {type: actions.INGESTION_PROFILE_RESET_NEW_LINK};
+function resetMappingLink() {
+  return {type: actions.INGESTION_PROFILE_RESET_MAPPING_LINK};
 }
 
-function deleteNewLinkProp(key) {
+function deleteMappingLinkProp(key) {
   return {
-    type: actions.INGESTION_PROFILE_DELETE_NEW_LINK_PROP,
+    type: actions.INGESTION_PROFILE_DELETE_MAPPING_LINK_PROP,
     key,
   };
 }
 
-function addNewLinkProp() {
-  return {type: actions.INGESTION_PROFILE_ADD_NEW_LINK_PROP};
+function addMappingLinkProp() {
+  return {type: actions.INGESTION_PROFILE_ADD_MAPPING_LINK_PROP};
 }
 
-function setNewLinkPropKey(key, prevKey) {
+function setMappingLinkPropKey(key, prevKey) {
   return {
-    type: actions.INGESTION_PROFILE_SET_NEW_LINK_PROP_KEY,
+    type: actions.INGESTION_PROFILE_SET_MAPPING_LINK_PROP_KEY,
     key,
     prevKey,
+  };
+}
+
+function editMappingLink(link, index) {
+  return {
+    type: actions.INGESTION_PROFILE_EDIT_MAPPING_LINK,
+    link,
+    index,
   };
 }
 
@@ -240,11 +248,12 @@ module.exports = {
   resetMappingNode,
   editMappingNode,
   revealNewLink,
-  toggleNewLinkActivePropKey,
-  toggleNewLinkActivePropValue,
-  setNewLinkPropValue,
-  resetNewLink,
-  deleteNewLinkProp,
-  addNewLinkProp,
-  setNewLinkPropKey,
+  toggleMappingLinkActivePropKey,
+  toggleMappingLinkActivePropValue,
+  setMappingLinkPropValue,
+  resetMappingLink,
+  deleteMappingLinkProp,
+  addMappingLinkProp,
+  setMappingLinkPropKey,
+  editMappingLink,
 };

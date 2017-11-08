@@ -32,6 +32,7 @@ const {
 module.exports =
   ({
     link,
+    index,
     activeLinkProp,
     linkTypeOptions,
     sourceOptions,
@@ -46,11 +47,18 @@ module.exports =
     handleDeleteSectionButtonClick,
     handleSaveButtonClick,
     handleAddLinkPropButtonClick,
+    handleDeleteButtonClick,
   }) =>
     <div className="card">
       <header className="card-header">
         <p className="card-header-title">
-          New Link
+          {
+            link.has(MAPPING_LINK_TYPE_KEY)
+              ? <LinkTypeLabel
+                  source={link.getIn([MAPPING_LINK_TYPE_KEY, 'source'])}
+                  name={link.getIn([MAPPING_LINK_TYPE_KEY, 'name'])} />
+              : 'New Link'
+          }
         </p>
         <a className="card-header-icon" onClick={() => handleCancelButtonClick()}>
           <span className="icon">
@@ -273,14 +281,27 @@ module.exports =
         }
       </div>
       <footer className="card-footer">
+        {
+          index >= 0 && (
+            <a
+              className="card-footer-item has-text-danger"
+              onClick={() => handleDeleteButtonClick(index)}>
+              Delete
+            </a>
+          )
+        }
         <a className="card-footer-item" onClick={() => handleAddLinkPropButtonClick()}>Add</a>
         {
           saveEnabled
           ? (
-            <a className="card-footer-item" onClick={() => handleSaveButtonClick(link)}>Save</a>
+            <a
+              className="card-footer-item"
+              onClick={() => handleSaveButtonClick(link, index)}>
+              Done
+            </a>
           )
           : (
-            <span className="card-footer-item">Save</span>
+            <span className="card-footer-item">Done</span>
           )
         }
       </footer>

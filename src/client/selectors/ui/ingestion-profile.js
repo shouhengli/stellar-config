@@ -120,7 +120,11 @@ const mappingNodeSaveEnabledSelector = createSelector(
     const valueEmpty = mappingNode.some(
       R.ifElse(
         R.is(Map),
-        (value) => value.get('source') === '' || value.get('column') === '',
+        R.ifElse(
+          (value) => value.has('source'),
+          (value) => value.get('source') === '' || value.get('column') === '',
+          R.isNil
+        ),
         (value) => R.isNil(value) || R.isEmpty(value)
       )
     );
@@ -138,20 +142,20 @@ const editingNodeIndexSelector = createSelector(
   (ingestionProfileUi) => ingestionProfileUi.get('editingNodeIndex')
 );
 
-const newLinkSelector = createSelector(
+const mappingLinkSelector = createSelector(
   ingestionProfileUiSelector,
-  (ingestionProfileUi) => ingestionProfileUi.get('newLink')
+  (ingestionProfileUi) => ingestionProfileUi.get('mappingLink')
 );
 
-const newLinkActivePropSelector = createSelector(
+const mappingLinkActivePropSelector = createSelector(
   ingestionProfileUiSelector,
-  (ingestionProfileUi) => ingestionProfileUi.get('newLinkActiveProp')
+  (ingestionProfileUi) => ingestionProfileUi.get('mappingLinkActiveProp')
 );
 
-const newLinkColumnOptionsSelector = createSelector(
+const mappingLinkColumnOptionsSelector = createSelector(
   samplesSelector,
-  newLinkSelector,
-  newLinkActivePropSelector,
+  mappingLinkSelector,
+  mappingLinkActivePropSelector,
   (samples, newNode, activeProp) =>
     samples.getIn(
       [
@@ -162,22 +166,22 @@ const newLinkColumnOptionsSelector = createSelector(
     )
 );
 
-const newLinkSaveEnabledSelector = createSelector(
-  newLinkSelector,
-  (newLink) => {
+const mappingLinkSaveEnabledSelector = createSelector(
+  mappingLinkSelector,
+  (mappingLink) => {
     if (
-      !newLink.has(MAPPING_LINK_TYPE_KEY)
-      || !newLink.has(MAPPING_LINK_SOURCE_KEY)
-      || !newLink.has(MAPPING_LINK_DESTINATION_KEY)
+      !mappingLink.has(MAPPING_LINK_TYPE_KEY)
+      || !mappingLink.has(MAPPING_LINK_SOURCE_KEY)
+      || !mappingLink.has(MAPPING_LINK_DESTINATION_KEY)
     ) {
       return false;
     }
 
-    if (newLink.has('')) {
+    if (mappingLink.has('')) {
       return false;
     }
 
-    const valueEmpty = newLink.some(
+    const valueEmpty = mappingLink.some(
       R.ifElse(
         R.is(Map),
         R.ifElse(
@@ -195,6 +199,11 @@ const newLinkSaveEnabledSelector = createSelector(
 
     return true;
   }
+);
+
+const editingLinkIndexSelector = createSelector(
+  ingestionProfileUiSelector,
+  (ingestionProfileUi) => ingestionProfileUi.get('editingLinkIndex')
 );
 
 module.exports = {
@@ -216,8 +225,9 @@ module.exports = {
   mappingNodeSaveEnabledSelector,
   editingNodeIndexSelector,
   newLinkVisibleSelector,
-  newLinkSelector,
-  newLinkActivePropSelector,
-  newLinkColumnOptionsSelector,
-  newLinkSaveEnabledSelector,
+  mappingLinkSelector,
+  mappingLinkActivePropSelector,
+  mappingLinkColumnOptionsSelector,
+  mappingLinkSaveEnabledSelector,
+  editingLinkIndexSelector,
 };

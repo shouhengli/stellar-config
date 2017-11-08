@@ -7,55 +7,61 @@ const {
 } = require('../ingestion-profile');
 
 const {
-  newLinkSelector,
-  newLinkActivePropSelector,
-  newLinkColumnOptionsSelector,
-  newLinkSaveEnabledSelector,
+  mappingLinkSelector,
+  editingLinkIndexSelector,
+  mappingLinkActivePropSelector,
+  mappingLinkColumnOptionsSelector,
+  mappingLinkSaveEnabledSelector,
 } = require('../selectors/ui/ingestion-profile');
 
 const {
   classLinkKeysSelector,
   sourcesSelector,
-  newMappingLinkPropOptionsSelector,
+  mappingLinkPropOptionsSelector,
 } = require('../selectors/ingestion-profile');
 
 const {
-  toggleNewLinkActivePropKey,
-  toggleNewLinkActivePropValue,
-  setNewLinkPropValue,
-  resetNewLink,
-  deleteNewLinkProp,
-  addNewLinkProp,
-  setNewLinkPropKey,
+  toggleMappingLinkActivePropKey,
+  toggleMappingLinkActivePropValue,
+  setMappingLinkPropValue,
+  resetMappingLink,
+  deleteMappingLinkProp,
+  addMappingLinkProp,
+  setMappingLinkPropKey,
 } = require('../action-creators/ui/ingestion-profile');
 
-const {addNewMappingLink} = require('../action-creators/ingestion-profile');
+const {
+  addMappingLink,
+  updateMappingLink,
+  deleteMappingLink,
+} = require('../action-creators/ingestion-profile');
 
 function mapStateToProps(state) {
   return {
-    link: newLinkSelector(state),
-    activeLinkProp: newLinkActivePropSelector(state),
+    link: mappingLinkSelector(state),
+    index: editingLinkIndexSelector(state),
+    activeLinkProp: mappingLinkActivePropSelector(state),
     linkTypeOptions: classLinkKeysSelector(state),
     sourceOptions: sourcesSelector(state),
-    columnOptions: newLinkColumnOptionsSelector(state),
-    linkPropOptions: newMappingLinkPropOptionsSelector(state),
-    saveEnabled: newLinkSaveEnabledSelector(state),
+    columnOptions: mappingLinkColumnOptionsSelector(state),
+    linkPropOptions: mappingLinkPropOptionsSelector(state),
+    saveEnabled: mappingLinkSaveEnabledSelector(state),
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     handleLinkPropKeyMenuItemClick: (itemLists, activeItems, depth, item, propKey) =>
-      dispatch(setNewLinkPropKey(item, propKey)),
+      dispatch(setMappingLinkPropKey(item, propKey)),
 
-    handleLinkPropKeyButtonClick: R.compose(dispatch, toggleNewLinkActivePropKey),
+    handleLinkPropKeyButtonClick: R.compose(dispatch, toggleMappingLinkActivePropKey),
 
     handleLinkPropValueMenuItemClick: (itemLists, activeItems, depth, item, propKey) => {
       if (propKey === MAPPING_LINK_TYPE_KEY) {
-        dispatch(setNewLinkPropValue(propKey, item));
+        dispatch(setMappingLinkPropValue(propKey, item));
       } else {
         if (depth === 0) {
-          dispatch(setNewLinkPropValue(
+          dispatch(setMappingLinkPropValue(
             propKey,
             {
               source: item,
@@ -63,7 +69,7 @@ function mapDispatchToProps(dispatch) {
             false
           ));
         } else {
-          dispatch(setNewLinkPropValue(
+          dispatch(setMappingLinkPropValue(
             propKey,
             {
               source: activeItems.get(0),
@@ -74,15 +80,23 @@ function mapDispatchToProps(dispatch) {
       }
     },
 
-    handleLinkPropValueButtonClick: R.compose(dispatch, toggleNewLinkActivePropValue),
+    handleLinkPropValueButtonClick: R.compose(dispatch, toggleMappingLinkActivePropValue),
 
-    handleCancelButtonClick: R.compose(dispatch, resetNewLink),
+    handleCancelButtonClick: R.compose(dispatch, resetMappingLink),
 
-    handleDeleteSectionButtonClick: R.compose(dispatch, deleteNewLinkProp),
+    handleDeleteSectionButtonClick: R.compose(dispatch, deleteMappingLinkProp),
 
-    handleAddLinkPropButtonClick: R.compose(dispatch, addNewLinkProp),
+    handleAddLinkPropButtonClick: R.compose(dispatch, addMappingLinkProp),
 
-    handleSaveButtonClick: R.compose(dispatch, addNewMappingLink),
+    handleSaveButtonClick: (link, index) => {
+      if (index >= 0) {
+        dispatch(updateMappingLink(link, index));
+      } else {
+        dispatch(addMappingLink(link));
+      }
+    },
+
+    handleDeleteButtonClick: R.compose(dispatch, deleteMappingLink),
   };
 }
 

@@ -16,13 +16,14 @@ const initialState = fromJS({
   newNodeVisible: false,
   editingNodeIndex: -1,
   newLinkVisible: false,
+  editingLinkIndex: -1,
   mappingNode: OrderedMap(),
-  newLink: {},
+  mappingLink: OrderedMap(),
   mappingNodeActiveProp: {
     key: null,
     valueActive: false,
   },
-  newLinkActiveProp: {
+  mappingLinkActiveProp: {
     key: null,
     valueActive: false,
   },
@@ -174,70 +175,83 @@ function reduceState(state = initialState, action) {
         .set('newNodeVisible', initialState.get('newNodeVisible'));
 
     case actions.INGESTION_PROFILE_REVEAL_NEW_LINK:
-      return state.set('newLinkVisible', true);
+      return state
+        .set('newLinkVisible', true)
+        .set('editingLinkIndex', initialState.get('editingLinkIndex'))
+        .set('mappingLink', initialState.get('mappingLink'))
+        .set('mappingLinkActiveProp', initialState.get('mappingLinkActiveProp'));
 
-    case actions.INGESTION_PROFILE_TOGGLE_NEW_LINK_ACTIVE_PROP_KEY:
-      if (action.key === state.getIn(['newLinkActiveProp', 'key'])) {
-        return state.set('newLinkActiveProp', initialState.get('newLinkActiveProp'));
+    case actions.INGESTION_PROFILE_TOGGLE_MAPPING_LINK_ACTIVE_PROP_KEY:
+      if (action.key === state.getIn(['mappingLinkActiveProp', 'key'])) {
+        return state.set('mappingLinkActiveProp', initialState.get('mappingLinkActiveProp'));
       }
 
       return state.set(
-        'newLinkActiveProp',
+        'mappingLinkActiveProp',
         Map({
           key: action.key,
           valueActive: false,
         })
       );
 
-    case actions.INGESTION_PROFILE_TOGGLE_NEW_LINK_ACTIVE_PROP_VALUE:
+    case actions.INGESTION_PROFILE_TOGGLE_MAPPING_LINK_ACTIVE_PROP_VALUE:
       if (
-        is(state.getIn(['newLinkActiveProp', 'key']), action.key)
-        && state.getIn(['newLinkActiveProp', 'valueActive'])
+        is(state.getIn(['mappingLinkActiveProp', 'key']), action.key)
+        && state.getIn(['mappingLinkActiveProp', 'valueActive'])
       ) {
-        return state.set('newLinkActiveProp', initialState.get('newLinkActiveProp'));
+        return state.set('mappingLinkActiveProp', initialState.get('mappingLinkActiveProp'));
       }
 
       return state.set(
-        'newLinkActiveProp',
+        'mappingLinkActiveProp',
         Map({
           key: action.key,
           valueActive: true,
         })
       );
 
-    case actions.INGESTION_PROFILE_SET_NEW_LINK_PROP_VALUE:
-      state = state.setIn(['newLink', action.key], fromJS(action.value));
+    case actions.INGESTION_PROFILE_SET_MAPPING_LINK_PROP_VALUE:
+      state = state.setIn(['mappingLink', action.key], fromJS(action.value));
 
       if (action.shouldResetActiveLink) {
-        return state.set('newLinkActiveProp', initialState.get('newLinkActiveProp'));
+        return state.set('mappingLinkActiveProp', initialState.get('mappingLinkActiveProp'));
       }
 
       return state;
 
-    case actions.INGESTION_PROFILE_RESET_NEW_LINK:
-    case actions.INGESTION_PROFILE_ADD_NEW_LINK:
+    case actions.INGESTION_PROFILE_RESET_MAPPING_LINK:
+    case actions.INGESTION_PROFILE_ADD_MAPPING_LINK:
+    case actions.INGESTION_PROFILE_UPDATE_MAPPING_LINK:
+    case actions.INGESTION_PROFILE_DELETE_MAPPING_LINK:
       return state
         .set('newLinkVisible', initialState.get('newLinkVisible'))
-        .set('newLink', initialState.get('newLink'))
-        .set('newLinkActiveProp', initialState.get('newLinkActiveProp'));
+        .set('editingLinkIndex', initialState.get('editingLinkIndex'))
+        .set('mappingLink', initialState.get('mappingLink'))
+        .set('mappingLinkActiveProp', initialState.get('mappingLinkActiveProp'));
 
-    case actions.INGESTION_PROFILE_DELETE_NEW_LINK_PROP:
-      return state.deleteIn(['newLink', action.key]);
+    case actions.INGESTION_PROFILE_DELETE_MAPPING_LINK_PROP:
+      return state.deleteIn(['mappingLink', action.key]);
 
-    case actions.INGESTION_PROFILE_ADD_NEW_LINK_PROP:
-      if (!state.hasIn(['newLink', ''])) {
-        return state.setIn(['newLink', ''], Map({source: '', column: ''}));
+    case actions.INGESTION_PROFILE_ADD_MAPPING_LINK_PROP:
+      if (!state.hasIn(['mappingLink', ''])) {
+        return state.setIn(['mappingLink', ''], Map({source: '', column: ''}));
       }
 
       return state;
 
-    case actions.INGESTION_PROFILE_SET_NEW_LINK_PROP_KEY: {
-      const prevValue = state.getIn(['newLink', action.prevKey]);
+    case actions.INGESTION_PROFILE_SET_MAPPING_LINK_PROP_KEY: {
+      const prevValue = state.getIn(['mappingLink', action.prevKey]);
       return state
-        .deleteIn(['newLink', action.prevKey])
-        .setIn(['newLink', action.key], prevValue)
-        .set('newLinkActiveProp', initialState.get('newLinkActiveProp'));
+        .deleteIn(['mappingLink', action.prevKey])
+        .setIn(['mappingLink', action.key], prevValue)
+        .set('mappingLinkActiveProp', initialState.get('mappingLinkActiveProp'));
     }
+
+    case actions.INGESTION_PROFILE_EDIT_MAPPING_LINK:
+      return state
+        .set('editingLinkIndex', action.index)
+        .set('mappingLink', action.link)
+        .set('newLinkVisible', initialState.get('newLinkVisible'));
 
     default:
       return state;
