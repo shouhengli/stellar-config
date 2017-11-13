@@ -48,17 +48,19 @@ module.exports =
               handleTabClick={handleTabClick} />
           }
           <NavItem>
-            <Save
-              name={name}
-              status={status}
-              content={content}
-              handleClick={handleSaveClick} />
-            <SearchToggle handleClick={handleSearchToggleClick} />
-            <NewToggle handleClick={handleNewToggleClick} />
-            {
-              isNotEmpty(name) &&
-              <DeleteToggle handleClick={handleDeleteToggleClick} />
-            }
+            <div className="buttons has-addons">
+              <Save
+                name={name}
+                status={status}
+                content={content}
+                handleClick={handleSaveClick} />
+              <SearchToggle handleClick={handleSearchToggleClick} />
+              <NewToggle handleClick={handleNewToggleClick} />
+              {
+                isNotEmpty(name) &&
+                <DeleteToggle handleClick={handleDeleteToggleClick} />
+              }
+            </div>
           </NavItem>
         </NavMenuEnd>
       </Nav>,

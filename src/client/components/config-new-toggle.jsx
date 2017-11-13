@@ -2,10 +2,10 @@ const React = require('react');
 
 module.exports = ({handleClick}) => {
   return (
-    <button className="button is-white" onClick={() => handleClick()}>
-      <span className="icon is-small">
+    <span className="button" onClick={() => handleClick()}>
+      <span className="icon">
         <i className="fa fa-plus"></i>
       </span>
-    </button>
+    </span>
   );
 };

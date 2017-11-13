@@ -15,23 +15,23 @@ module.exports =
     switch (status) {
       case CONFIG_STATUS_CHANGED:
         return (
-          <button
-            className="button is-white"
+          <span
+            className="button is-primary"
             onClick={
               () => handleClick(name, content)
             }>
-            <span className="icon is-small">
+            <span className="icon">
               <i className="fa fa-upload"></i>
             </span>
-          </button>
+          </span>
         );
       case CONFIG_STATUS_SAVING:
         return (
-          <button className="button is-white is-loading">
-            <span className="icon is-small">
+          <span className="button is-loading">
+            <span className="icon">
               <i className="fa fa-spinner"></i>
             </span>
-          </button>
+          </span>
         );
       default:
         return null;
