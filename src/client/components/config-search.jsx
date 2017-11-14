@@ -1,10 +1,5 @@
-const {List} = require('immutable');
 const React = require('react');
-const {connect} = require('react-redux');
-const {setSearchText, hideSearch} = require('../action-creators/search');
 
-const Tab = require('./config-search-tab.jsx');
-const ActiveTab = require('./config-search-active-tab.jsx');
 const Item = require('./config-search-item.jsx');
 
 class ConfigSearch extends React.Component {
@@ -12,11 +7,15 @@ class ConfigSearch extends React.Component {
     super(props);
   }
 
-  static get displayName() {
-    return 'Config Search';
-  }
-
   render() {
+    const {
+      text,
+      names,
+      handleSearchTextChange,
+      handleHideButtonClick,
+      handleItemClick,
+    } = this.props;
+
     return (
       <nav className="panel config-search">
         <div className="panel-block config-search-input">
@@ -25,8 +24,8 @@ class ConfigSearch extends React.Component {
               <input
                 className="input is-medium"
                 type="text"
-                value={this.props.searchText}
-                onChange={(event) => this.props.handleSearchTextChange(event)} />
+                value={text}
+                onChange={(event) => handleSearchTextChange(event.target.value)} />
               <span className="icon is-left">
                 <i className="fa fa-search"></i>
               </span>
@@ -34,7 +33,7 @@ class ConfigSearch extends React.Component {
             <div className="control">
               <button
                 className="button is-medium"
-                onClick={() => this.props.handleHideButtonClick()}>
+                onClick={() => handleHideButtonClick()}>
                 <span className="icon is-small">
                   <i className="fa fa-times"></i>
                 </span>
@@ -42,57 +41,23 @@ class ConfigSearch extends React.Component {
             </div>
           </div>
         </div>
-        <div className="panel-tabs">
-          {
-            this.props.configTypes.map((configType) => {
-              if (configType === this.props.activeConfigType) {
-                return <ActiveTab key={configType} title={configType} />;
-              } else {
-                return <Tab key={configType} title={configType} />;
-              }
-            })
-          }
-        </div>
         {
-          this.props.configNames
-              .filter((configName) =>
-                configName.indexOf(this.props.searchText) >= 0
-              )
-              .map((configName) =>
-                <Item
-                  key={configName}
-                  type={this.props.activeConfigType}
-                  name={configName} />
-              )
+          names
+            .filter((name) => name.indexOf(text) >= 0)
+            .map((name) =>
+              <Item
+                key={name}
+                name={name}
+                handleClick={handleItemClick} />
+            )
         }
       </nav>
     );
   }
+
+  componentDidMount() {
+    this.props.handleComponentDidMount();
+  }
 }
 
-function mapStateToProps(state) {
-  const configTypes = state.getIn(['search', 'types']);
-  const activeConfigType = state.getIn(['search', 'activeType']);
-  const configNames = state.getIn(['search', 'names'], List());
-  const searchText = state.getIn(['search', 'text']);
-
-  return {
-    configTypes,
-    activeConfigType,
-    configNames,
-    searchText,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  const handleHideButtonClick = () => dispatch(hideSearch());
-  const handleSearchTextChange =
-    (event) => dispatch(setSearchText(event.target.value));
-
-  return {
-    handleHideButtonClick,
-    handleSearchTextChange,
-  };
-}
-
-module.exports = connect(mapStateToProps, mapDispatchToProps)(ConfigSearch);
+module.exports = ConfigSearch;

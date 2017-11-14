@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component graph-schema-class-arc can be rendered 1`] = `
+<g
+  className="graph-schema-class-arc"
+>
+  <path
+    d="M0,1"
+    onMouseOut={[Function]}
+    onMouseOver={[Function]}
+  />
+</g>
+`;

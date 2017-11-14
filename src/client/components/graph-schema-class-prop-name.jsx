@@ -1,12 +1,6 @@
 const React = require('react');
-const {connect} = require('react-redux');
 
-const {
-  revealClassPropTooltip,
-  hideClassPropTooltip,
-} = require('../action-creators/graph-schema');
-
-const ClassPropName = (props) => {
+module.exports = (props) => {
   const {
     id,
     rotation,
@@ -41,14 +35,3 @@ const ClassPropName = (props) => {
     </g>
   );
 };
-
-function mapDispatchToProps(dispatch) {
-  return {
-    handleMouseOver: (className, classPropName) =>
-      dispatch(revealClassPropTooltip(className, classPropName)),
-    handleMouseOut: (className, classPropName) =>
-      dispatch(hideClassPropTooltip(className, classPropName)),
-  };
-}
-
-module.exports = connect(null, mapDispatchToProps)(ClassPropName);

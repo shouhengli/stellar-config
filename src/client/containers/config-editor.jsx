@@ -1,5 +1,6 @@
+const R = require('ramda');
 const {connect} = require('react-redux');
-const {setEditConfigContent} = require('../action-creators/edit');
+const {setEditorContent} = require('../action-creators/ui/graph-schema');
 const {CONFIG_STATUS_SAVING} = require('../config-status');
 
 require('brace');
@@ -7,10 +8,10 @@ require('brace/mode/yaml');
 require('brace/theme/github');
 const AceEditor = require('react-ace').default;
 
-function mapStateToProps(state) {
-  const configContent = state.getIn(['edit', 'content']);
-  const configStatus = state.getIn(['edit', 'status']);
+const {statusSelector} = require('../selectors/ingestion-profile');
+const {editorContentSelector} = require('../selectors/ui/graph-schema');
 
+function mapStateToProps(state) {
   return {
     name: 'code-editor',
     mode: 'yaml',
@@ -22,16 +23,14 @@ function mapStateToProps(state) {
     showPrintMargin: false,
     setOptions: {scrollPastEnd: false},
     editorProps: {$blockScrolling: Infinity},
-    readOnly: configStatus === CONFIG_STATUS_SAVING ? true : false,
-    value: configContent,
+    readOnly: statusSelector(state) === CONFIG_STATUS_SAVING ? true : false,
+    value: editorContentSelector(state),
   };
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
   return {
-    onChange: (value) => {
-      dispatch(setEditConfigContent(value));
-    },
+    onChange: R.compose(dispatch, setEditorContent),
   };
 }
 

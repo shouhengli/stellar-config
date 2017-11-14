@@ -2,6 +2,4 @@ redis:
   rootNamespace: config
   namespaceSeparator: ':'
   configTypes:
-    - source
-    - mapping
-    - graphSchema
+    - ingestion profile

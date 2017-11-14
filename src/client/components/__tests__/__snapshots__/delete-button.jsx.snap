@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component delete-button is clickable 1`] = `
+<button
+  className="delete"
+  onClick={[Function]}
+/>
+`;

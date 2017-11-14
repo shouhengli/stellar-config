@@ -1,9 +1,6 @@
 const React = require('react');
 
-const NavItem = ({children}) =>
-  <div className="navbar-item">{children}</div>;
-
-const Nav = ({children}) => {
+module.exports = ({children}) => {
   return (
     <nav className="navbar is-fixed">
       <div className="navbar-brand">
@@ -11,16 +8,9 @@ const Nav = ({children}) => {
           SEAWEED
         </div>
       </div>
-      <div className="navbar-menu">
-        <div className="navbar-start">
-          {children}
-        </div>
+      <div className="navbar-menu is-active">
+        {children}
       </div>
     </nav>
   );
-};
-
-module.exports = {
-  Nav,
-  NavItem,
 };

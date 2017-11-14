@@ -1,22 +1,11 @@
 const React = require('react');
-const {connect} = require('react-redux');
-const {revealSearch} = require('../action-creators/search');
 
-const Toggle = ({handleClick}) => {
+module.exports = ({handleClick}) => {
   return (
-    <button className="button is-white" onClick={() => handleClick()}>
-      <span className="icon is-small">
+    <span className="button" onClick={() => handleClick()}>
+      <span className="icon">
         <i className="fa fa-search"></i>
       </span>
-    </button>
+    </span>
   );
 };
-
-function mapDispatchToProps(dispatch) {
-  return {
-    handleClick: () =>
-      dispatch(revealSearch()),
-  };
-}
-
-module.exports = connect(null, mapDispatchToProps)(Toggle);

@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component graph-schema-class-name can be rendered 1`] = `
+<g
+  className="graph-schema-class-name"
+  onMouseDown={[Function]}
+>
+  <circle
+    r={100}
+  />
+  <text
+    dy={8}
+    textAnchor="middle"
+  >
+    Person
+  </text>
+</g>
+`;

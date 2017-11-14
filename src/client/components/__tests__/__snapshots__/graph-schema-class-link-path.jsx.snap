@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component graph-schema-class-link-path can be rendered 1`] = `
+<path
+  d="M123,321Q123,321 456,654Q789,987 789,987"
+  id="graph-schema-class-link-path-1"
+  markerMid="url(#arrow)"
+/>
+`;

@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component new-config-toggle is clickable 1`] = `
+<button
+  className="button is-white"
+  onClick={[Function]}
+>
+  <span
+    className="icon is-small"
+  >
+    <i
+      className="fa fa-plus"
+    />
+  </span>
+</button>
+`;

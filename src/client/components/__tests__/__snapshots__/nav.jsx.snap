@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component nav wraps its children 1`] = `
+<nav
+  className="navbar is-fixed"
+>
+  <div
+    className="navbar-brand"
+  >
+    <div
+      className="navbar-item"
+    >
+      SEAWEED
+    </div>
+  </div>
+  <div
+    className="navbar-menu"
+  >
+    <div
+      className="navbar-start"
+    >
+      content
+    </div>
+  </div>
+</nav>
+`;

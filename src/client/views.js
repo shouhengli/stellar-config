@@ -1,0 +1,4 @@
+module.exports = {
+  INGESTION_PROFILE: 'INGESTION_PROFILE',
+  MONITORING: 'MONITORING',
+};

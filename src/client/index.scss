@@ -5,27 +5,34 @@
 @import '../../node_modules/bulma/sass/elements/icon';
 @import '../../node_modules/bulma/sass/elements/tag';
 @import '../../node_modules/bulma/sass/elements/box';
+@import '../../node_modules/bulma/sass/elements/content';
+@import '../../node_modules/bulma/sass/elements/container';
+@import '../../node_modules/bulma/sass/elements/title';
 @import '../../node_modules/bulma/sass/elements/other';
 @import '../../node_modules/bulma/sass/components/navbar';
-@import '../../node_modules/bulma/sass/components/tabs';
 @import '../../node_modules/bulma/sass/components/panel';
 @import '../../node_modules/bulma/sass/components/message';
+@import '../../node_modules/bulma/sass/components/dropdown';
+@import '../../node_modules/bulma/sass/components/menu';
+@import '../../node_modules/bulma/sass/components/card';
+@import '../../node_modules/bulma/sass/grid/columns';
+
+$tabs-link-padding: 0.25em 1em;
+$tabs-border-bottom-color: $white;
+@import '../../node_modules/bulma/sass/components/tabs';
+
+$table-cell-padding: 0.5em 1.5em;
+@import '../../node_modules/bulma/sass/elements/table';
 
 $modal-z: 200;
 $modal-background-background-color: rgba($black, 0.1);
 @import '../../node_modules/bulma/sass/components/modal';
 
-$pane-height-formula: 100vh - #{$navbar-height};
+$pane-height-formula: 100vh - #{$navbar-height} - 1px;
 $pane-height: calc(#{$pane-height-formula});
 
 html {
   overflow: auto;
-}
-
-.tabs {
-  a {
-    border-bottom-color: $white;
-  }
 }
 
 nav {
@@ -36,12 +43,6 @@ nav {
     min-width: 100vw;
     z-index: 100;
     border-bottom: 1px solid $border;
-  }
-}
-
-.navbar-item {
-  &.is-start-aligned {
-    align-items: flex-start;
   }
 }
 
@@ -70,11 +71,11 @@ nav {
   }
 }
 
-div.pane {
+div.view {
   height: $pane-height;
   width: 100%;
   margin-top: $navbar-height;
-  overflow: hidden;
+  overflow: auto;
 
   &.is-half {
     width: 50%;
@@ -97,6 +98,12 @@ div.pane {
 .graph-schema {
   width: 100%;
   height: 100%;
+  overflow: hidden;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
 
   .graph-schema-class-links {
     .graph-schema-class-link {
@@ -157,4 +164,131 @@ div.pane {
       }
     }
   }
+}
+
+.new-config {
+  &.box {
+    box-shadow: none;
+  }
+}
+
+.ingestion-profile-source-view {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+
+  .control-pane {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+
+    .select select {
+      max-width: 20rem;
+    }
+  }
+
+  .data-table {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    display: flex;
+    justify-content: center;
+
+    .scroll-pane {
+      overflow: auto;
+
+      .table {
+        margin-bottom: 0;
+
+        th {
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+}
+
+.ingestion-profile-mapping-view {
+  padding: 1rem;
+
+  .header {
+    margin-bottom: 1.5rem;
+  }
+
+  .card {
+    margin-bottom: 1.5rem;
+
+    .card-content {
+      .source-column-label {
+        padding: 0.5rem;
+        background-color: $background;
+        border-radius: $radius;
+        margin-bottom: 0.5rem;
+        white-space: pre;
+        overflow-x: scroll;
+        -ms-overflow-style: -ms-autohiding-scrollbar;
+      }
+
+      .title.is-6 {
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
+
+        &:first-child {
+          margin-top: 0;
+        }
+      }
+
+      .link-title {
+        margin-bottom: 0.5rem;
+
+        .link-column {
+          margin-left: 0.5rem;
+        }
+      }
+
+      hr {
+        margin: 1.5rem 0 1rem 0;
+      }
+
+      .dropdown {
+        max-width: 100%;
+
+        .dropdown-trigger {
+          width: 100%;
+
+          button {
+            width: 100%;
+            overflow: hidden;
+
+            span:not(:first-child) {
+              margin-left: 0.5rem;
+            }
+          }
+        }
+      }
+
+      table {
+        table-layout: fixed;
+
+        th, td {
+          padding-left: 0.5rem;
+          padding-right: 0.5rem;
+          // width: 50%;
+          word-wrap: break-word;
+        }
+      }
+
+      .delete-section-button {
+        float: right;
+      }
+    }
+  }
+}
+
+.dropdown-content {
+  font-weight: normal;
+  overflow-y: auto;
+  max-height: 20rem;
+  white-space: nowrap;
 }

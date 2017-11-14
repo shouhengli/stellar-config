@@ -4,14 +4,13 @@ const d3 = require('d3-force');
 const {
   START_GRAPH_SCHEMA_SIMULATION,
   STOP_GRAPH_SCHEMA_SIMULATION,
-  UPDATE_GRAPH_SCHEMA_ELEMENT_POSITIONS,
+  GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS,
 } = require('./force-layout');
 
 const CLASS_FORCE_RADIUS = 125;
 const CLASS_LINK_FORCE_RADIUS = 50;
 const COLLIDE_FORCE_RADIUS_MULTIPLIER = 1.1;
 const LINK_FORCE_DISTANCE = 175;
-const MANY_BODY_FORCE_STRENGTH = 50;
 
 const graphSchemaSimulation = d3.forceSimulation().stop();
 
@@ -30,12 +29,9 @@ const createCollideForce = (radiusMultiplier) =>
 const createLinkForce = (links, distance) =>
   d3.forceLink(links).distance(distance);
 
-const createManyBodyForce = (strength) =>
-  d3.forceManyBody().strength(strength);
-
 const updateGraphSchemaElementPositions = (classNodes, classLinkNodes) => {
   postMessage({
-    type: UPDATE_GRAPH_SCHEMA_ELEMENT_POSITIONS,
+    type: GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS,
     classes: classNodes,
     classLinks: classLinkNodes,
   });
@@ -88,7 +84,6 @@ const startGraphSchemaSimulation = (classes, classLinks, dimensions) => {
     .force('collide', createCollideForce(COLLIDE_FORCE_RADIUS_MULTIPLIER))
     .force('boundary', createBoundaryForce(graphSchemaSimulation, ...dimensions))
     .force('link', createLinkForce(links, LINK_FORCE_DISTANCE))
-    .force('many-body', createManyBodyForce(MANY_BODY_FORCE_STRENGTH))
     .on(
       'tick',
       () => updateGraphSchemaElementPositions(classNodes, classLinkNodes)

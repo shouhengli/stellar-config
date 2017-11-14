@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`component modal view wraps its children 1`] = `
+exports[`component modal-view wraps its children 1`] = `
 <div
   className="modal is-active"
 >

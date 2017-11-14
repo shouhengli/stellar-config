@@ -1,22 +1,13 @@
 const React = require('react');
-const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
-const d3 = require('d3-shape');
 const R = require('ramda');
-const anime = require('animejs');
-const {updateClassOuterRadius} = require('../action-creators/graph-schema');
+const d3 = require('d3-shape');
 
 const {
   CLASS_INNER_RADIUS,
-  CLASS_OUTER_RADIUS,
   CLASS_PAD_ANGLE,
   FONT_SIZE,
-} = require('../graph-schema');
-
-const ClassName = require('./graph-schema-class-name.jsx');
-const ClassArc = require('./graph-schema-class-arc.jsx');
-const ClassPropName = require('./graph-schema-class-prop-name.jsx');
-const ClassPropTooltip = require('./graph-schema-class-prop-tooltip.jsx');
+} = require('../ingestion-profile');
 
 const getLengthSum = R.compose(R.sum, R.map((x) => x.length));
 
@@ -114,6 +105,10 @@ class Class extends React.Component {
 
   render() {
     const {
+      ClassName,
+      ClassArc,
+      ClassPropName,
+      ClassPropTooltip,
       cls,
       handleMouseEnter,
       handleMouseLeave,
@@ -187,52 +182,4 @@ class Class extends React.Component {
   }
 }
 
-const classOuterRadiusAnimationIndex = {};
-
-const stopClassOuterRadiusAnimation = (className) => {
-  if (classOuterRadiusAnimationIndex[className]) {
-    classOuterRadiusAnimationIndex[className].pause();
-    delete classOuterRadiusAnimationIndex[className];
-  }
-};
-
-const playClassOuterRadiusAnimation =
-  (className, classOuterRadius, targetRadius, handleUpdate) => {
-    stopClassOuterRadiusAnimation(className);
-
-    const target = {r: classOuterRadius};
-
-    classOuterRadiusAnimationIndex[className] = anime({
-      targets: target,
-      r: targetRadius,
-      update: () => handleUpdate(Number(target.r)),
-    });
-  };
-
-const startClassOuterRadiusAnimation =
-  R.curry(playClassOuterRadiusAnimation)(R.__, R.__, CLASS_OUTER_RADIUS);
-
-const reverseClassOuterRadiusAnimation =
-  R.curry(playClassOuterRadiusAnimation)(R.__, R.__, CLASS_INNER_RADIUS);
-
-function mapDispatchToProps(dispatch) {
-  return {
-    handleMouseEnter: (cls) =>
-      startClassOuterRadiusAnimation(
-        cls.get('name'),
-        cls.get('outerRadius'),
-        (radius) => dispatch(updateClassOuterRadius(cls.get('name'), radius))
-      ),
-    handleMouseLeave: (cls) =>
-      reverseClassOuterRadiusAnimation(
-        cls.get('name'),
-        cls.get('outerRadius'),
-        (radius) => dispatch(updateClassOuterRadius(cls.get('name'), radius))
-      ),
-    handleComponentWillUnmount: (cls) => {
-      stopClassOuterRadiusAnimation(cls.name);
-    },
-  };
-}
-
-module.exports = connect(null, mapDispatchToProps)(Class);
+module.exports = Class;
