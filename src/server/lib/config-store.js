@@ -1,9 +1,9 @@
 import R from 'ramda';
-import util from './util';
+import { loadYamlSync } from './util';
 import P from 'bluebird';
 import redis from 'redis';
 
-const config = util.loadYamlSync(__dirname, 'config-store.yaml');
+const config = loadYamlSync(__dirname, 'config-store.yaml');
 
 P.promisifyAll(redis.RedisClient.prototype);
 P.promisifyAll(redis.Multi.prototype);

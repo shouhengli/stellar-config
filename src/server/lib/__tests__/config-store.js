@@ -381,7 +381,7 @@ describe('store module', () => {
     beforeEach(() => {
       jest.unmock('redis');
       jest.unmock('../util');
-      util = require('../util').default;
+      util = require('../util');
       store = require('../config-store');
       config = util.loadYamlSync(__dirname, '../config-store.yaml');
       P.all(
