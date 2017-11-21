@@ -20,7 +20,7 @@ function sendNotFound(res) {
   res.sendStatus(404);
 }
 
-module.exports = {
+export default {
   loadYamlSync,
   sendNotFound,
   sendOk,

@@ -2,3 +2,5 @@
 /node_modules/
 /tsconfig.json
 /*.log
+dump.rdb
+coverage

@@ -1,11 +1,10 @@
-const express = require('express');
+import express from 'express';
+import bodyParser from 'body-parser';
+import store from './config-store';
+import {sendServerError, sendNotFound, sendOk} from './util';
+
 const router = express.Router();
-
-const bodyParser = require('body-parser');
 router.use(bodyParser.json());
-
-const store = require('./config-store');
-const {sendServerError, sendNotFound, sendOk} = require('./util');
 
 router.get(
   '/',
@@ -57,4 +56,4 @@ router.get(
     )
 );
 
-module.exports = router;
+export default router;
