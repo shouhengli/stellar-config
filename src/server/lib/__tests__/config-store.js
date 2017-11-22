@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import P from 'bluebird';
 
-describe('store module', () => {
+describe('config store module', () => {
   let mockRedisClient, redis;
   const mockConfig = {
     redis: {

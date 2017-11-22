@@ -1,59 +1,46 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import store from './config-store';
-import {sendServerError, sendNotFound, sendOk} from './util';
+import { sendServerError, sendNotFound, sendOk } from './util';
 
 const router = express.Router();
 router.use(bodyParser.json());
 
-router.get(
-  '/',
-  (req, res) => store
+router.get('/', (req, res) =>
+  store
     .listConfigTypes()
-    .then(
-      (types) => res.json(types),
-      () => sendServerError(res)
-    )
+    .then(types => res.json(types), () => sendServerError(res))
 );
 
-router.get(
-  '/:type/:name',
-  (req, res) => store
+router.get('/:type/:name', (req, res) =>
+  store
     .getConfig(req.params.type, req.params.name)
-    .then((content) => res.json(JSON.parse(content)))
+    .then(content => res.json(JSON.parse(content)))
     .catch(store.NonexistentKeyError, () => sendNotFound(res))
-    .catch(() => sendServerError(res))
+    .catch(e => {
+      sendServerError(res);
+    })
 );
 
-router.post(
-  '/:type/:name',
-  (req, res) => store
-    .defineConfig(
-      req.params.type,
-      req.params.name,
-      JSON.stringify(req.body)
-    )
+router.post('/:type/:name', (req, res) =>
+  store
+    .defineConfig(req.params.type, req.params.name, JSON.stringify(req.body))
     .then(() => sendOk(res))
     .catch(() => sendServerError(res))
 );
 
-router.delete(
-  '/:type/:name',
-  (req, res) => store
+router.delete('/:type/:name', (req, res) =>
+  store
     .deleteConfig(req.params.type, req.params.name)
     .then(() => sendOk(res))
     .catch(store.NonexistentKeyError, () => sendNotFound(res))
     .catch(() => sendServerError(res))
 );
 
-router.get(
-  '/:type',
-  (req, res) => store
+router.get('/:type', (req, res) =>
+  store
     .listConfigs(req.params.type)
-    .then(
-      (names) => res.json(names),
-      () => sendServerError(res)
-    )
+    .then(names => res.json(names), () => sendServerError(res))
 );
 
 export default router;
