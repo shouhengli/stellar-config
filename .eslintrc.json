@@ -7,7 +7,12 @@
     "no-console": "off",
     "require-jsdoc": "off",
     "react/display-name": "off",
-    "react/prop-types": "off"
+    "react/prop-types": "off",
+    "object-curly-spacing": ["warn", "always"],
+    "comma-dangle": ["warn", "never"],
+    "arrow-parens": ["warn", "as-needed"],
+    "one-var": ["warn", "always"],
+    "no-invalid-this": "off"
   },
   "env": {
     "es6": true,
@@ -17,9 +22,10 @@
     "jest": true
   },
   "parserOptions": {
-    "ecmaVersion": 6,
+    "ecmaVersion": 2017,
     "ecmaFeatures": {
       "jsx": true
-    }
+    },
+    "sourceType": "module"
   }
 }

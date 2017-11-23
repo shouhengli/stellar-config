@@ -14,9 +14,7 @@ describe('config store module', () => {
 
   beforeEach(() => {
     mockRedisClient = {
-      on: jest.fn(function() {
-        return this;
-      }),
+      on: jest.fn().mockReturnThis(),
       quit: jest.fn()
     };
     redis = jest.mock('redis', () => {
@@ -286,7 +284,7 @@ describe('config store module', () => {
       it('tries to reconnect', async () => {
         const { disconnect, deleteConfig } = require('../../lib/config-store');
         disconnect();
-        await require('../../lib/config-store').deleteConfig('type', 'name');
+        await deleteConfig('type', 'name');
         expect(redis.createClient).toHaveBeenCalledTimes(2);
       });
     });
