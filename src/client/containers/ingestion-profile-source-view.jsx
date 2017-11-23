@@ -1,5 +1,5 @@
 const R = require('ramda');
-const {connect} = require('react-redux');
+const { connect } = require('react-redux');
 
 const SourceView = require('../components/ingestion-profile-source-view.jsx');
 
@@ -8,12 +8,10 @@ const {
   newSourceSelector,
   deleteSourceVisibleSelector,
   selectedSourceSelector,
-  sampleOfSelectedSourceSelector,
+  sampleOfSelectedSourceSelector
 } = require('../selectors/ui/ingestion-profile');
 
-const {
-  sourcesSelector,
-} = require('../selectors/ingestion-profile');
+const { sourcesSelector } = require('../selectors/ingestion-profile');
 
 const {
   setSelectedSource,
@@ -22,12 +20,12 @@ const {
   setNewSource,
   hideNewSource,
   hideDeleteSource,
-  addSampleAsync,
+  addSampleAsync
 } = require('../action-creators/ui/ingestion-profile');
 
 const {
   addSource,
-  deleteSource,
+  deleteSource
 } = require('../action-creators/ingestion-profile');
 
 function mapStateToProps(state) {
@@ -37,7 +35,7 @@ function mapStateToProps(state) {
     deleteSourceVisible: deleteSourceVisibleSelector(state),
     sources: sourcesSelector(state),
     selectedSource: selectedSourceSelector(state),
-    sample: sampleOfSelectedSourceSelector(state),
+    sample: sampleOfSelectedSourceSelector(state)
   };
 }
 
@@ -51,16 +49,17 @@ function mapDispatchToProps(dispatch) {
 
     handleNewSourceChange: R.compose(dispatch, setNewSource),
 
-    handleNewSourceAddButtonClick: (source) => R.pipeP(
-      R.compose(dispatch, R.partial(addSampleAsync, [source])),
-      R.compose(dispatch, R.partial(addSource, [source]))
-    )(),
+    handleNewSourceAddButtonClick: source =>
+      R.pipeP(
+        R.compose(dispatch, R.partial(addSampleAsync, [source])),
+        R.compose(dispatch, R.partial(addSource, [source]))
+      )(),
 
     handleNewSourceCancelButtonClick: R.compose(dispatch, hideNewSource),
 
     handleDeleteSourceYesButtonClick: R.compose(dispatch, deleteSource),
 
-    handleDeleteSourceCancelButtonClick: R.compose(dispatch, hideDeleteSource),
+    handleDeleteSourceCancelButtonClick: R.compose(dispatch, hideDeleteSource)
   };
 }
 

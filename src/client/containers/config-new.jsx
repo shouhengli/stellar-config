@@ -1,25 +1,23 @@
 const R = require('ramda');
-const {connect} = require('react-redux');
+const { connect } = require('react-redux');
 
 const {
   loadAsync,
-  saveAsync,
+  saveAsync
 } = require('../action-creators/ingestion-profile');
 
 const {
   hideNew,
-  setNewName,
+  setNewName
 } = require('../action-creators/ui/ingestion-profile');
 
-const {
-  newNameSelector,
-} = require('../selectors/ui/ingestion-profile');
+const { newNameSelector } = require('../selectors/ui/ingestion-profile');
 
 const New = require('../components/config-new.jsx');
 
 function mapStateToProps(state) {
   return {
-    name: newNameSelector(state),
+    name: newNameSelector(state)
   };
 }
 
@@ -29,12 +27,13 @@ function mapDispatchToProps(dispatch) {
 
     handleCancelButtonClick: R.compose(dispatch, hideNew),
 
-    handleAddButtonClick: (name) => R.pipeP(
-      R.compose(dispatch, R.partial(saveAsync, [name, {}])),
-      R.compose(dispatch, R.partial(loadAsync, [name])),
-      R.compose(dispatch, R.partial(setNewName, [''])),
-      R.compose(dispatch, hideNew)
-    )(),
+    handleAddButtonClick: name =>
+      R.pipeP(
+        R.compose(dispatch, R.partial(saveAsync, [name, {}])),
+        R.compose(dispatch, R.partial(loadAsync, [name])),
+        R.compose(dispatch, R.partial(setNewName, [''])),
+        R.compose(dispatch, hideNew)
+      )()
   };
 }
 

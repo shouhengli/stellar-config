@@ -6,16 +6,14 @@ describe('component config-delete-confirmation', () => {
   test('is editable', () => {
     const props = {
       configDeleteName: 'default',
-      handleChange: jest.fn(),
+      handleChange: jest.fn()
     };
 
-    const component = renderer.create(
-      <Confirmation {...props} />
-    );
+    const component = renderer.create(<Confirmation {...props} />);
 
     const tree = component.toJSON();
 
-    const event = {target: {value: 'def'}};
+    const event = { target: { value: 'def' } };
     tree.props.onChange(event);
 
     expect(tree).toMatchSnapshot();

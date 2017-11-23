@@ -1,6 +1,6 @@
 const React = require('react');
 
-module.exports = (props) => {
+module.exports = props => {
   const {
     id,
     rotation,
@@ -12,17 +12,20 @@ module.exports = (props) => {
     classPropName,
     fontSize,
     handleMouseOver,
-    handleMouseOut,
+    handleMouseOut
   } = props;
 
   return (
-    <g className="graph-schema-class-prop-name"
+    <g
+      className="graph-schema-class-prop-name"
       transform={`rotate(${rotation})`}
       clipPath={clipPath}>
       <path
         id={`graph-schema-class-prop-name-path-${id}`}
-        d={classPropNameArcPath} />
-      <text visibility={classPropNameVisibility}
+        d={classPropNameArcPath}
+      />
+      <text
+        visibility={classPropNameVisibility}
         dx={Math.PI * classPropNameRadius}
         dy={fontSize / 2}
         textAnchor="middle"

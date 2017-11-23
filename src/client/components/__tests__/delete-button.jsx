@@ -5,7 +5,7 @@ const Close = require('../delete-button.jsx');
 describe('component delete-button', () => {
   test('is clickable', () => {
     const props = {
-      handleClick: jest.fn(),
+      handleClick: jest.fn()
     };
 
     const component = renderer.create(<Close {...props} />);

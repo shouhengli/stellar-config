@@ -1,7 +1,7 @@
-const {Map, is, fromJS} = require('immutable');
+const { Map, is, fromJS } = require('immutable');
 const reduceState = require('../class-links');
 const actions = require('../../../actions');
-const {createClassLink, getClassLinkKey} = require('../../../graph-schema');
+const { createClassLink, getClassLinkKey } = require('../../../graph-schema');
 
 describe('reducer class-links', () => {
   let initialState;
@@ -13,25 +13,23 @@ describe('reducer class-links', () => {
   describe('when GRAPH_SCHEMA_UPDATE_CONTENT', () => {
     test('forgets previous state', () => {
       const classLink = createClassLink('has', 'Person', 'Car');
-      const state = initialState.set(getClassLinkKey(classLink), fromJS(classLink));
+      const state = initialState.set(
+        getClassLinkKey(classLink),
+        fromJS(classLink)
+      );
 
       const action = {
         type: actions.GRAPH_SCHEMA_UPDATE_CONTENT,
         classLinks: [
           createClassLink('lives-at', 'Person', 'Place'),
-          createClassLink('receives', 'Person', 'Package'),
-        ],
+          createClassLink('receives', 'Person', 'Package')
+        ]
       };
 
       const next = reduceState(state, action);
 
       const expected = Map(
-        action.classLinks.map(
-          (l) => [
-            getClassLinkKey(l),
-            fromJS(l),
-          ]
-        )
+        action.classLinks.map(l => [getClassLinkKey(l), fromJS(l)])
       );
 
       expect(is(next, expected)).toBe(true);
@@ -51,8 +49,8 @@ describe('reducer class-links', () => {
         type: actions.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS,
         classLinks: [
           createClassLink('lives-at', 'Person', 'Place', 10, 100, 1000),
-          createClassLink('has', 'Person', 'Car', 9, 99, 999),
-        ],
+          createClassLink('has', 'Person', 'Car', 9, 99, 999)
+        ]
       };
 
       const next = reduceState(state, action);
@@ -78,8 +76,8 @@ describe('reducer class-links', () => {
         type: actions.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS,
         classLinks: [
           createClassLink('rents-at', 'Person', 'Place', 10, 100, 1000),
-          createClassLink('has', 'Person', 'Car', 9, 99, 999),
-        ],
+          createClassLink('has', 'Person', 'Car', 9, 99, 999)
+        ]
       };
 
       const next = reduceState(state, action);
@@ -103,7 +101,7 @@ describe('reducer class-links', () => {
         source: 'Person',
         target: 'Car',
         dx: 1,
-        dy: 2,
+        dy: 2
       };
 
       const next = reduceState(state, action);
@@ -129,8 +127,8 @@ describe('reducer class-links', () => {
         type: actions.GRAPH_SCHEMA_UPDATE_CLASS_LINK_LENGTHS,
         classLinks: [
           createClassLink('lives-at', 'Person', 'Place', 10, 100, 1000),
-          createClassLink('has', 'Person', 'Car', 9, 99, 999),
-        ],
+          createClassLink('has', 'Person', 'Car', 9, 99, 999)
+        ]
       };
 
       const next = reduceState(state, action);

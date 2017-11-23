@@ -13,7 +13,7 @@ class ConfigSearch extends React.Component {
       names,
       handleSearchTextChange,
       handleHideButtonClick,
-      handleItemClick,
+      handleItemClick
     } = this.props;
 
     return (
@@ -25,9 +25,10 @@ class ConfigSearch extends React.Component {
                 className="input is-medium"
                 type="text"
                 value={text}
-                onChange={(event) => handleSearchTextChange(event.target.value)} />
+                onChange={event => handleSearchTextChange(event.target.value)}
+              />
               <span className="icon is-left">
-                <i className="fa fa-search"></i>
+                <i className="fa fa-search" />
               </span>
             </div>
             <div className="control">
@@ -35,22 +36,17 @@ class ConfigSearch extends React.Component {
                 className="button is-medium"
                 onClick={() => handleHideButtonClick()}>
                 <span className="icon is-small">
-                  <i className="fa fa-times"></i>
+                  <i className="fa fa-times" />
                 </span>
               </button>
             </div>
           </div>
         </div>
-        {
-          names
-            .filter((name) => name.indexOf(text) >= 0)
-            .map((name) =>
-              <Item
-                key={name}
-                name={name}
-                handleClick={handleItemClick} />
-            )
-        }
+        {names
+          .filter(name => name.indexOf(text) >= 0)
+          .map(name => (
+            <Item key={name} name={name} handleClick={handleItemClick} />
+          ))}
       </nav>
     );
   }

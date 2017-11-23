@@ -1,4 +1,4 @@
-const {List, is, fromJS} = require('immutable');
+const { List, is, fromJS } = require('immutable');
 const reduceState = require('../search');
 const actions = require('../../../actions');
 
@@ -11,7 +11,7 @@ describe('reducer ui/search', () => {
       names: [],
       activeType: null,
       visible: false,
-      text: '',
+      text: ''
     });
   });
 
@@ -21,14 +21,13 @@ describe('reducer ui/search', () => {
 
       const action1 = {
         type: actions.SEARCH_LOAD_CONFIG_TYPES,
-        configTypes: ['mapping', 'graph schema'],
+        configTypes: ['mapping', 'graph schema']
       };
 
       const action2 = {
         type: actions.SEARCH_LOAD_CONFIG_TYPES,
-        configTypes: ['source', 'mapping', 'graph schema'],
+        configTypes: ['source', 'mapping', 'graph schema']
       };
-
 
       const first = reduceState(state, action1);
       const second = reduceState(first, action2);
@@ -48,7 +47,7 @@ describe('reducer ui/search', () => {
     test('updates config names', () => {
       const action = {
         type: actions.SEARCH_LOAD_NAMES,
-        configNames: ['people', 'vehicles'],
+        configNames: ['people', 'vehicles']
       };
 
       const next = reduceState(initialState, action);
@@ -62,7 +61,7 @@ describe('reducer ui/search', () => {
     test('updates search text', () => {
       const action = {
         type: actions.SEARCH_SET_TEXT,
-        searchText: 'people',
+        searchText: 'people'
       };
 
       const next = reduceState(initialState, action);
@@ -75,7 +74,7 @@ describe('reducer ui/search', () => {
   describe('when SEARCH_HIDE', () => {
     test('hides search', () => {
       const state = initialState.set('visible', true);
-      const action = {type: actions.SEARCH_HIDE};
+      const action = { type: actions.SEARCH_HIDE };
       const next = reduceState(state, action);
 
       const expected = state.set('visible', false);
@@ -86,7 +85,7 @@ describe('reducer ui/search', () => {
   describe('when SEARCH_REVEAL', () => {
     test('reveals search', () => {
       const state = initialState.set('visible', false);
-      const action = {type: actions.SEARCH_REVEAL};
+      const action = { type: actions.SEARCH_REVEAL };
       const next = reduceState(state, action);
 
       const expected = state.set('visible', true);

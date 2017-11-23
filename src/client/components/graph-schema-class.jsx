@@ -1,36 +1,37 @@
 const React = require('react');
-const {createSelector} = require('reselect');
+const { createSelector } = require('reselect');
 const R = require('ramda');
 const d3 = require('d3-shape');
 
 const {
   CLASS_INNER_RADIUS,
   CLASS_PAD_ANGLE,
-  FONT_SIZE,
+  FONT_SIZE
 } = require('../ingestion-profile');
 
-const getLengthSum = R.compose(R.sum, R.map((x) => x.length));
+const getLengthSum = R.compose(R.sum, R.map(x => x.length));
 
 class Class extends React.Component {
   constructor(props) {
     super(props);
 
     this.getClassPropAngles = createSelector(
-      (cls) => cls.get('props'),
-      (classProps) => {
+      cls => cls.get('props'),
+      classProps => {
         const classPropNames = classProps.keySeq().toJS();
         const classPropNamesLengthSum = getLengthSum(classPropNames);
 
         const classPropAngles = R.reduce(
           (angles, classPropName) => {
-            const start = (R.last(angles) || {end: 0}).end;
+            const start = (R.last(angles) || { end: 0 }).end;
 
             const end = Math.min(
-              start + 2 * Math.PI * (classPropName.length / classPropNamesLengthSum),
+              start +
+                2 * Math.PI * (classPropName.length / classPropNamesLengthSum),
               2 * Math.PI
             );
 
-            angles.push({classPropName, start, end});
+            angles.push({ classPropName, start, end });
             return angles;
           },
           [],
@@ -41,27 +42,28 @@ class Class extends React.Component {
       }
     );
 
-    this.getClassOuterRadius = (cls) => cls.get('outerRadius');
+    this.getClassOuterRadius = cls => cls.get('outerRadius');
 
     this.getClassArcGenerator = createSelector(
       this.getClassOuterRadius,
-      (classOuterRadius) => d3
-        .arc()
-        .innerRadius(CLASS_INNER_RADIUS)
-        .outerRadius(classOuterRadius)
-        .padAngle(CLASS_PAD_ANGLE)
-        .startAngle((d) => d.start)
-        .endAngle((d) => d.end)
+      classOuterRadius =>
+        d3
+          .arc()
+          .innerRadius(CLASS_INNER_RADIUS)
+          .outerRadius(classOuterRadius)
+          .padAngle(CLASS_PAD_ANGLE)
+          .startAngle(d => d.start)
+          .endAngle(d => d.end)
     );
 
     this.getClassPropNameRadius = createSelector(
       this.getClassOuterRadius,
-      (classOuterRadius) => 0.5 * (classOuterRadius + CLASS_INNER_RADIUS)
+      classOuterRadius => 0.5 * (classOuterRadius + CLASS_INNER_RADIUS)
     );
 
     this.getClassPropNameArcPath = createSelector(
       this.getClassPropNameRadius,
-      (classPropNameRadius) => {
+      classPropNameRadius => {
         const arc = d3
           .arc()
           .innerRadius(0)
@@ -75,18 +77,18 @@ class Class extends React.Component {
 
     this.getClassPropNameVisibility = createSelector(
       this.getClassOuterRadius,
-      (classOuterRadius) =>
+      classOuterRadius =>
         classOuterRadius > CLASS_INNER_RADIUS ? 'visible' : 'hidden'
     );
 
     this.getClassPropTooltipRadius = createSelector(
       this.getClassOuterRadius,
-      (classOuterRadius) => classOuterRadius + 10
+      classOuterRadius => classOuterRadius + 10
     );
 
     this.getClassPropTooltipArcPath = createSelector(
       this.getClassPropTooltipRadius,
-      (classPropTooltipRadius) => {
+      classPropTooltipRadius => {
         const arc = d3
           .arc()
           .innerRadius(0)
@@ -111,7 +113,7 @@ class Class extends React.Component {
       ClassPropTooltip,
       cls,
       handleMouseEnter,
-      handleMouseLeave,
+      handleMouseLeave
     } = this.props;
 
     const className = cls.get('name');
@@ -127,31 +129,30 @@ class Class extends React.Component {
     return (
       <g
         className="graph-schema-class"
-        transform={
-          `translate(${cls.get('x').toFixed()}, ${cls.get('y').toFixed()})`
-        }
+        transform={`translate(${cls.get('x').toFixed()}, ${cls
+          .get('y')
+          .toFixed()})`}
         onMouseEnter={() => handleMouseEnter(cls)}
         onMouseLeave={() => handleMouseLeave(cls)}>
-
         <ClassName
           name={cls.get('name')}
           radius={CLASS_INNER_RADIUS}
-          fontSize={FONT_SIZE} />
+          fontSize={FONT_SIZE}
+        />
 
-        {
-          this.getClassPropAngles(cls).map(({classPropName, start, end}, i) => {
-            const classArcPath = classArcGenerator({start, end});
+        {this.getClassPropAngles(cls).map(
+          ({ classPropName, start, end }, i) => {
+            const classArcPath = classArcGenerator({ start, end });
             const rotation = 180 * ((start + end) * 0.5 / Math.PI - 1);
             const classPropId = `${classGlobalIndex}-${i}`;
 
             return (
-              <g
-                key={classPropName}
-                transform="rotate(180)">
+              <g key={classPropName} transform="rotate(180)">
                 <ClassArc
                   path={classArcPath}
                   className={className}
-                  classPropName={classPropName} />
+                  classPropName={classPropName}
+                />
                 <ClassPropName
                   id={classPropId}
                   rotation={rotation}
@@ -161,18 +162,20 @@ class Class extends React.Component {
                   classPropNameVisibility={classPropNameVisibility}
                   className={className}
                   classPropName={classPropName}
-                  fontSize={FONT_SIZE} />
+                  fontSize={FONT_SIZE}
+                />
                 <ClassPropTooltip
                   id={classPropId}
                   rotation={rotation}
                   classPropTooltipArcPath={classPropTooltipArcPath}
                   classPropTooltipRadius={classPropTooltipRadius}
                   visible={tooltipVisibleProp === classPropName}
-                  classPropName={classPropName} />
+                  classPropName={classPropName}
+                />
               </g>
             );
-          })
-        }
+          }
+        )}
       </g>
     );
   }

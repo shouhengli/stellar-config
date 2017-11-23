@@ -7,7 +7,7 @@ describe('component config-search-item', () => {
     const props = {
       type: 'mapping',
       name: 'transportation',
-      handleClick: jest.fn(),
+      handleClick: jest.fn()
     };
 
     const tree = renderer.create(<Item {...props} />).toJSON();

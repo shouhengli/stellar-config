@@ -1,8 +1,8 @@
-const {connect} = require('react-redux');
+const { connect } = require('react-redux');
 
 const {
   revealClassPropTooltip,
-  hideClassPropTooltip,
+  hideClassPropTooltip
 } = require('../action-creators/ui/graph-schema');
 
 const ClassArc = require('../components/graph-schema-class-arc.jsx');
@@ -12,7 +12,7 @@ function mapDispatchToProps(dispatch) {
     handleMouseOver: (className, classPropName) =>
       dispatch(revealClassPropTooltip(className, classPropName)),
     handleMouseOut: (className, classPropName) =>
-      dispatch(hideClassPropTooltip(className, classPropName)),
+      dispatch(hideClassPropTooltip(className, classPropName))
   };
 }
 

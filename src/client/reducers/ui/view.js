@@ -1,9 +1,9 @@
-const {fromJS} = require('immutable');
+const { fromJS } = require('immutable');
 const actions = require('../../actions');
-const {INGESTION_PROFILE} = require('../../views');
+const { INGESTION_PROFILE } = require('../../views');
 
 const initialState = fromJS({
-  activeView: INGESTION_PROFILE,
+  activeView: INGESTION_PROFILE
 });
 
 function reduce(state = initialState, action) {

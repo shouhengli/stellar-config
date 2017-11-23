@@ -3,10 +3,10 @@ const actions = require('../actions');
 function change(view) {
   return {
     type: actions.VIEW_CHANGE,
-    view,
+    view
   };
 }
 
 module.exports = {
-  change,
+  change
 };

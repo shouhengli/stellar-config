@@ -6,7 +6,7 @@ describe('component config-search-tab', () => {
   test('is clickable', () => {
     const props = {
       title: 'mapping',
-      handleClick: jest.fn(),
+      handleClick: jest.fn()
     };
 
     const tree = renderer.create(<Tab {...props} />).toJSON();

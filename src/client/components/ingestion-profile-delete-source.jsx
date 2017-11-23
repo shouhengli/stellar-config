@@ -1,11 +1,11 @@
 const React = require('react');
 const Close = require('./delete-button.jsx');
 
-module.exports = (props) => {
+module.exports = props => {
   const {
     selectedSource,
     handleYesButtonClick,
-    handleCancelButtonClick,
+    handleCancelButtonClick
   } = props;
 
   return (
@@ -16,12 +16,8 @@ module.exports = (props) => {
       </div>
       <div className="message-body">
         <div className="content">
-          <p>
-            The following source will be deleted. Are you sure?
-          </p>
-          <blockquote>
-            {selectedSource}
-          </blockquote>
+          <p>The following source will be deleted. Are you sure?</p>
+          <blockquote>{selectedSource}</blockquote>
         </div>
         <div className="field is-grouped is-grouped-centered">
           <div className="control">
@@ -32,9 +28,7 @@ module.exports = (props) => {
             </button>
           </div>
           <div className="control">
-            <button
-              className="button"
-              onClick={handleCancelButtonClick}>
+            <button className="button" onClick={handleCancelButtonClick}>
               No
             </button>
           </div>

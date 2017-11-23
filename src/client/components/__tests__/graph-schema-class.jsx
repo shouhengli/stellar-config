@@ -1,10 +1,10 @@
 const React = require('react');
 const renderer = require('react-test-renderer');
-const {mount, shallow} = require('enzyme');
-const {fromJS} = require('immutable');
+const { mount, shallow } = require('enzyme');
+const { fromJS } = require('immutable');
 const Class = require('../graph-schema-class.jsx');
 
-const {createClass} = require('../../graph-schema');
+const { createClass } = require('../../graph-schema');
 
 describe('component graph-schema-class', () => {
   let props;
@@ -15,10 +15,10 @@ describe('component graph-schema-class', () => {
       ClassArc: 'div',
       ClassPropName: 'div',
       ClassPropTooltip: 'div',
-      cls: fromJS(createClass('Person', {name: 'string'})),
+      cls: fromJS(createClass('Person', { name: 'string' })),
       handleMouseEnter: jest.fn(),
       handleMouseLeave: jest.fn(),
-      handleComponentWillUnmount: jest.fn(),
+      handleComponentWillUnmount: jest.fn()
     };
   });
 

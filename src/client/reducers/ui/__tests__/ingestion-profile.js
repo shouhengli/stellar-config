@@ -1,4 +1,4 @@
-const {is, fromJS} = require('immutable');
+const { is, fromJS } = require('immutable');
 const reduceState = require('../ingestion-profile');
 const actions = require('../../../actions');
 
@@ -15,14 +15,14 @@ describe('reducer ui/ingestion-profile', () => {
       newSource: '',
       newSourceVisible: false,
       deleteSourceVisible: false,
-      sample: null,
+      sample: null
     });
   });
 
   describe('when INGESTION_PROFILE_REVEAL_NEW', () => {
     test('reveals new file UI', () => {
       const state = initialState.set('newConfigVisible', false);
-      const action = {type: actions.INGESTION_PROFILE_REVEAL_NEW};
+      const action = { type: actions.INGESTION_PROFILE_REVEAL_NEW };
       const next = reduceState(state, action);
 
       const expected = state.set('newConfigVisible', true);
@@ -33,7 +33,7 @@ describe('reducer ui/ingestion-profile', () => {
   describe('when INGESTION_PROFILE_HIDE_NEW', () => {
     test('hides new file UI', () => {
       const state = initialState.set('newConfigVisible', true);
-      const action = {type: actions.INGESTION_PROFILE_HIDE_NEW};
+      const action = { type: actions.INGESTION_PROFILE_HIDE_NEW };
       const next = reduceState(state, action);
 
       const expected = state.set('newConfigVisible', false);
@@ -45,7 +45,7 @@ describe('reducer ui/ingestion-profile', () => {
     test('updates name of new file', () => {
       const action = {
         type: actions.INGESTION_PROFILE_SET_NEW_NAME,
-        name: 'people',
+        name: 'people'
       };
 
       const next = reduceState(initialState, action);
@@ -58,7 +58,7 @@ describe('reducer ui/ingestion-profile', () => {
   describe('when INGESTION_PROFILE_HIDE_DELETE', () => {
     test('hides delete file UI', () => {
       const state = initialState.set('deleteConfigVisible', true);
-      const action = {type: actions.INGESTION_PROFILE_HIDE_DELETE};
+      const action = { type: actions.INGESTION_PROFILE_HIDE_DELETE };
       const next = reduceState(state, action);
 
       const expected = state.set('deleteConfigVisible', false);
@@ -69,7 +69,7 @@ describe('reducer ui/ingestion-profile', () => {
   describe('when INGESTION_PROFILE_REVEAL_DELETE', () => {
     test('reveals delete file UI', () => {
       const state = initialState.set('deleteConfigVisible', false);
-      const action = {type: actions.INGESTION_PROFILE_REVEAL_DELETE};
+      const action = { type: actions.INGESTION_PROFILE_REVEAL_DELETE };
       const next = reduceState(state, action);
 
       const expected = state.set('deleteConfigVisible', true);
@@ -81,7 +81,7 @@ describe('reducer ui/ingestion-profile', () => {
     test('updates name of file to be deleted', () => {
       const action = {
         type: actions.INGESTION_PROFILE_SET_DELETE_NAME,
-        name: 'people',
+        name: 'people'
       };
 
       const next = reduceState(initialState, action);
@@ -95,7 +95,7 @@ describe('reducer ui/ingestion-profile', () => {
     test('selects source with specified URI', () => {
       const action = {
         type: actions.INGESTION_PROFILE_SET_SELECTED_SOURCE,
-        source: 'http://source.me/people.csv',
+        source: 'http://source.me/people.csv'
       };
 
       const next = reduceState(initialState, action);
@@ -109,7 +109,7 @@ describe('reducer ui/ingestion-profile', () => {
     test('sets new source URI', () => {
       const action = {
         type: actions.INGESTION_PROFILE_SET_NEW_SOURCE,
-        source: 'http://source.me/people.csv',
+        source: 'http://source.me/people.csv'
       };
 
       const next = reduceState(initialState, action);
@@ -121,7 +121,7 @@ describe('reducer ui/ingestion-profile', () => {
 
   describe('when INGESTION_PROFILE_HIDE_NEW_SOURCE', () => {
     test('hides new source', () => {
-      const action = {type: actions.INGESTION_PROFILE_HIDE_NEW_SOURCE};
+      const action = { type: actions.INGESTION_PROFILE_HIDE_NEW_SOURCE };
 
       const next = reduceState(
         initialState.set('newSourceVisible', true),
@@ -134,7 +134,7 @@ describe('reducer ui/ingestion-profile', () => {
 
   describe('when INGESTION_PROFILE_REVEAL_NEW_SOURCE', () => {
     test('reveals new source', () => {
-      const action = {type: actions.INGESTION_PROFILE_REVEAL_NEW_SOURCE};
+      const action = { type: actions.INGESTION_PROFILE_REVEAL_NEW_SOURCE };
 
       const next = reduceState(initialState, action);
 
@@ -145,7 +145,7 @@ describe('reducer ui/ingestion-profile', () => {
 
   describe('when INGESTION_PROFILE_ADD_SOURCE', () => {
     test('resets new source URI and hides new source', () => {
-      const action = {type: actions.INGESTION_PROFILE_ADD_SOURCE};
+      const action = { type: actions.INGESTION_PROFILE_ADD_SOURCE };
 
       const next = reduceState(
         initialState
@@ -164,23 +164,20 @@ describe('reducer ui/ingestion-profile', () => {
         type: actions.INGESTION_PROFILE_LOAD_SAMPLE,
         sample: {
           headers: ['A', 'B'],
-          rows: [
-            [0, 1],
-            [5, 6],
-          ],
-        },
+          rows: [[0, 1], [5, 6]]
+        }
       };
 
       const next = reduceState(initialState, action);
 
-      const expected = initialState .set('sample', fromJS(action.sample));
+      const expected = initialState.set('sample', fromJS(action.sample));
       expect(is(next, expected)).toBe(true);
     });
   });
 
   describe('when INGESTION_PROFILE_HIDE_DELETE_SOURCE', () => {
     test('hides delete source', () => {
-      const action = {type: actions.INGESTION_PROFILE_HIDE_DELETE_SOURCE};
+      const action = { type: actions.INGESTION_PROFILE_HIDE_DELETE_SOURCE };
 
       const next = reduceState(
         initialState.set('deleteSourceVisible', true),
@@ -193,7 +190,7 @@ describe('reducer ui/ingestion-profile', () => {
 
   describe('when INGESTION_PROFILE_REVEAL_DELETE_SOURCE', () => {
     test('hides delete source', () => {
-      const action = {type: actions.INGESTION_PROFILE_REVEAL_DELETE_SOURCE};
+      const action = { type: actions.INGESTION_PROFILE_REVEAL_DELETE_SOURCE };
 
       const next = reduceState(initialState, action);
 

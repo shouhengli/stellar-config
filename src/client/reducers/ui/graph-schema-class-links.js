@@ -1,7 +1,7 @@
 const R = require('ramda');
-const {fromJS, Map} = require('immutable');
+const { fromJS, Map } = require('immutable');
 const actions = require('../../actions');
-const {getClassLinkKey} = require('../../ingestion-profile');
+const { getClassLinkKey } = require('../../ingestion-profile');
 
 const initialState = Map();
 
@@ -15,13 +15,14 @@ function reduce(state = initialState, action) {
       );
 
     case actions.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS:
-      if (R.any((l) => !state.has(getClassLinkKey(l)), action.classLinks)) {
+      if (R.any(l => !state.has(getClassLinkKey(l)), action.classLinks)) {
         return state;
       } else {
         return R.reduce(
-          (s, l) => s
-            .setIn([getClassLinkKey(l), 'x'], l.x)
-            .setIn([getClassLinkKey(l), 'y'], l.y),
+          (s, l) =>
+            s
+              .setIn([getClassLinkKey(l), 'x'], l.x)
+              .setIn([getClassLinkKey(l), 'y'], l.y),
           state,
           action.classLinks
         );
@@ -31,7 +32,7 @@ function reduce(state = initialState, action) {
       const classLinkKey = getClassLinkKey({
         name: action.name,
         source: action.source,
-        target: action.target,
+        target: action.target
       });
 
       return state
@@ -46,8 +47,8 @@ function reduce(state = initialState, action) {
     }
 
     case actions.GRAPH_SCHEMA_UPDATE_CLASS_LINK_LENGTHS:
-      return state.withMutations((mutableState) => {
-        action.classLinks.forEach((classLink) =>
+      return state.withMutations(mutableState => {
+        action.classLinks.forEach(classLink =>
           mutableState.setIn(
             [getClassLinkKey(classLink), 'length'],
             classLink.length

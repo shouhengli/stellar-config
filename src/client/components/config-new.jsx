@@ -1,11 +1,11 @@
 const React = require('react');
 
-module.exports = (props) => {
+module.exports = props => {
   const {
     name,
     handleNameChange,
     handleCancelButtonClick,
-    handleAddButtonClick,
+    handleAddButtonClick
   } = props;
 
   return (
@@ -17,7 +17,8 @@ module.exports = (props) => {
             type="text"
             className="input"
             value={name}
-            onChange={(event) => handleNameChange(event.target.value)} />
+            onChange={event => handleNameChange(event.target.value)}
+          />
         </div>
       </div>
       <div className="field is-grouped is-grouped-centered">
@@ -29,9 +30,7 @@ module.exports = (props) => {
           </button>
         </div>
         <div className="control">
-          <button
-            className="button"
-            onClick={() => handleCancelButtonClick()}>
+          <button className="button" onClick={() => handleCancelButtonClick()}>
             Cancel
           </button>
         </div>

@@ -6,7 +6,7 @@ describe('component config-search-active-tab', () => {
   test('load config names before being mounted', () => {
     const props = {
       title: 'mapping',
-      loadConfigNames: jest.fn(),
+      loadConfigNames: jest.fn()
     };
 
     const tree = renderer.create(<ActiveTab {...props} />).toJSON();

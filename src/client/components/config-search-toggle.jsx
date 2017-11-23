@@ -1,10 +1,10 @@
 const React = require('react');
 
-module.exports = ({handleClick}) => {
+module.exports = ({ handleClick }) => {
   return (
     <span className="button" onClick={() => handleClick()}>
       <span className="icon">
-        <i className="fa fa-search"></i>
+        <i className="fa fa-search" />
       </span>
     </span>
   );

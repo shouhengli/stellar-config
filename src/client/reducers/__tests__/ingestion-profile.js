@@ -1,10 +1,10 @@
-const {is, fromJS} = require('immutable');
+const { is, fromJS } = require('immutable');
 const reduceState = require('../ingestion-profile');
 const actions = require('../../actions');
 
 const {
   CONFIG_STATUS_NORMAL,
-  CONFIG_STATUS_CHANGED,
+  CONFIG_STATUS_CHANGED
 } = require('../../config-status');
 
 describe('reducer ingestion-profile', () => {
@@ -14,7 +14,7 @@ describe('reducer ingestion-profile', () => {
     initialState = fromJS({
       name: '',
       sources: [],
-      status: CONFIG_STATUS_NORMAL,
+      status: CONFIG_STATUS_NORMAL
     });
   });
 
@@ -24,11 +24,8 @@ describe('reducer ingestion-profile', () => {
         type: actions.INGESTION_PROFILE_LOAD,
         name: 'default',
         content: {
-          sources: [
-            'people.csv',
-            'vehicles.csv',
-          ],
-        },
+          sources: ['people.csv', 'vehicles.csv']
+        }
       };
 
       const next = reduceState(initialState, action);
@@ -44,7 +41,7 @@ describe('reducer ingestion-profile', () => {
 
   describe('when INGESTION_PROFILE_SET_STATUS', () => {
     test('sets status to normal', () => {
-      const action = {type: actions.INGESTION_PROFILE_SET_STATUS};
+      const action = { type: actions.INGESTION_PROFILE_SET_STATUS };
 
       const next = reduceState(
         initialState.set('status', CONFIG_STATUS_CHANGED),
@@ -57,7 +54,7 @@ describe('reducer ingestion-profile', () => {
 
   describe('when INGESTION_PROFILE_RESET', () => {
     test('resets to initial state', () => {
-      const action = {type: actions.INGESTION_PROFILE_RESET};
+      const action = { type: actions.INGESTION_PROFILE_RESET };
 
       const next = reduceState(
         initialState
@@ -75,7 +72,7 @@ describe('reducer ingestion-profile', () => {
     test('adds source and sets status to changed', () => {
       const action = {
         type: actions.INGESTION_PROFILE_ADD_SOURCE,
-        source: 'people.csv',
+        source: 'people.csv'
       };
 
       const next = reduceState(initialState, action);

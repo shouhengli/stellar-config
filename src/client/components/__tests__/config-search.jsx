@@ -1,6 +1,6 @@
 const React = require('react');
 const renderer = require('react-test-renderer');
-const {shallow} = require('enzyme');
+const { shallow } = require('enzyme');
 const Search = require('../config-search.jsx');
 
 describe('component config-search', () => {
@@ -12,19 +12,11 @@ describe('component config-search', () => {
       ActiveTab: 'div',
       Item: 'div',
       searchText: 'default',
-      configTypes: [
-        'source',
-        'mapping',
-        'graphSchema',
-      ],
+      configTypes: ['source', 'mapping', 'graphSchema'],
       activeConfigType: 'mapping',
-      configNames: [
-        'default',
-        'finance',
-        'hr',
-      ],
+      configNames: ['default', 'finance', 'hr'],
       handleSearchTextChange: jest.fn(),
-      handleHideButtonClick: jest.fn(),
+      handleHideButtonClick: jest.fn()
     };
   });
 
@@ -36,7 +28,7 @@ describe('component config-search', () => {
 
   test('has changeable search field', () => {
     const wrapper = shallow(<Search {...props} />);
-    const event = {target: {value: 'def'}};
+    const event = { target: { value: 'def' } };
     wrapper.find('input').simulate('change', event);
 
     expect(props.handleSearchTextChange).toHaveBeenCalledTimes(1);

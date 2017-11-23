@@ -1,19 +1,21 @@
 const React = require('react');
 
-module.exports = (props) => {
+module.exports = props => {
   const {
     path,
     className,
     classPropName,
     handleMouseOver,
-    handleMouseOut,
+    handleMouseOut
   } = props;
 
   return (
     <g className="graph-schema-class-arc">
-      <path d={path}
+      <path
+        d={path}
         onMouseOver={() => handleMouseOver(className, classPropName)}
-        onMouseOut={() => handleMouseOut(className, classPropName)} />
+        onMouseOut={() => handleMouseOut(className, classPropName)}
+      />
     </g>
   );
 };

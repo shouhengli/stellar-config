@@ -30,7 +30,7 @@ function locateBezierControlPoints(x0, y0, x1, y1, x2, y2) {
       cx0: x1 - dy,
       cy0: y1 + dx,
       cx1: x1 + dy,
-      cy1: y1 - dx,
+      cy1: y1 - dx
     };
   } else {
     let dx = 0.5 * (x2 - x0);
@@ -40,7 +40,7 @@ function locateBezierControlPoints(x0, y0, x1, y1, x2, y2) {
       cx0: x1 - dx,
       cy0: y1 - dy,
       cx1: x1 + dx,
-      cy1: y1 + dy,
+      cy1: y1 + dy
     };
   }
 }
@@ -55,24 +55,43 @@ class ClassLinkPath extends React.Component {
   }
 
   render() {
-    const {id, markerId} = this.props;
-    let {x0, y0, x1, y1, x2, y2} = this.props;
-    let {cx0, cy0, cx1, cy1} = locateBezierControlPoints(x0, y0, x1, y1, x2, y2);
+    const { id, markerId } = this.props;
+    let { x0, y0, x1, y1, x2, y2 } = this.props;
+    let { cx0, cy0, cx1, cy1 } = locateBezierControlPoints(
+      x0,
+      y0,
+      x1,
+      y1,
+      x2,
+      y2
+    );
 
     // The toFixed() method forces the output number format to be fixed-point
     // notation, which can be understood by the path element.
-    [x0, y0, x1, y1, x2, y2, cx0, cy0, cx1, cy1] =
-      [x0, y0, x1, y1, x2, y2, cx0, cy0, cx1, cy1].map((x) => x.toFixed());
+    [x0, y0, x1, y1, x2, y2, cx0, cy0, cx1, cy1] = [
+      x0,
+      y0,
+      x1,
+      y1,
+      x2,
+      y2,
+      cx0,
+      cy0,
+      cx1,
+      cy1
+    ].map(x => x.toFixed());
 
-    const pathData =
-      `M${x0},${y0}Q${cx0},${cy0} ${x1},${y1}Q${cx1},${cy1} ${x2},${y2}`;
+    const pathData = `M${x0},${y0}Q${cx0},${cy0} ${x1},${y1}Q${cx1},${cy1} ${
+      x2
+    },${y2}`;
 
     return (
       <path
         id={`graph-schema-class-link-path-${id}`}
         d={pathData}
         markerMid={`url(#${markerId})`}
-        ref={(path) => this.getLength = () => path.getTotalLength()}/>
+        ref={path => (this.getLength = () => path.getTotalLength())}
+      />
     );
   }
 }

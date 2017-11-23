@@ -1,6 +1,6 @@
 const React = require('react');
 const renderer = require('react-test-renderer');
-const {shallow} = require('enzyme');
+const { shallow } = require('enzyme');
 const ClassArc = require('../graph-schema-class-arc.jsx');
 
 describe('component graph-schema-class-arc', () => {
@@ -12,7 +12,7 @@ describe('component graph-schema-class-arc', () => {
       className: 'Person',
       classPropName: 'name',
       handleMouseOver: jest.fn(),
-      handleMouseOut: jest.fn(),
+      handleMouseOut: jest.fn()
     };
   });
 
@@ -27,8 +27,10 @@ describe('component graph-schema-class-arc', () => {
     wrapper.find('path').simulate('mouseover');
 
     expect(props.handleMouseOver).toHaveBeenCalledTimes(1);
-    expect(props.handleMouseOver)
-      .toHaveBeenCalledWith(props.className, props.classPropName);
+    expect(props.handleMouseOver).toHaveBeenCalledWith(
+      props.className,
+      props.classPropName
+    );
   });
 
   test('can handle mouse-out event', () => {
@@ -36,7 +38,9 @@ describe('component graph-schema-class-arc', () => {
     wrapper.find('path').simulate('mouseout');
 
     expect(props.handleMouseOut).toHaveBeenCalledTimes(1);
-    expect(props.handleMouseOut)
-      .toHaveBeenCalledWith(props.className, props.classPropName);
+    expect(props.handleMouseOut).toHaveBeenCalledWith(
+      props.className,
+      props.classPropName
+    );
   });
 });

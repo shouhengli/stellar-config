@@ -1,8 +1,8 @@
 const React = require('react');
 const R = require('ramda');
-const {is} = require('immutable');
+const { is } = require('immutable');
 
-const {getClassLinkKey} = require('../ingestion-profile');
+const { getClassLinkKey } = require('../ingestion-profile');
 
 class GraphSchema extends React.Component {
   constructor(props) {
@@ -31,67 +31,54 @@ class GraphSchema extends React.Component {
       handleWheel,
       zoom,
       pan,
-      coordinates,
+      coordinates
     } = this.props;
 
     return (
       <div className="graph-schema">
         <svg
-          ref={(ref) => this.svg = ref}
-          onMouseMove={
-            (event) => handleMouseMove(
-              event,
-              drag,
-              zoom
-            )
-          }
+          ref={ref => (this.svg = ref)}
+          onMouseMove={event => handleMouseMove(event, drag, zoom)}
           onMouseUp={() => handleMouseUp()}
-          onMouseDown={(event) => handleMouseDown(event, zoom)}
-          onWheel={(event) => handleWheel(event, coordinates, drag)}>
+          onMouseDown={event => handleMouseDown(event, zoom)}
+          onWheel={event => handleWheel(event, coordinates, drag)}>
           <g
-            transform={
-              `scale(${zoom}) translate(${pan.get('x')}, ${pan.get('y')})`
-            }>
+            transform={`scale(${zoom}) translate(${pan.get('x')}, ${pan.get(
+              'y'
+            )})`}>
             <defs>
               <Arrow id="graph-schema-arrow" />
             </defs>
             <g className="graph-schema-class-links">
-              {
-                classLinks.toList().map((l) => {
-                  return (
-                    <ClassLink key={getClassLinkKey(l)}>
-                      <ClassLinkPath
-                        ref={
-                          (p) => {
-                            if (R.isNil(p)) {
-                              delete this.classLinkPaths[l.get('globalIndex')];
-                            } else {
-                              this.classLinkPaths[l.get('globalIndex')] = {l, p};
-                            }
-                          }
+              {classLinks.toList().map(l => {
+                return (
+                  <ClassLink key={getClassLinkKey(l)}>
+                    <ClassLinkPath
+                      ref={p => {
+                        if (R.isNil(p)) {
+                          delete this.classLinkPaths[l.get('globalIndex')];
+                        } else {
+                          this.classLinkPaths[l.get('globalIndex')] = { l, p };
                         }
-                        id={l.get('globalIndex')}
-                        x0={classes.getIn([l.get('source'), 'x'])}
-                        y0={classes.getIn([l.get('source'), 'y'])}
-                        x1={l.get('x')}
-                        y1={l.get('y')}
-                        x2={classes.getIn([l.get('target'), 'x'])}
-                        y2={classes.getIn([l.get('target'), 'y'])}
-                        markerId="graph-schema-arrow" />
-                      <ClassLinkLabel
-                        id={l.get('globalIndex')}
-                        classLink={l} />
-                    </ClassLink>
-                  );
-                })
-              }
+                      }}
+                      id={l.get('globalIndex')}
+                      x0={classes.getIn([l.get('source'), 'x'])}
+                      y0={classes.getIn([l.get('source'), 'y'])}
+                      x1={l.get('x')}
+                      y1={l.get('y')}
+                      x2={classes.getIn([l.get('target'), 'x'])}
+                      y2={classes.getIn([l.get('target'), 'y'])}
+                      markerId="graph-schema-arrow"
+                    />
+                    <ClassLinkLabel id={l.get('globalIndex')} classLink={l} />
+                  </ClassLink>
+                );
+              })}
             </g>
             <g className="graph-schema-classes">
-              {
-                classes.toList().map((c) => {
-                  return <Class key={c.get('name')} cls={c} />;
-                })
-              }
+              {classes.toList().map(c => {
+                return <Class key={c.get('name')} cls={c} />;
+              })}
             </g>
           </g>
         </svg>
@@ -113,7 +100,7 @@ class GraphSchema extends React.Component {
   }
 
   componentDidMount() {
-    const {left, top} = this.svg.getBoundingClientRect();
+    const { left, top } = this.svg.getBoundingClientRect();
     this.props.init(
       [this.svg.clientWidth, this.svg.clientHeight],
       [left, top],

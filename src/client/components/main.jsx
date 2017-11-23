@@ -6,12 +6,9 @@ class Main extends React.Component {
   }
 
   render() {
-    const {Nav, View} = this.props;
+    const { Nav, View } = this.props;
 
-    return [
-      <Nav key="nav" />,
-      <View key="view" />,
-    ];
+    return [<Nav key="nav" />, <View key="view" />];
   }
 
   componentDidMount() {

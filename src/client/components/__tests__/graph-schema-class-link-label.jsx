@@ -1,8 +1,8 @@
 const React = require('react');
 const renderer = require('react-test-renderer');
-const {shallow} = require('enzyme');
-const {fromJS} = require('immutable');
-const {createClassLink} = require('../../graph-schema');
+const { shallow } = require('enzyme');
+const { fromJS } = require('immutable');
+const { createClassLink } = require('../../graph-schema');
 const Label = require('../graph-schema-class-link-label.jsx');
 
 describe('component graph-schema-class-link-label', () => {
@@ -13,7 +13,7 @@ describe('component graph-schema-class-link-label', () => {
       id: 1,
       classLink: fromJS(createClassLink('is-a', 'Person', 'Engineer')),
       zoom: 2,
-      handleMouseDown: jest.fn(),
+      handleMouseDown: jest.fn()
     };
   });
 
@@ -25,11 +25,14 @@ describe('component graph-schema-class-link-label', () => {
 
   test('can handle mouse-down event', () => {
     const wrapper = shallow(<Label {...props} />);
-    const event = {pageX: 1000, pageY: 650};
+    const event = { pageX: 1000, pageY: 650 };
     wrapper.simulate('mousedown', event);
 
     expect(props.handleMouseDown).toHaveBeenCalledTimes(1);
-    expect(props.handleMouseDown)
-      .toHaveBeenCalledWith(event, props.classLink, props.zoom);
+    expect(props.handleMouseDown).toHaveBeenCalledWith(
+      event,
+      props.classLink,
+      props.zoom
+    );
   });
 });

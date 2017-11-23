@@ -1,23 +1,21 @@
 const R = require('ramda');
-const {connect} = require('react-redux');
+const { connect } = require('react-redux');
 const LinkEditor = require('../components/ingestion-profile-mapping-link-editor.jsx');
 
-const {
-  MAPPING_LINK_TYPE_KEY,
-} = require('../ingestion-profile');
+const { MAPPING_LINK_TYPE_KEY } = require('../ingestion-profile');
 
 const {
   mappingLinkSelector,
   editingLinkIndexSelector,
   mappingLinkActivePropSelector,
   mappingLinkColumnOptionsSelector,
-  mappingLinkSaveEnabledSelector,
+  mappingLinkSaveEnabledSelector
 } = require('../selectors/ui/ingestion-profile');
 
 const {
   classLinkKeysSelector,
   sourcesSelector,
-  mappingLinkPropOptionsSelector,
+  mappingLinkPropOptionsSelector
 } = require('../selectors/ingestion-profile');
 
 const {
@@ -27,13 +25,13 @@ const {
   resetMappingLink,
   deleteMappingLinkProp,
   addMappingLinkProp,
-  setMappingLinkPropKey,
+  setMappingLinkPropKey
 } = require('../action-creators/ui/ingestion-profile');
 
 const {
   addMappingLink,
   updateMappingLink,
-  deleteMappingLink,
+  deleteMappingLink
 } = require('../action-creators/ingestion-profile');
 
 function mapStateToProps(state) {
@@ -45,42 +43,60 @@ function mapStateToProps(state) {
     sourceOptions: sourcesSelector(state),
     columnOptions: mappingLinkColumnOptionsSelector(state),
     linkPropOptions: mappingLinkPropOptionsSelector(state),
-    saveEnabled: mappingLinkSaveEnabledSelector(state),
+    saveEnabled: mappingLinkSaveEnabledSelector(state)
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    handleLinkPropKeyMenuItemClick: (itemLists, activeItems, depth, item, propKey) =>
-      dispatch(setMappingLinkPropKey(item, propKey)),
+    handleLinkPropKeyMenuItemClick: (
+      itemLists,
+      activeItems,
+      depth,
+      item,
+      propKey
+    ) => dispatch(setMappingLinkPropKey(item, propKey)),
 
-    handleLinkPropKeyButtonClick: R.compose(dispatch, toggleMappingLinkActivePropKey),
+    handleLinkPropKeyButtonClick: R.compose(
+      dispatch,
+      toggleMappingLinkActivePropKey
+    ),
 
-    handleLinkPropValueMenuItemClick: (itemLists, activeItems, depth, item, propKey) => {
+    handleLinkPropValueMenuItemClick: (
+      itemLists,
+      activeItems,
+      depth,
+      item,
+      propKey
+    ) => {
       if (propKey === MAPPING_LINK_TYPE_KEY) {
         dispatch(setMappingLinkPropValue(propKey, item));
       } else {
         if (depth === 0) {
-          dispatch(setMappingLinkPropValue(
-            propKey,
-            {
-              source: item,
-            },
-            false
-          ));
+          dispatch(
+            setMappingLinkPropValue(
+              propKey,
+              {
+                source: item
+              },
+              false
+            )
+          );
         } else {
-          dispatch(setMappingLinkPropValue(
-            propKey,
-            {
+          dispatch(
+            setMappingLinkPropValue(propKey, {
               source: activeItems.get(0),
-              column: item,
-            }
-          ));
+              column: item
+            })
+          );
         }
       }
     },
 
-    handleLinkPropValueButtonClick: R.compose(dispatch, toggleMappingLinkActivePropValue),
+    handleLinkPropValueButtonClick: R.compose(
+      dispatch,
+      toggleMappingLinkActivePropValue
+    ),
 
     handleCancelButtonClick: R.compose(dispatch, resetMappingLink),
 
@@ -96,7 +112,7 @@ function mapDispatchToProps(dispatch) {
       }
     },
 
-    handleDeleteButtonClick: R.compose(dispatch, deleteMappingLink),
+    handleDeleteButtonClick: R.compose(dispatch, deleteMappingLink)
   };
 }
 

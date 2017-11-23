@@ -1,47 +1,45 @@
-const {createSelector} = require('reselect');
-const {List, Map} = require('immutable');
-const {MAPPING_NODE_TYPE_KEY} = require('../ingestion-profile');
+const { createSelector } = require('reselect');
+const { List, Map } = require('immutable');
+const { MAPPING_NODE_TYPE_KEY } = require('../ingestion-profile');
 
 const {
   mappingNodeSelector,
-  mappingLinkSelector,
+  mappingLinkSelector
 } = require('./ui/ingestion-profile');
 
-const ingestionProfileSelector = (state) => state.get('ingestionProfile');
+const ingestionProfileSelector = state => state.get('ingestionProfile');
 
 const nameSelector = createSelector(
   ingestionProfileSelector,
-  (ingestionProfile) => ingestionProfile.get('name')
+  ingestionProfile => ingestionProfile.get('name')
 );
 
 const sourcesSelector = createSelector(
   ingestionProfileSelector,
-  (ingestionProfile) => ingestionProfile.get('sources')
+  ingestionProfile => ingestionProfile.get('sources')
 );
 
 const statusSelector = createSelector(
   ingestionProfileSelector,
-  (ingestionProfile) => ingestionProfile.get('status')
+  ingestionProfile => ingestionProfile.get('status')
 );
 
 const graphSchemaSelector = createSelector(
   ingestionProfileSelector,
-  (ingestionProfile) => ingestionProfile.get('graphSchema')
+  ingestionProfile => ingestionProfile.get('graphSchema')
 );
 
-const classNamesSelector = createSelector(
-  graphSchemaSelector,
-  (graphSchema) => graphSchema.get('classes', List()).keySeq()
+const classNamesSelector = createSelector(graphSchemaSelector, graphSchema =>
+  graphSchema.get('classes', List()).keySeq()
 );
 
-const classLinkKeysSelector = createSelector(
-  graphSchemaSelector,
-  (graphSchema) => graphSchema.get('classLinks', List()).keySeq()
+const classLinkKeysSelector = createSelector(graphSchemaSelector, graphSchema =>
+  graphSchema.get('classLinks', List()).keySeq()
 );
 
 const mappingSelector = createSelector(
   ingestionProfileSelector,
-  (ingestionProfile) => ingestionProfile.get('mapping')
+  ingestionProfile => ingestionProfile.get('mapping')
 );
 
 const persistentIngestionProfileSelector = createSelector(
@@ -53,26 +51,30 @@ const persistentIngestionProfileSelector = createSelector(
     return {
       sources: sources.toJS(),
       graphSchema: {
-        classes: graphSchema.get('classes', List()).valueSeq().toJS(),
-        classLinks: graphSchema.get('classLinks', List()).valueSeq().toJS(),
+        classes: graphSchema
+          .get('classes', List())
+          .valueSeq()
+          .toJS(),
+        classLinks: graphSchema
+          .get('classLinks', List())
+          .valueSeq()
+          .toJS()
       },
       mapping: mapping.toJS(),
       // This is just a temporary workaround for using an editor to build graph schema.
       // Changes will be introduced to replace the editor with form controls. This field will then
       // beremoved.
-      editorContent,
+      editorContent
     };
   }
 );
 
-const mappingNodesSelector = createSelector(
-  mappingSelector,
-  (mapping) => mapping.get('nodes', List())
+const mappingNodesSelector = createSelector(mappingSelector, mapping =>
+  mapping.get('nodes', List())
 );
 
-const mappingLinksSelector = createSelector(
-  mappingSelector,
-  (mapping) => mapping.get('links', List())
+const mappingLinksSelector = createSelector(mappingSelector, mapping =>
+  mapping.get('links', List())
 );
 
 const mappingNodePropOptionsSelector = createSelector(
@@ -81,11 +83,7 @@ const mappingNodePropOptionsSelector = createSelector(
   (graphSchema, mappingNode) =>
     graphSchema
       .getIn(
-        [
-          'classes',
-          mappingNode.get(MAPPING_NODE_TYPE_KEY),
-          'props',
-        ],
+        ['classes', mappingNode.get(MAPPING_NODE_TYPE_KEY), 'props'],
         Map()
       )
       .keySeq()
@@ -99,11 +97,7 @@ const mappingLinkPropOptionsSelector = createSelector(
   (graphSchema, mappingLink) =>
     graphSchema
       .getIn(
-        [
-          'classLinks',
-          mappingLink.get(MAPPING_NODE_TYPE_KEY),
-          'props',
-        ],
+        ['classLinks', mappingLink.get(MAPPING_NODE_TYPE_KEY), 'props'],
         Map()
       )
       .keySeq()
@@ -121,5 +115,5 @@ module.exports = {
   mappingNodesSelector,
   mappingLinksSelector,
   mappingNodePropOptionsSelector,
-  mappingLinkPropOptionsSelector,
+  mappingLinkPropOptionsSelector
 };

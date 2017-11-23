@@ -1,7 +1,7 @@
 const React = require('react');
-const {connect} = require('react-redux');
+const { connect } = require('react-redux');
 const R = require('ramda');
-const {Map} = require('immutable');
+const { Map } = require('immutable');
 
 const Arrow = require('../components/graph-schema-arrow.jsx');
 const ClassLink = require('../components/graph-schema-class-link.jsx');
@@ -13,7 +13,7 @@ const GraphSchema = require('../components/graph-schema.jsx');
 const {
   GraphSchemaFormatError,
   getClassLinkKey,
-  parseYaml,
+  parseYaml
 } = require('../ingestion-profile');
 
 const {
@@ -23,11 +23,13 @@ const {
   coordinatesSelector,
   panSelector,
   zoomSelector,
-  dragSelector,
+  dragSelector
 } = require('../selectors/ui/graph-schema');
 
-const {classesSelector} = require('../selectors/ui/graph-schema-classes');
-const {classLinksSelector} = require('../selectors/ui/graph-schema-class-links');
+const { classesSelector } = require('../selectors/ui/graph-schema-classes');
+const {
+  classLinksSelector
+} = require('../selectors/ui/graph-schema-class-links');
 
 const {
   setLayoutDimensionsAndCoordinates,
@@ -39,11 +41,11 @@ const {
   updateClassLinkPosition,
   updateClassPosition,
   updatePan,
-  zoom,
+  zoom
 } = require('../action-creators/ui/graph-schema');
 
 const {
-  loadGraphSchemaContent,
+  loadGraphSchemaContent
 } = require('../action-creators/ingestion-profile');
 
 function mapStateToProps(state) {
@@ -56,7 +58,7 @@ function mapStateToProps(state) {
     coordinates: coordinatesSelector(state),
     drag: dragSelector(state),
     zoom: zoomSelector(state),
-    pan: panSelector(state),
+    pan: panSelector(state)
   };
 }
 
@@ -69,15 +71,15 @@ function handleEditorContentChange(
 ) {
   dispatch(stopLayoutAsync())
     .then(() => parseYaml(editorContent))
-    .then(({classes, classLinks}) => {
-      const [defaultX, defaultY] = layoutDimensions.map((d) => d / 2);
+    .then(({ classes, classLinks }) => {
+      const [defaultX, defaultY] = layoutDimensions.map(d => d / 2);
 
-      classes.forEach((cls) => {
+      classes.forEach(cls => {
         cls.x = R.defaultTo(defaultX, currentClasses.getIn([cls.name, 'x']));
         cls.y = R.defaultTo(defaultY, currentClasses.getIn([cls.name, 'y']));
       });
 
-      classLinks.forEach((l) => {
+      classLinks.forEach(l => {
         l.x = R.defaultTo(
           defaultX,
           currentClassLinks.getIn([getClassLinkKey(l), 'x'])
@@ -91,25 +93,22 @@ function handleEditorContentChange(
 
       dispatch(loadGraphSchemaContent(classes, classLinks));
 
-      return {classes, classLinks};
+      return { classes, classLinks };
     })
-    .then(({classes, classLinks}) =>
+    .then(({ classes, classLinks }) =>
       dispatch(startLayoutAsync(classes, classLinks, layoutDimensions))
     )
-    .catch(
-      GraphSchemaFormatError,
-      (error) => {
-        console.log(error.message);
-      }
-    );
+    .catch(GraphSchemaFormatError, error => {
+      console.log(error.message);
+    });
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    updateClassLinkLengths: (classLinkPaths) =>
+    updateClassLinkLengths: classLinkPaths =>
       dispatch(
         updateClassLinkLengthsAsync(
-          R.values(classLinkPaths).map(({l, p}) => {
+          R.values(classLinkPaths).map(({ l, p }) => {
             const classLink = l.toJS();
             classLink.length = p.getLength();
             return classLink;
@@ -122,30 +121,36 @@ function mapDispatchToProps(dispatch) {
         // If a graph class is being dragged...
         const draggedClass = drag.get('class');
 
-        dispatch(updateClassPosition(
-          draggedClass.get('name'),
-          event.pageX / zoom - draggedClass.get('fromX'),
-          event.pageY / zoom - draggedClass.get('fromY')
-        ));
+        dispatch(
+          updateClassPosition(
+            draggedClass.get('name'),
+            event.pageX / zoom - draggedClass.get('fromX'),
+            event.pageY / zoom - draggedClass.get('fromY')
+          )
+        );
       } else if (drag.has('classLink')) {
         // If a graph class link is being dragged...
         const draggedClassLink = drag.get('classLink');
 
-        dispatch(updateClassLinkPosition(
-          draggedClassLink.get('name'),
-          draggedClassLink.get('source'),
-          draggedClassLink.get('target'),
-          event.pageX / zoom - draggedClassLink.get('fromX'),
-          event.pageY / zoom - draggedClassLink.get('fromY')
-        ));
+        dispatch(
+          updateClassLinkPosition(
+            draggedClassLink.get('name'),
+            draggedClassLink.get('source'),
+            draggedClassLink.get('target'),
+            event.pageX / zoom - draggedClassLink.get('fromX'),
+            event.pageY / zoom - draggedClassLink.get('fromY')
+          )
+        );
       } else if (drag.has('pan')) {
         // If the viewport is being dragged...
         const pan = drag.get('pan');
 
-        dispatch(updatePan(
-          event.pageX / zoom - pan.get('fromX'),
-          event.pageY / zoom - pan.get('fromY')
-        ));
+        dispatch(
+          updatePan(
+            event.pageX / zoom - pan.get('fromX'),
+            event.pageY / zoom - pan.get('fromY')
+          )
+        );
       }
     },
 
@@ -169,15 +174,19 @@ function mapDispatchToProps(dispatch) {
 
     stopLayout: () => dispatch(stopLayoutAsync()),
 
-    handleEditorContentChange:
-      (editorContent, layoutDimensions, currentClasses, currentClassLinks) =>
-        handleEditorContentChange(
-          dispatch,
-          editorContent,
-          layoutDimensions,
-          currentClasses,
-          currentClassLinks
-        ),
+    handleEditorContentChange: (
+      editorContent,
+      layoutDimensions,
+      currentClasses,
+      currentClassLinks
+    ) =>
+      handleEditorContentChange(
+        dispatch,
+        editorContent,
+        layoutDimensions,
+        currentClasses,
+        currentClassLinks
+      ),
 
     handleWheel: (event, coordinates, drag) => {
       event.preventDefault();
@@ -193,16 +202,17 @@ function mapDispatchToProps(dispatch) {
           dispatch(zoom(-1, x, y));
         }
       }
-    },
+    }
   };
 }
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(
-  (props) => <GraphSchema
-               Arrow={Arrow}
-               ClassLink={ClassLink}
-               ClassLinkPath={ClassLinkPath}
-               ClassLinkLabel={ClassLinkLabel}
-               Class={Class}
-               {...props} />
-);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(props => (
+  <GraphSchema
+    Arrow={Arrow}
+    ClassLink={ClassLink}
+    ClassLinkPath={ClassLinkPath}
+    ClassLinkLabel={ClassLinkLabel}
+    Class={Class}
+    {...props}
+  />
+));

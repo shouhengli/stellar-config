@@ -4,10 +4,10 @@ const SplitView = require('./split-view.jsx');
 const {
   TAB_SOURCE,
   TAB_GRAPH_SCHEMA,
-  TAB_MAPPING,
+  TAB_MAPPING
 } = require('../ingestion-profile');
 
-const {isNotEmpty} = require('../util');
+const { isNotEmpty } = require('../util');
 
 class IngestionProfileView extends React.Component {
   constructor(props) {
@@ -21,7 +21,7 @@ class IngestionProfileView extends React.Component {
       SourceView,
       GraphSchema,
       ConfigEditor,
-      MappingView,
+      MappingView
     } = this.props;
 
     if (isNotEmpty(name)) {
@@ -29,7 +29,12 @@ class IngestionProfileView extends React.Component {
         case TAB_SOURCE:
           return <SourceView />;
         case TAB_GRAPH_SCHEMA:
-          return <SplitView><ConfigEditor /><GraphSchema /></SplitView>;
+          return (
+            <SplitView>
+              <ConfigEditor />
+              <GraphSchema />
+            </SplitView>
+          );
         case TAB_MAPPING:
           return <MappingView />;
       }
