@@ -1,4 +1,4 @@
-const {Map, is, fromJS, List} = require('immutable');
+const { Map, is, fromJS, List } = require('immutable');
 const reduceState = require('../graph-schema');
 const actions = require('../../../actions');
 
@@ -12,9 +12,9 @@ describe('reducer ui/graph-schema', () => {
       dimensions: [0, 0],
       pan: {
         x: 0,
-        y: 0,
+        y: 0
       },
-      zoom: 1,
+      zoom: 1
     });
   });
 
@@ -22,10 +22,10 @@ describe('reducer ui/graph-schema', () => {
     test('resets some state fields', () => {
       const state = initialState
         .set('shouldUpdateClassLinkLengths', true)
-        .set('pan', Map({x: 100, y: 200}))
+        .set('pan', Map({ x: 100, y: 200 }))
         .set('zoom', 2);
 
-      const action = {type: actions.GRAPH_SCHEMA_UPDATE_CONTENT};
+      const action = { type: actions.GRAPH_SCHEMA_UPDATE_CONTENT };
 
       const next = reduceState(state, action);
 
@@ -39,7 +39,7 @@ describe('reducer ui/graph-schema', () => {
         type: actions.GRAPH_SCHEMA_START_CLASS_DRAG,
         name: 'Person',
         fromX: 100,
-        fromY: 200,
+        fromY: 200
       };
 
       const next = reduceState(initialState, action);
@@ -49,7 +49,7 @@ describe('reducer ui/graph-schema', () => {
         Map({
           name: action.name,
           fromX: action.fromX,
-          fromY: action.fromY,
+          fromY: action.fromY
         })
       );
 
@@ -64,10 +64,10 @@ describe('reducer ui/graph-schema', () => {
         classLink: {
           name: 'has',
           source: 'Person',
-          target: 'Car',
+          target: 'Car'
         },
         fromX: 100,
-        fromY: 200,
+        fromY: 200
       };
 
       const next = reduceState(initialState, action);
@@ -79,7 +79,7 @@ describe('reducer ui/graph-schema', () => {
           source: 'Person',
           target: 'Car',
           fromX: action.fromX,
-          fromY: action.fromY,
+          fromY: action.fromY
         })
       );
 
@@ -92,7 +92,7 @@ describe('reducer ui/graph-schema', () => {
       const action = {
         type: actions.GRAPH_SCHEMA_START_PAN,
         fromX: 100,
-        fromY: 200,
+        fromY: 200
       };
 
       const next = reduceState(initialState, action);
@@ -101,7 +101,7 @@ describe('reducer ui/graph-schema', () => {
         ['drag', 'pan'],
         Map({
           fromX: action.fromX,
-          fromY: action.fromY,
+          fromY: action.fromY
         })
       );
 
@@ -116,11 +116,11 @@ describe('reducer ui/graph-schema', () => {
         Map({
           name: 'Person',
           fromX: 10,
-          fromY: 20,
+          fromY: 20
         })
       );
 
-      const action = {type: actions.GRAPH_SCHEMA_STOP_DRAG};
+      const action = { type: actions.GRAPH_SCHEMA_STOP_DRAG };
 
       const next = reduceState(state, action);
 
@@ -130,7 +130,7 @@ describe('reducer ui/graph-schema', () => {
 
   describe('when GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS', () => {
     test('gives indicator to update length of class links', () => {
-      const action = {type: actions.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS};
+      const action = { type: actions.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS };
       const next = reduceState(initialState, action);
 
       const expected = initialState.set('shouldUpdateClassLinkLengths', true);
@@ -145,14 +145,14 @@ describe('reducer ui/graph-schema', () => {
         Map({
           name: 'Person',
           fromX: 10,
-          fromY: 20,
+          fromY: 20
         })
       );
 
       const action = {
         type: actions.GRAPH_SCHEMA_UPDATE_CLASS_POSITION,
         dx: 1,
-        dy: 2,
+        dy: 2
       };
 
       const next = reduceState(state, action);
@@ -175,14 +175,14 @@ describe('reducer ui/graph-schema', () => {
           source: 'Person',
           target: 'Car',
           fromX: 10,
-          fromY: 20,
+          fromY: 20
         })
       );
 
       const action = {
         type: actions.GRAPH_SCHEMA_UPDATE_CLASS_LINK_POSITION,
         dx: 1,
-        dy: 2,
+        dy: 2
       };
 
       const next = reduceState(state, action);
@@ -198,33 +198,29 @@ describe('reducer ui/graph-schema', () => {
 
   describe('when GRAPH_SCHEMA_UPDATE_PAN', () => {
     test('updates pan position', () => {
-      const state = initialState
-        .set('pan', Map({x: 100, y: 200}))
-        .setIn(
-          ['drag', 'pan'],
-          Map({
-            fromX: 10,
-            fromY: 20,
-          })
-        );
+      const state = initialState.set('pan', Map({ x: 100, y: 200 })).setIn(
+        ['drag', 'pan'],
+        Map({
+          fromX: 10,
+          fromY: 20
+        })
+      );
 
       const action = {
         type: actions.GRAPH_SCHEMA_UPDATE_PAN,
         dx: 1,
-        dy: 2,
+        dy: 2
       };
 
       const next = reduceState(state, action);
 
-      const expected = state
-        .set('pan', Map({x: 101, y: 202}))
-        .setIn(
-          ['drag', 'pan'],
-          Map({
-            fromX: 11,
-            fromY: 22,
-          })
-        );
+      const expected = state.set('pan', Map({ x: 101, y: 202 })).setIn(
+        ['drag', 'pan'],
+        Map({
+          fromX: 11,
+          fromY: 22
+        })
+      );
 
       expect(is(next, expected)).toBe(true);
     });
@@ -233,7 +229,7 @@ describe('reducer ui/graph-schema', () => {
   describe('when GRAPH_SCHEMA_UPDATE_CLASS_LINK_LENGTHS', () => {
     test('resets indicator of updating length of class links', () => {
       const state = initialState.set('shouldUpdateClassLinkLengths', true);
-      const action = {type: actions.GRAPH_SCHEMA_UPDATE_CLASS_LINK_LENGTHS};
+      const action = { type: actions.GRAPH_SCHEMA_UPDATE_CLASS_LINK_LENGTHS };
       const next = reduceState(state, action);
 
       const expected = state.set('shouldUpdateClassLinkLengths', false);
@@ -246,7 +242,7 @@ describe('reducer ui/graph-schema', () => {
       const action = {
         type: actions.GRAPH_SCHEMA_SET_DIMENSIONS_AND_COORDINATES,
         dimensions: [1000, 2000],
-        coordinates: [100, 200],
+        coordinates: [100, 200]
       };
 
       const next = reduceState(initialState, action);
@@ -269,7 +265,7 @@ describe('reducer ui/graph-schema', () => {
         type: actions.GRAPH_SCHEMA_ZOOM,
         offset: 1,
         w: 1000,
-        h: 800,
+        h: 800
       };
 
       const next = reduceState(state, action);

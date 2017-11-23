@@ -1,23 +1,23 @@
 const R = require('ramda');
-const {fromJS, is, Map, List, OrderedMap} = require('immutable');
+const { fromJS, is, Map, List, OrderedMap } = require('immutable');
 const actions = require('../actions');
 
 const {
   CONFIG_STATUS_NORMAL,
   CONFIG_STATUS_CHANGED,
-  CONFIG_STATUS_SAVING,
+  CONFIG_STATUS_SAVING
 } = require('../config-status');
 
 const {
   defaultToEmptyList,
   defaultToEmptyArray,
-  defaultToEmptyObject,
+  defaultToEmptyObject
 } = require('../util');
 
 const {
   createPersistentClass,
   createPersistentClassLink,
-  getClassLinkKey,
+  getClassLinkKey
 } = require('../ingestion-profile');
 
 const initialState = fromJS({
@@ -26,12 +26,12 @@ const initialState = fromJS({
   status: CONFIG_STATUS_NORMAL,
   graphSchema: {
     classes: {},
-    classLinks: {},
+    classLinks: {}
   },
   mapping: {
     nodes: [],
-    links: [],
-  },
+    links: []
+  }
 });
 
 function loadGraphSchema(graphSchema) {
@@ -40,14 +40,14 @@ function loadGraphSchema(graphSchema) {
       {
         classes: R.pipe(
           defaultToEmptyArray,
-          R.map((cls) => [cls.name, cls]),
+          R.map(cls => [cls.name, cls]),
           R.fromPairs,
           fromJS
         ),
         classLinks: R.pipe(
           defaultToEmptyArray,
           R.reduce((s, l) => s.set(getClassLinkKey(l), fromJS(l)), Map())
-        ),
+        )
       },
       defaultToEmptyObject(graphSchema)
     )
@@ -60,20 +60,18 @@ function updateGraphSchema(graphSchema) {
       {
         classes: R.pipe(
           defaultToEmptyArray,
-          R.map((cls) => [cls.name, createPersistentClass(cls)]),
+          R.map(cls => [cls.name, createPersistentClass(cls)]),
           R.fromPairs,
           fromJS
         ),
         classLinks: R.pipe(
           defaultToEmptyArray,
           R.reduce(
-            (s, l) => s.set(
-              getClassLinkKey(l),
-              fromJS(createPersistentClassLink(l))
-            ),
+            (s, l) =>
+              s.set(getClassLinkKey(l), fromJS(createPersistentClassLink(l))),
             Map()
           )
-        ),
+        )
       },
       graphSchema
     )
@@ -95,7 +93,7 @@ function loadMapping(mapping) {
           R.map(fromJS),
           R.map(OrderedMap),
           List
-        ),
+        )
       },
       mapping
     )
@@ -128,7 +126,10 @@ function reduce(state = initialState, action) {
 
     case actions.INGESTION_PROFILE_DELETE_SOURCE:
       return state
-        .set('sources', state.get('sources').filterNot(R.curry(is)(action.source)))
+        .set(
+          'sources',
+          state.get('sources').filterNot(R.curry(is)(action.source))
+        )
         .set('status', CONFIG_STATUS_CHANGED);
 
     case actions.GRAPH_SCHEMA_UPDATE_CONTENT:
@@ -139,10 +140,8 @@ function reduce(state = initialState, action) {
 
     case actions.INGESTION_PROFILE_ADD_MAPPING_NODE:
       return state
-        .updateIn(
-          ['mapping', 'nodes'],
-          List(),
-          (nodes) => nodes.push(action.node)
+        .updateIn(['mapping', 'nodes'], List(), nodes =>
+          nodes.push(action.node)
         )
         .set('status', CONFIG_STATUS_CHANGED);
 
@@ -158,10 +157,8 @@ function reduce(state = initialState, action) {
 
     case actions.INGESTION_PROFILE_ADD_MAPPING_LINK:
       return state
-        .updateIn(
-          ['mapping', 'links'],
-          List(),
-          (links) => links.push(action.link)
+        .updateIn(['mapping', 'links'], List(), links =>
+          links.push(action.link)
         )
         .set('status', CONFIG_STATUS_CHANGED);
 

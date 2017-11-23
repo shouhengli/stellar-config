@@ -5,12 +5,10 @@ const ConfigDeleteToggle = require('../config-delete-toggle.jsx');
 describe('component config-delete-toggle', () => {
   test('is clickable', () => {
     const props = {
-      handleClick: jest.fn(),
+      handleClick: jest.fn()
     };
 
-    const component = renderer.create(
-      <ConfigDeleteToggle {...props} />
-    );
+    const component = renderer.create(<ConfigDeleteToggle {...props} />);
 
     const tree = component.toJSON();
     tree.props.onClick();

@@ -1,13 +1,13 @@
 const React = require('react');
 
-const ClassPropTooltip = (props) => {
+const ClassPropTooltip = props => {
   const {
     id,
     rotation,
     classPropTooltipArcPath,
     classPropTooltipRadius,
     visible,
-    classPropName,
+    classPropName
   } = props;
 
   return (
@@ -16,8 +16,10 @@ const ClassPropTooltip = (props) => {
       transform={`rotate(${rotation})`}>
       <path
         id={`graph-schema-class-prop-tooltip-path-${id}`}
-        d={classPropTooltipArcPath} />
-      <text textAnchor="middle"
+        d={classPropTooltipArcPath}
+      />
+      <text
+        textAnchor="middle"
         dx={Math.PI * classPropTooltipRadius}
         visibility={visible ? 'visible' : 'hidden'}>
         <textPath xlinkHref={`#graph-schema-class-prop-tooltip-path-${id}`}>

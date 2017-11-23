@@ -1,10 +1,8 @@
 const R = require('ramda');
-const {connect} = require('react-redux');
+const { connect } = require('react-redux');
 const NodeEditor = require('../components/ingestion-profile-mapping-node-editor.jsx');
 
-const {
-  MAPPING_NODE_TYPE_KEY,
-} = require('../ingestion-profile');
+const { MAPPING_NODE_TYPE_KEY } = require('../ingestion-profile');
 
 const {
   toggleMappingNodeActivePropKey,
@@ -13,13 +11,13 @@ const {
   deleteMappingNodeProp,
   setMappingNodePropKey,
   setMappingNodePropValue,
-  resetMappingNode,
+  resetMappingNode
 } = require('../action-creators/ui/ingestion-profile');
 
 const {
   addMappingNode,
   updateMappingNode,
-  deleteMappingNode,
+  deleteMappingNode
 } = require('../action-creators/ingestion-profile');
 
 const {
@@ -27,13 +25,13 @@ const {
   editingNodeIndexSelector,
   mappingNodeActivePropSelector,
   mappingNodeColumnOptionsSelector,
-  mappingNodeSaveEnabledSelector,
+  mappingNodeSaveEnabledSelector
 } = require('../selectors/ui/ingestion-profile');
 
 const {
   mappingNodePropOptionsSelector,
   classNamesSelector,
-  sourcesSelector,
+  sourcesSelector
 } = require('../selectors/ingestion-profile');
 
 function mapStateToProps(state) {
@@ -45,42 +43,60 @@ function mapStateToProps(state) {
     nodePropOptions: mappingNodePropOptionsSelector(state),
     sourceOptions: sourcesSelector(state),
     columnOptions: mappingNodeColumnOptionsSelector(state),
-    saveEnabled: mappingNodeSaveEnabledSelector(state),
+    saveEnabled: mappingNodeSaveEnabledSelector(state)
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    handleNodePropKeyMenuItemClick: (itemLists, activeItems, depth, item, propKey) =>
-      dispatch(setMappingNodePropKey(item, propKey)),
+    handleNodePropKeyMenuItemClick: (
+      itemLists,
+      activeItems,
+      depth,
+      item,
+      propKey
+    ) => dispatch(setMappingNodePropKey(item, propKey)),
 
-    handleNodePropValueMenuItemClick: (itemLists, activeItems, depth, item, propKey) => {
+    handleNodePropValueMenuItemClick: (
+      itemLists,
+      activeItems,
+      depth,
+      item,
+      propKey
+    ) => {
       if (propKey === MAPPING_NODE_TYPE_KEY) {
         dispatch(setMappingNodePropValue(propKey, item));
       } else {
         if (depth === 0) {
-          dispatch(setMappingNodePropValue(
-            propKey,
-            {
-              source: item,
-            },
-            false
-          ));
+          dispatch(
+            setMappingNodePropValue(
+              propKey,
+              {
+                source: item
+              },
+              false
+            )
+          );
         } else {
-          dispatch(setMappingNodePropValue(
-            propKey,
-            {
+          dispatch(
+            setMappingNodePropValue(propKey, {
               source: activeItems.get(0),
-              column: item,
-            }
-          ));
+              column: item
+            })
+          );
         }
       }
     },
 
-    handleNodePropKeyButtonClick: R.compose(dispatch, toggleMappingNodeActivePropKey),
+    handleNodePropKeyButtonClick: R.compose(
+      dispatch,
+      toggleMappingNodeActivePropKey
+    ),
 
-    handleNodePropValueButtonClick: R.compose(dispatch, toggleMappingNodeActivePropValue),
+    handleNodePropValueButtonClick: R.compose(
+      dispatch,
+      toggleMappingNodeActivePropValue
+    ),
 
     handleDeleteSectionButtonClick: R.compose(dispatch, deleteMappingNodeProp),
 
@@ -96,7 +112,7 @@ function mapDispatchToProps(dispatch) {
       }
     },
 
-    handleDeleteButtonClick: R.compose(dispatch, deleteMappingNode),
+    handleDeleteButtonClick: R.compose(dispatch, deleteMappingNode)
   };
 }
 

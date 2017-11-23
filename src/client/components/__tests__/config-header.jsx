@@ -6,7 +6,7 @@ describe('component config-header', () => {
   test('can be rendered', () => {
     const props = {
       configType: 'source',
-      configName: 'vehicles',
+      configName: 'vehicles'
     };
 
     const component = renderer.create(<Header {...props} />);

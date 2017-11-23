@@ -5,7 +5,7 @@ const reduceGraphSchemaClassLinksState = require('./ui/graph-schema-class-links'
 const reduceSearchState = require('./ui/search');
 const reduceViewState = require('./ui/view');
 
-const {combineReducers} = require('redux-immutable');
+const { combineReducers } = require('redux-immutable');
 
 module.exports = combineReducers({
   ingestionProfile: reduceIngestionProfileState,
@@ -13,5 +13,5 @@ module.exports = combineReducers({
   graphSchemaClasses: reduceGraphSchemaClassesState,
   graphSchemaClassLinks: reduceGraphSchemaClassLinksState,
   search: reduceSearchState,
-  view: reduceViewState,
+  view: reduceViewState
 });

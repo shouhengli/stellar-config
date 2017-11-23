@@ -5,12 +5,10 @@ const Toggle = require('../new-config-toggle.jsx');
 describe('component new-config-toggle', () => {
   test('is clickable', () => {
     const props = {
-      handleClick: jest.fn(),
+      handleClick: jest.fn()
     };
 
-    const component = renderer.create(
-      <Toggle {...props} />
-    );
+    const component = renderer.create(<Toggle {...props} />);
 
     const tree = component.toJSON();
     tree.props.onClick();

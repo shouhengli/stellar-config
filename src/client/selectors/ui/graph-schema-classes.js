@@ -1,3 +1,3 @@
-const classesSelector = (state) => state.getIn(['ui', 'graphSchemaClasses']);
+const classesSelector = state => state.getIn(['ui', 'graphSchemaClasses']);
 
-module.exports = {classesSelector};
+module.exports = { classesSelector };

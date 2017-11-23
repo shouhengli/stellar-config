@@ -1,7 +1,7 @@
 const React = require('react');
 const renderer = require('react-test-renderer');
-const {shallow} = require('enzyme');
-const {fromJS} = require('immutable');
+const { shallow } = require('enzyme');
+const { fromJS } = require('immutable');
 const NewConfig = require('../new-config.jsx');
 
 describe('component new-config', () => {
@@ -15,7 +15,7 @@ describe('component new-config', () => {
       handleConfigTypeChange: jest.fn(),
       handleConfigNameChange: jest.fn(),
       handleCancelButtonClick: jest.fn(),
-      handleAddButtonClick: jest.fn(),
+      handleAddButtonClick: jest.fn()
     };
   });
 
@@ -27,7 +27,7 @@ describe('component new-config', () => {
 
   test('has changeable config type drop down list', () => {
     const wrapper = shallow(<NewConfig {...props} />);
-    const event = {target: {value: 'def'}};
+    const event = { target: { value: 'def' } };
     wrapper.find('select').simulate('change', event);
 
     expect(props.handleConfigTypeChange).toHaveBeenCalledTimes(1);
@@ -36,7 +36,7 @@ describe('component new-config', () => {
 
   test('has changeable config name input field', () => {
     const wrapper = shallow(<NewConfig {...props} />);
-    const event = {target: {value: 'def'}};
+    const event = { target: { value: 'def' } };
     wrapper.find('input').simulate('change', event);
 
     expect(props.handleConfigNameChange).toHaveBeenCalledTimes(1);
@@ -45,9 +45,10 @@ describe('component new-config', () => {
 
   test('has clickable add button', () => {
     const wrapper = shallow(<NewConfig {...props} />);
-    wrapper.find('button')
-           .filterWhere((w) => w.contains('Add'))
-           .simulate('click');
+    wrapper
+      .find('button')
+      .filterWhere(w => w.contains('Add'))
+      .simulate('click');
 
     expect(props.handleAddButtonClick).toHaveBeenCalledTimes(1);
     expect(props.handleAddButtonClick).toHaveBeenCalledWith(
@@ -58,9 +59,10 @@ describe('component new-config', () => {
 
   test('has clickable cancel button', () => {
     const wrapper = shallow(<NewConfig {...props} />);
-    wrapper.find('button')
-           .filterWhere((w) => w.contains('Cancel'))
-           .simulate('click');
+    wrapper
+      .find('button')
+      .filterWhere(w => w.contains('Cancel'))
+      .simulate('click');
 
     expect(props.handleCancelButtonClick).toHaveBeenCalledTimes(1);
   });

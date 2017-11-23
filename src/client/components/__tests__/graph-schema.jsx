@@ -1,13 +1,13 @@
 const React = require('react');
 const renderer = require('react-test-renderer');
-const {mount} = require('enzyme');
-const {Map, fromJS} = require('immutable');
+const { mount } = require('enzyme');
+const { Map, fromJS } = require('immutable');
 const GraphSchema = require('../graph-schema.jsx');
 
 const {
   getClassLinkKey,
   createClassLink,
-  createClass,
+  createClass
 } = require('../../graph-schema');
 
 describe('component graph-schema', () => {
@@ -16,13 +16,13 @@ describe('component graph-schema', () => {
   beforeEach(() => {
     const classLinks = [
       createClassLink('has-a', 'Person', 'Mac'),
-      createClassLink('is-a', 'Person', 'Engineer'),
+      createClassLink('is-a', 'Person', 'Engineer')
     ];
 
     const classes = [
       createClass('Person'),
       createClass('Mac'),
-      createClass('Engineer'),
+      createClass('Engineer')
     ];
 
     props = {
@@ -31,19 +31,19 @@ describe('component graph-schema', () => {
       ClassLinkPath: 'div',
       ClassLinkLabel: 'div',
       Class: 'div',
-      classLinks: Map(classLinks.map((l) => [getClassLinkKey(l), fromJS(l)])),
-      classes: Map(classes.map((c) => [c.name, fromJS(c)])),
+      classLinks: Map(classLinks.map(l => [getClassLinkKey(l), fromJS(l)])),
+      classes: Map(classes.map(c => [c.name, fromJS(c)])),
       drag: fromJS({
-        'class': {
+        class: {
           name: 'Person',
           fromX: 20,
-          fromY: 100,
-        },
+          fromY: 100
+        }
       }),
       zoom: 1.5,
       pan: fromJS({
         x: 150,
-        y: -30,
+        y: -30
       }),
       coordinates: fromJS([500, 600]),
       dimensions: fromJS([1200, 1800]),
@@ -56,23 +56,23 @@ describe('component graph-schema', () => {
       init: jest.fn(),
       handleEditorContentChange: jest.fn(),
       updateClassLinkLengths: jest.fn(),
-      stopLayout: jest.fn(),
+      stopLayout: jest.fn()
     };
   });
 
   test('can be rendered', () => {
     const boundingClientRect = {
       left: 15,
-      top: 25,
+      top: 25
     };
 
     const svg = {
       getBoundingClientRect: () => boundingClientRect,
       clientWidth: 96,
-      clientHeight: 69,
+      clientHeight: 69
     };
 
-    const createNodeMock = (element) => {
+    const createNodeMock = element => {
       if (element.type === 'svg') {
         return svg;
       }
@@ -81,7 +81,7 @@ describe('component graph-schema', () => {
     };
 
     const tree = renderer
-      .create(<GraphSchema {...props} />, {createNodeMock})
+      .create(<GraphSchema {...props} />, { createNodeMock })
       .toJSON();
 
     expect(tree).toMatchSnapshot();
@@ -127,16 +127,15 @@ describe('component graph-schema', () => {
 
   test('can track mouse move', () => {
     const wrapper = mount(<GraphSchema {...props} />);
-    const event = {pageX: 1000, pageY: 650};
+    const event = { pageX: 1000, pageY: 650 };
     wrapper.find('svg').simulate('mousemove', event);
 
     expect(props.handleMouseMove).toHaveBeenCalledTimes(1);
-    expect(props.handleMouseMove)
-      .toHaveBeenCalledWith(
-        expect.objectContaining(event),
-        props.drag,
-        props.zoom
-      );
+    expect(props.handleMouseMove).toHaveBeenCalledWith(
+      expect.objectContaining(event),
+      props.drag,
+      props.zoom
+    );
   });
 
   test('can handle mouse-up event', () => {
@@ -148,28 +147,26 @@ describe('component graph-schema', () => {
 
   test('can handle mouse-down event', () => {
     const wrapper = mount(<GraphSchema {...props} />);
-    const event = {pageX: 1000, pageY: 650};
+    const event = { pageX: 1000, pageY: 650 };
     wrapper.find('svg').simulate('mousedown', event);
 
     expect(props.handleMouseDown).toHaveBeenCalledTimes(1);
-    expect(props.handleMouseDown)
-      .toHaveBeenCalledWith(
-        expect.objectContaining(event),
-        props.zoom
-      );
+    expect(props.handleMouseDown).toHaveBeenCalledWith(
+      expect.objectContaining(event),
+      props.zoom
+    );
   });
 
   test('can handle wheel event', () => {
     const wrapper = mount(<GraphSchema {...props} />);
-    const event = {pageX: 1000, pageY: 650};
+    const event = { pageX: 1000, pageY: 650 };
     wrapper.find('svg').simulate('wheel', event);
 
     expect(props.handleWheel).toHaveBeenCalledTimes(1);
-    expect(props.handleWheel)
-      .toHaveBeenCalledWith(
-        expect.objectContaining(event),
-        props.coordinates,
-        props.drag
-      );
+    expect(props.handleWheel).toHaveBeenCalledWith(
+      expect.objectContaining(event),
+      props.coordinates,
+      props.drag
+    );
   });
 });

@@ -1,11 +1,11 @@
 const React = require('react');
 
-module.exports = (props) => {
+module.exports = props => {
   const {
     newSource,
     handleNewSourceChange,
     handleAddButtonClick,
-    handleCancelButtonClick,
+    handleCancelButtonClick
   } = props;
 
   return [
@@ -15,7 +15,8 @@ module.exports = (props) => {
         className="input"
         placeholder="http://..."
         value={newSource}
-        onChange={(event) => handleNewSourceChange(event.target.value)} />
+        onChange={event => handleNewSourceChange(event.target.value)}
+      />
     </div>,
     <div key="add" className="control">
       <button
@@ -25,11 +26,9 @@ module.exports = (props) => {
       </button>
     </div>,
     <div key="cancel" className="control">
-      <button
-        className="button"
-        onClick={() => handleCancelButtonClick()}>
+      <button className="button" onClick={() => handleCancelButtonClick()}>
         Cancel
       </button>
-    </div>,
+    </div>
   ];
 };

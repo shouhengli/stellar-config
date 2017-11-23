@@ -5,7 +5,7 @@ const Toggle = require('../config-search-toggle.jsx');
 describe('component config-search-toggle', () => {
   test('is clickable', () => {
     const props = {
-      handleClick: jest.fn(),
+      handleClick: jest.fn()
     };
 
     const tree = renderer.create(<Toggle {...props} />).toJSON();

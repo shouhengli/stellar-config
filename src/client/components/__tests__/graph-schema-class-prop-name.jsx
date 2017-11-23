@@ -1,6 +1,6 @@
 const React = require('react');
 const renderer = require('react-test-renderer');
-const {shallow} = require('enzyme');
+const { shallow } = require('enzyme');
 const ClassPropName = require('../graph-schema-class-prop-name.jsx');
 
 describe('component graph-schema-class-prop-name', () => {
@@ -18,7 +18,7 @@ describe('component graph-schema-class-prop-name', () => {
       classPropName: 'name',
       fontSize: 16,
       handleMouseOver: jest.fn(),
-      handleMouseOut: jest.fn(),
+      handleMouseOut: jest.fn()
     };
   });
 
@@ -33,8 +33,10 @@ describe('component graph-schema-class-prop-name', () => {
     wrapper.find('text').simulate('mouseover');
 
     expect(props.handleMouseOver).toHaveBeenCalledTimes(1);
-    expect(props.handleMouseOver)
-      .toHaveBeenCalledWith(props.className, props.classPropName);
+    expect(props.handleMouseOver).toHaveBeenCalledWith(
+      props.className,
+      props.classPropName
+    );
   });
 
   test('can handle mouse-out event', () => {
@@ -42,7 +44,9 @@ describe('component graph-schema-class-prop-name', () => {
     wrapper.find('text').simulate('mouseout');
 
     expect(props.handleMouseOut).toHaveBeenCalledTimes(1);
-    expect(props.handleMouseOut)
-      .toHaveBeenCalledWith(props.className, props.classPropName);
+    expect(props.handleMouseOut).toHaveBeenCalledWith(
+      props.className,
+      props.classPropName
+    );
   });
 });

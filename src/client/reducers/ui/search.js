@@ -1,10 +1,10 @@
-const {fromJS} = require('immutable');
+const { fromJS } = require('immutable');
 const actions = require('../../actions');
 
 const initialState = fromJS({
   names: [],
   visible: false,
-  text: '',
+  text: ''
 });
 
 function reduce(state = initialState, action) {

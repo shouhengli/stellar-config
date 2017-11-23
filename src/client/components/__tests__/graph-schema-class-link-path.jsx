@@ -12,7 +12,7 @@ describe('component graph-schema-class-link-path', () => {
       x1: 456,
       y1: 654,
       x2: 789,
-      y2: 987,
+      y2: 987
     };
 
     const tree = renderer.create(<ClassLinkPath {...props} />).toJSON();

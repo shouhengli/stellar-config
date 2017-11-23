@@ -1,7 +1,7 @@
-const {fromJS, List, Map} = require('immutable');
+const { fromJS, List, Map } = require('immutable');
 const actions = require('../../actions');
 
-const {ZOOM_STEP, MAX_ZOOM, MIN_ZOOM} = require('../../ingestion-profile');
+const { ZOOM_STEP, MAX_ZOOM, MIN_ZOOM } = require('../../ingestion-profile');
 
 /**
  * Initial UI state.
@@ -21,9 +21,9 @@ const initialState = fromJS({
   coordinates: [0, 0],
   pan: {
     x: 0,
-    y: 0,
+    y: 0
   },
-  zoom: 1,
+  zoom: 1
 });
 
 function reduce(state = initialState, action) {
@@ -38,7 +38,7 @@ function reduce(state = initialState, action) {
       return state
         .set('shouldUpdateClassLinkLengths', false)
         .set('zoom', 1)
-        .set('pan', Map({x: 0, y: 0}));
+        .set('pan', Map({ x: 0, y: 0 }));
 
     case actions.GRAPH_SCHEMA_START_CLASS_DRAG:
       return state.setIn(
@@ -46,7 +46,7 @@ function reduce(state = initialState, action) {
         Map({
           name: action.name,
           fromX: action.fromX,
-          fromY: action.fromY,
+          fromY: action.fromY
         })
       );
 
@@ -58,7 +58,7 @@ function reduce(state = initialState, action) {
           name: action.classLink.name,
           target: action.classLink.target,
           fromX: action.fromX,
-          fromY: action.fromY,
+          fromY: action.fromY
         })
       );
 
@@ -67,7 +67,7 @@ function reduce(state = initialState, action) {
         ['drag', 'pan'],
         Map({
           fromX: action.fromX,
-          fromY: action.fromY,
+          fromY: action.fromY
         })
       );
 
@@ -111,14 +111,8 @@ function reduce(state = initialState, action) {
           ['drag', 'pan', 'fromY'],
           state.getIn(['drag', 'pan', 'fromY']) + action.dy
         )
-        .setIn(
-          ['pan', 'x'],
-          state.getIn(['pan', 'x']) + action.dx
-        )
-        .setIn(
-          ['pan', 'y'],
-          state.getIn(['pan', 'y']) + action.dy
-        );
+        .setIn(['pan', 'x'], state.getIn(['pan', 'x']) + action.dx)
+        .setIn(['pan', 'y'], state.getIn(['pan', 'y']) + action.dy);
 
     case actions.GRAPH_SCHEMA_UPDATE_CLASS_LINK_LENGTHS:
       return state.set('shouldUpdateClassLinkLengths', false);
@@ -133,13 +127,10 @@ function reduce(state = initialState, action) {
       const panY = state.getIn(['pan', 'y']);
       const zoom0 = state.get('zoom');
       const zoom1 = Math.min(
-        Math.max(
-          zoom0 + action.offset * ZOOM_STEP,
-          MIN_ZOOM
-        ),
+        Math.max(zoom0 + action.offset * ZOOM_STEP, MIN_ZOOM),
         MAX_ZOOM
       );
-      const {w, h} = action;
+      const { w, h } = action;
 
       return state
         .set('zoom', zoom1)

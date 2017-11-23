@@ -4,7 +4,7 @@ const Save = require('../config-save.jsx');
 
 const {
   CONFIG_STATUS_CHANGED,
-  CONFIG_STATUS_SAVING,
+  CONFIG_STATUS_SAVING
 } = require('../../config-status');
 
 describe('component config-save', () => {
@@ -14,7 +14,7 @@ describe('component config-save', () => {
       configName: 'vehicles',
       configContent: 'vehicles: {id: integer, model: string}',
       configStatus: CONFIG_STATUS_CHANGED,
-      handleClick: jest.fn(),
+      handleClick: jest.fn()
     };
 
     const component = renderer.create(<Save {...props} />);
@@ -31,7 +31,7 @@ describe('component config-save', () => {
   });
 
   test('shows loading icon when config is being saved', () => {
-    const props = {configStatus: CONFIG_STATUS_SAVING};
+    const props = { configStatus: CONFIG_STATUS_SAVING };
 
     const component = renderer.create(<Save {...props} />);
     const tree = component.toJSON();

@@ -1,6 +1,6 @@
 const R = require('ramda');
 const P = require('bluebird');
-const {Map} = require('immutable');
+const { Map } = require('immutable');
 const yaml = require('js-yaml');
 const ClientError = require('./error');
 
@@ -50,7 +50,7 @@ function createClass(
     x,
     y,
     tooltipVisibleProp,
-    outerRadius,
+    outerRadius
   };
 
   if (shouldGenerateGlobalIndex) {
@@ -68,7 +68,7 @@ function createClass(
 function createPersistentClass(cls) {
   return {
     name: cls.name,
-    props: R.clone(cls.props),
+    props: R.clone(cls.props)
   };
 }
 
@@ -101,7 +101,7 @@ function createClassLink(
     target,
     x,
     y,
-    length,
+    length
   };
 
   if (shouldGenerateGlobalIndex) {
@@ -120,7 +120,7 @@ function createPersistentClassLink(classLink) {
   return {
     name: classLink.name,
     source: classLink.source,
-    target: classLink.target,
+    target: classLink.target
   };
 }
 
@@ -132,14 +132,14 @@ function createPersistentClassLink(classLink) {
 function getClassLinkId(classLink) {
   if (Map.isMap(classLink)) {
     return {
-      'source': classLink.get('source'),
-      'name': classLink.get('name'),
+      source: classLink.get('source'),
+      name: classLink.get('name')
     };
   }
 
   return {
     source: classLink.source,
-    name: classLink.name,
+    name: classLink.name
   };
 }
 
@@ -158,7 +158,10 @@ class GraphSchemaFormatError extends ClientError {
 }
 
 const graphSchemaPrimitiveTypes = ['string', 'boolean', 'integer', 'float'];
-const isInGraphSchemaPrimitiveTypes = R.contains(R.__, graphSchemaPrimitiveTypes);
+const isInGraphSchemaPrimitiveTypes = R.contains(
+  R.__,
+  graphSchemaPrimitiveTypes
+);
 
 function convertGraphSchemaToClassesAndLinks(graphSchema) {
   if (R.type(graphSchema) !== 'Object') {
@@ -174,28 +177,25 @@ function convertGraphSchemaToClassesAndLinks(graphSchema) {
         );
       }
 
-      const [primitivePropPairs, linkPropPairs] =
-        R.partition(
-          ([n, t]) => isInGraphSchemaPrimitiveTypes(t),
-          R.toPairs(classProps)
-        );
+      const [primitivePropPairs, linkPropPairs] = R.partition(
+        ([n, t]) => isInGraphSchemaPrimitiveTypes(t),
+        R.toPairs(classProps)
+      );
 
       const cls = createClass(className, R.fromPairs(primitivePropPairs));
 
-      const classLinks =
-        linkPropPairs.map(([n, t]) => createClassLink(n, className, t));
+      const classLinks = linkPropPairs.map(([n, t]) =>
+        createClassLink(n, className, t)
+      );
 
-      return [
-        cls,
-        classLinks,
-      ];
+      return [cls, classLinks];
     }),
     R.transpose
   )(graphSchema);
 
   const classLinks = R.unnest(classLinkLists);
 
-  classLinks.forEach((l) => {
+  classLinks.forEach(l => {
     if (!R.has(l.target, graphSchema)) {
       throw new GraphSchemaFormatError(
         `Cannot find class link target "${l.target}".`
@@ -205,14 +205,13 @@ function convertGraphSchemaToClassesAndLinks(graphSchema) {
 
   return {
     classes,
-    classLinks,
+    classLinks
   };
 }
 
 function parseYaml(yamlDoc) {
-  return P
-    .try(() => yaml.safeLoad(yamlDoc))
-    .catch((error) => {
+  return P.try(() => yaml.safeLoad(yamlDoc))
+    .catch(error => {
       throw new GraphSchemaFormatError(error);
     })
     .then(convertGraphSchemaToClassesAndLinks);
@@ -241,7 +240,7 @@ function createIngestionProfile(sources, graphSchema, mapping) {
   return {
     sources,
     graphSchema,
-    mapping,
+    mapping
   };
 }
 
@@ -288,5 +287,5 @@ module.exports = {
   getClassLinkKey,
   parseYaml,
   convertGraphSchemaToClassesAndLinks,
-  GraphSchemaFormatError,
+  GraphSchemaFormatError
 };

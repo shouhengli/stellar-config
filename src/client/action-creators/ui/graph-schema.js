@@ -8,7 +8,7 @@ function startClassDrag(name, fromX, fromY) {
     type: actions.GRAPH_SCHEMA_START_CLASS_DRAG,
     name,
     fromX,
-    fromY,
+    fromY
   };
 }
 
@@ -17,7 +17,7 @@ function startClassLinkDrag(classLink, fromX, fromY) {
     type: actions.GRAPH_SCHEMA_START_CLASS_LINK_DRAG,
     classLink,
     fromX,
-    fromY,
+    fromY
   };
 }
 
@@ -25,19 +25,19 @@ function startPan(fromX, fromY) {
   return {
     type: actions.GRAPH_SCHEMA_START_PAN,
     fromX,
-    fromY,
+    fromY
   };
 }
 
 function stopDrag() {
-  return {type: actions.GRAPH_SCHEMA_STOP_DRAG};
+  return { type: actions.GRAPH_SCHEMA_STOP_DRAG };
 }
 
 function updateGraphSchemaElementPositions(classes, classLinks) {
   return {
     type: actions.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS,
     classes,
-    classLinks,
+    classLinks
   };
 }
 
@@ -46,7 +46,7 @@ function updateClassPosition(className, dx, dy) {
     type: actions.GRAPH_SCHEMA_UPDATE_CLASS_POSITION,
     name: className,
     dx,
-    dy,
+    dy
   };
 }
 
@@ -63,7 +63,7 @@ function updateClassLinkPosition(
     source: classLinkSource,
     target: classLinkTarget,
     dx,
-    dy,
+    dy
   };
 }
 
@@ -71,7 +71,7 @@ function updatePan(dx, dy) {
   return {
     type: actions.GRAPH_SCHEMA_UPDATE_PAN,
     dx,
-    dy,
+    dy
   };
 }
 
@@ -79,47 +79,55 @@ function setLayoutDimensionsAndCoordinates(dimensions, coordinates) {
   return {
     type: actions.GRAPH_SCHEMA_SET_DIMENSIONS_AND_COORDINATES,
     dimensions,
-    coordinates,
+    coordinates
   };
 }
 
 function initLayoutAsync() {
-  return (dispatch) => P.resolve().then(() =>
-    layoutWorker.onmessage = (event) => {
-      if (event.data.type === layout.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS) {
-        dispatch(updateGraphSchemaElementPositions(
-          event.data.classes,
-          event.data.classLinks
-        ));
-      }
-    }
-  );
+  return dispatch =>
+    P.resolve().then(
+      () =>
+        (layoutWorker.onmessage = event => {
+          if (
+            event.data.type === layout.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS
+          ) {
+            dispatch(
+              updateGraphSchemaElementPositions(
+                event.data.classes,
+                event.data.classLinks
+              )
+            );
+          }
+        })
+    );
 }
 
 function startLayoutAsync(classes, classLinks, dimensions) {
-  return () => P.resolve().then(() =>
-    layoutWorker.postMessage({
-      type: layout.START_GRAPH_SCHEMA_SIMULATION,
-      classes,
-      classLinks,
-      dimensions,
-    })
-  );
+  return () =>
+    P.resolve().then(() =>
+      layoutWorker.postMessage({
+        type: layout.START_GRAPH_SCHEMA_SIMULATION,
+        classes,
+        classLinks,
+        dimensions
+      })
+    );
 }
 
 function stopLayoutAsync() {
-  return () => P.resolve().then(() =>
-    layoutWorker.postMessage({
-      type: layout.STOP_GRAPH_SCHEMA_SIMULATION,
-    })
-  );
+  return () =>
+    P.resolve().then(() =>
+      layoutWorker.postMessage({
+        type: layout.STOP_GRAPH_SCHEMA_SIMULATION
+      })
+    );
 }
 
 function revealClassPropTooltip(className, propName) {
   return {
     type: actions.GRAPH_SCHEMA_REVEAL_CLASS_PROP_TOOLTIP,
     className,
-    propName,
+    propName
   };
 }
 
@@ -127,7 +135,7 @@ function hideClassPropTooltip(className, propName) {
   return {
     type: actions.GRAPH_SCHEMA_HIDE_CLASS_PROP_TOOLTIP,
     className,
-    propName,
+    propName
   };
 }
 
@@ -135,21 +143,20 @@ function updateClassOuterRadius(className, outerRadius) {
   return {
     type: actions.GRAPH_SCHEMA_UPDATE_CLASS_OUTER_RADIUS,
     className,
-    outerRadius,
+    outerRadius
   };
 }
 
 function updateClassLinkLengths(classLinks) {
   return {
     type: actions.GRAPH_SCHEMA_UPDATE_CLASS_LINK_LENGTHS,
-    classLinks,
+    classLinks
   };
 }
 
 function updateClassLinkLengthsAsync(classLinks) {
-  return (dispatch) => P.resolve().then(() =>
-    dispatch(updateClassLinkLengths(classLinks))
-  );
+  return dispatch =>
+    P.resolve().then(() => dispatch(updateClassLinkLengths(classLinks)));
 }
 
 function zoom(offset, w, h) {
@@ -157,14 +164,14 @@ function zoom(offset, w, h) {
     type: actions.GRAPH_SCHEMA_ZOOM,
     offset,
     w,
-    h,
+    h
   };
 }
 
 function setEditorContent(content) {
   return {
     type: actions.GRAPH_SCHEMA_SET_EDITOR_CONTENT,
-    content,
+    content
   };
 }
 
@@ -185,5 +192,5 @@ module.exports = {
   updateClassLinkPosition,
   updatePan,
   zoom,
-  setEditorContent,
+  setEditorContent
 };

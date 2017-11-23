@@ -7,7 +7,7 @@ describe('component config-delete-yes', () => {
     const props = {
       configType: 'mapping',
       configName: 'people',
-      handleClick: jest.fn(),
+      handleClick: jest.fn()
     };
 
     const component = renderer.create(<Yes {...props} />);

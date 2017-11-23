@@ -1,28 +1,22 @@
 const R = require('ramda');
-const {connect} = require('react-redux');
+const { connect } = require('react-redux');
 const Delete = require('../components/config-delete.jsx');
 
-const {
-  deleteAsync,
-} = require('../action-creators/ingestion-profile');
+const { deleteAsync } = require('../action-creators/ingestion-profile');
 
 const {
   setDeleteName,
-  hideDelete,
+  hideDelete
 } = require('../action-creators/ui/ingestion-profile');
 
-const {
-  nameSelector,
-} = require('../selectors/ingestion-profile');
+const { nameSelector } = require('../selectors/ingestion-profile');
 
-const {
-  deleteNameSelector,
-} = require('../selectors/ui/ingestion-profile');
+const { deleteNameSelector } = require('../selectors/ui/ingestion-profile');
 
 function mapStateToProps(state) {
   return {
     name: nameSelector(state),
-    deleteName: deleteNameSelector(state),
+    deleteName: deleteNameSelector(state)
   };
 }
 
@@ -32,7 +26,7 @@ function mapDispatchToProps(dispatch) {
 
     handleCloseButtonClick: R.compose(dispatch, hideDelete),
 
-    handleDeleteButtonClick: R.compose(dispatch, deleteAsync),
+    handleDeleteButtonClick: R.compose(dispatch, deleteAsync)
   };
 }
 

@@ -12,7 +12,7 @@ describe('component graph-schema-class-prop-tooltip', () => {
       classPropTooltipArcPath: 'M2,3',
       classPropTooltipRadius: 100,
       visible: true,
-      classPropName: 'name',
+      classPropName: 'name'
     };
   });
 

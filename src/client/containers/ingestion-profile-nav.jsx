@@ -1,37 +1,35 @@
 const React = require('react');
 const R = require('ramda');
-const {connect} = require('react-redux');
+const { connect } = require('react-redux');
 const Nav = require('../components/ingestion-profile-nav.jsx');
 const Search = require('./config-search.jsx');
 const New = require('./config-new.jsx');
 const Delete = require('./config-delete.jsx');
 
-const {
-  saveAsync,
-} = require('../action-creators/ingestion-profile');
+const { saveAsync } = require('../action-creators/ingestion-profile');
 
 const {
   revealNew,
   revealDelete,
-  setActiveTab,
+  setActiveTab
 } = require('../action-creators/ui/ingestion-profile');
 
-const {revealSearch} = require('../action-creators/ui/search');
+const { revealSearch } = require('../action-creators/ui/search');
 
 const {
   nameSelector,
   statusSelector,
-  persistentIngestionProfileSelector,
+  persistentIngestionProfileSelector
 } = require('../selectors/ingestion-profile');
 
 const {
-  visibleSelector: searchVisibleSelector,
+  visibleSelector: searchVisibleSelector
 } = require('../selectors/ui/search');
 
 const {
   newVisibleSelector,
   deleteVisibleSelector,
-  activeTabSelector,
+  activeTabSelector
 } = require('../selectors/ui/ingestion-profile');
 
 function mapStateToProps(state) {
@@ -42,7 +40,7 @@ function mapStateToProps(state) {
     searchVisible: searchVisibleSelector(state),
     newVisible: newVisibleSelector(state),
     deleteVisible: deleteVisibleSelector(state),
-    activeTab: activeTabSelector(state),
+    activeTab: activeTabSelector(state)
   };
 }
 
@@ -56,10 +54,10 @@ function mapDispatchToProps(dispatch) {
 
     handleDeleteToggleClick: R.compose(dispatch, revealDelete),
 
-    handleTabClick: R.compose(dispatch, setActiveTab),
+    handleTabClick: R.compose(dispatch, setActiveTab)
   };
 }
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(
-  (props) => <Nav Search={Search} New={New} Delete={Delete} {...props} />
-);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(props => (
+  <Nav Search={Search} New={New} Delete={Delete} {...props} />
+));

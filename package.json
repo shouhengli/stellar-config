@@ -33,6 +33,7 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "bulma": "^0.6.0",
+    "coveralls": "^3.0.0",
     "d3": "^4.10.0",
     "del": "^3.0.0",
     "enzyme": "^3.1.0",
@@ -64,7 +65,9 @@
     "build": "gulp",
     "clean": "gulp clean",
     "watch": "gulp watch",
-    "test": "jest"
+    "test": "jest",
+    "test-coverage":
+      "jest --coverage && cat ./src/server/coverage/lcov.info | coveralls"
   },
   "dependencies": {
     "bluebird": "^3.5.0",
@@ -74,8 +77,8 @@
     "redis": "^2.7.1"
   },
   "jest": {
-    "rootDir": "src",
+    "rootDir": "src/server",
     "verbose": true,
-    "setupTestFrameworkScriptFile": "<rootDir>/test-setup.js"
+    "setupTestFrameworkScriptFile": "<rootDir>/../test-setup.js"
   }
 }

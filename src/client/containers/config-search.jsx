@@ -1,25 +1,22 @@
 const R = require('ramda');
-const {connect} = require('react-redux');
+const { connect } = require('react-redux');
 const Search = require('../components/config-search.jsx');
 
-const {
-  namesSelector,
-  textSelector,
-} = require('../selectors/ui/search');
+const { namesSelector, textSelector } = require('../selectors/ui/search');
 
 const {
   hideSearch,
   loadSearchNamesAsync,
-  setSearchText,
+  setSearchText
 } = require('../action-creators/ui/search');
 
-const {loadAsync} = require('../action-creators/ingestion-profile');
-const {INGESTION_PROFILE_CONFIG_TYPE} = require('../ingestion-profile');
+const { loadAsync } = require('../action-creators/ingestion-profile');
+const { INGESTION_PROFILE_CONFIG_TYPE } = require('../ingestion-profile');
 
 function mapStateToProps(state) {
   return {
     names: namesSelector(state),
-    text: textSelector(state),
+    text: textSelector(state)
   };
 }
 
@@ -38,7 +35,7 @@ function mapDispatchToProps(dispatch) {
       dispatch,
       loadSearchNamesAsync,
       R.always(INGESTION_PROFILE_CONFIG_TYPE)
-    ),
+    )
   };
 }
 

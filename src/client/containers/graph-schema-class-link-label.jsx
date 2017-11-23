@@ -1,14 +1,16 @@
-const {connect} = require('react-redux');
+const { connect } = require('react-redux');
 
-const {startClassLinkDrag, stopLayoutAsync} =
-  require('../action-creators/ui/graph-schema');
+const {
+  startClassLinkDrag,
+  stopLayoutAsync
+} = require('../action-creators/ui/graph-schema');
 
 const ClassLinkLabel = require('../components/graph-schema-class-link-label.jsx');
 
-const {zoomSelector} = require('../selectors/ui/graph-schema');
+const { zoomSelector } = require('../selectors/ui/graph-schema');
 
 function mapStateToProps(state) {
-  return {zoom: zoomSelector(state)};
+  return { zoom: zoomSelector(state) };
 }
 
 function mapDispatchToProps(dispatch) {
@@ -17,13 +19,14 @@ function mapDispatchToProps(dispatch) {
       event.preventDefault();
       event.stopPropagation();
 
-      const {pageX, pageY} = event;
+      const { pageX, pageY } = event;
 
-      dispatch(stopLayoutAsync())
-        .then(() => dispatch(
+      dispatch(stopLayoutAsync()).then(() =>
+        dispatch(
           startClassLinkDrag(classLink.toJS(), pageX / zoom, pageY / zoom)
-        ));
-    },
+        )
+      );
+    }
   };
 }
 

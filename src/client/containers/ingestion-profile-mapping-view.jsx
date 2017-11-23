@@ -1,6 +1,6 @@
 const React = require('react');
 const R = require('ramda');
-const {connect} = require('react-redux');
+const { connect } = require('react-redux');
 const MappingView = require('../components/ingestion-profile-mapping-view.jsx');
 const NodeEditor = require('./ingestion-profile-mapping-node-editor.jsx');
 const LinkEditor = require('./ingestion-profile-mapping-link-editor.jsx');
@@ -9,19 +9,19 @@ const {
   newNodeVisibleSelector,
   newLinkVisibleSelector,
   editingNodeIndexSelector,
-  editingLinkIndexSelector,
+  editingLinkIndexSelector
 } = require('../selectors/ui/ingestion-profile');
 
 const {
   mappingNodesSelector,
-  mappingLinksSelector,
+  mappingLinksSelector
 } = require('../selectors/ingestion-profile');
 
 const {
   revealNewNode,
   revealNewLink,
   editMappingNode,
-  editMappingLink,
+  editMappingLink
 } = require('../action-creators/ui/ingestion-profile');
 
 function mapStateToProps(state) {
@@ -31,7 +31,7 @@ function mapStateToProps(state) {
     newNodeVisible: newNodeVisibleSelector(state),
     newLinkVisible: newLinkVisibleSelector(state),
     editingNodeIndex: editingNodeIndexSelector(state),
-    editingLinkIndex: editingLinkIndexSelector(state),
+    editingLinkIndex: editingLinkIndexSelector(state)
   };
 }
 
@@ -43,10 +43,10 @@ function mapDispatchToProps(dispatch) {
 
     handleEditNodeButtonClick: R.compose(dispatch, editMappingNode),
 
-    handleEditLinkButtonClick: R.compose(dispatch, editMappingLink),
+    handleEditLinkButtonClick: R.compose(dispatch, editMappingLink)
   };
 }
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(
-  (props) => <MappingView NodeEditor={NodeEditor} LinkEditor={LinkEditor} {...props} />
-);
+module.exports = connect(mapStateToProps, mapDispatchToProps)(props => (
+  <MappingView NodeEditor={NodeEditor} LinkEditor={LinkEditor} {...props} />
+));

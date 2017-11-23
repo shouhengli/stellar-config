@@ -15,19 +15,19 @@ const paths = {
       sass: 'src/client/**/*.scss',
       staticFiles: [
         'src/client/**/*.html',
-        'node_modules/font-awesome/css/font-awesome.min.css',
+        'node_modules/font-awesome/css/font-awesome.min.css'
       ],
-      fontFiles: 'node_modules/font-awesome/fonts/*',
+      fontFiles: 'node_modules/font-awesome/fonts/*'
     },
     server: {
-      js: 'src/server/**/*.js',
+      js: ['src/server/**/*.js', '!src/server/coverage/**/*'],
       staticFiles: [
         'src/server/**/*.json',
         'src/server/**/*.yaml',
         'package.json',
-        'yarn.lock',
-      ],
-    },
+        'yarn.lock'
+      ]
+    }
   },
   dest: {
     root: 'dist/',
@@ -35,31 +35,32 @@ const paths = {
       js: 'dist/public/',
       sass: 'dist/public/',
       staticFiles: 'dist/public/',
-      fontFiles: 'dist/public/fonts/',
+      fontFiles: 'dist/public/fonts/'
     },
     server: {
       js: 'dist/',
-      staticFiles: 'dist/',
-    },
-  },
+      staticFiles: 'dist/'
+    }
+  }
 };
 
 gulp.task('client-js-lint', () =>
-  gulp.src(paths.src.client.js)
-      .pipe(eslint())
-      .pipe(eslint.format())
-      .pipe(eslint.failAfterError())
+  gulp
+    .src(paths.src.client.js)
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError())
 );
 
 const fs = require('fs');
-const babelrc = JSON.parse(
-  fs.readFileSync('.babelrc', {encoding: 'utf8'})
-);
+const babelrc = JSON.parse(fs.readFileSync('.babelrc', { encoding: 'utf8' }));
 
 gulp.task('client-js', ['client-js-lint'], () =>
-  gulp.src(paths.src.client.jsEntries)
-      .pipe(named())
-      .pipe(gulpWebpack(
+  gulp
+    .src(paths.src.client.jsEntries)
+    .pipe(named())
+    .pipe(
+      gulpWebpack(
         {
           module: {
             rules: [
@@ -67,56 +68,63 @@ gulp.task('client-js', ['client-js-lint'], () =>
                 test: /\.jsx?$/,
                 use: {
                   loader: 'babel-loader',
-                  options: babelrc,
-                },
-              },
-            ],
-          },
+                  options: babelrc
+                }
+              }
+            ]
+          }
         },
         webpack
-      ))
-      .pipe(gulp.dest(paths.dest.client.js))
+      )
+    )
+    .pipe(gulp.dest(paths.dest.client.js))
 );
 
 gulp.task('client-sass', () =>
-  gulp.src(paths.src.client.sass)
-      .pipe(sass().on('error', sass.logError))
-      .pipe(gulp.dest(paths.dest.client.sass))
+  gulp
+    .src(paths.src.client.sass)
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest(paths.dest.client.sass))
 );
 
 gulp.task('client-static-files', () =>
-  gulp.src(paths.src.client.staticFiles)
-      .pipe(gulp.dest(paths.dest.client.staticFiles))
+  gulp
+    .src(paths.src.client.staticFiles)
+    .pipe(gulp.dest(paths.dest.client.staticFiles))
 );
 
 gulp.task('client-font-files', () =>
-  gulp.src(paths.src.client.fontFiles)
-      .pipe(gulp.dest(paths.dest.client.fontFiles))
+  gulp
+    .src(paths.src.client.fontFiles)
+    .pipe(gulp.dest(paths.dest.client.fontFiles))
 );
 
 gulp.task('server-js-lint', () =>
-  gulp.src(paths.src.server.js)
-      .pipe(eslint())
-      .pipe(eslint.format())
-      .pipe(eslint.failAfterError())
+  gulp
+    .src(paths.src.server.js)
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError())
 );
 
 gulp.task('server-js', ['server-js-lint'], () =>
-  gulp.src(paths.src.server.js)
-      .pipe(gulp.dest(paths.dest.server.js))
+  gulp.src(paths.src.server.js).pipe(gulp.dest(paths.dest.server.js))
 );
 
 gulp.task('server-static-files', () =>
-  gulp.src(paths.src.server.staticFiles)
-      .pipe(gulp.dest(paths.dest.server.staticFiles))
+  gulp
+    .src(paths.src.server.staticFiles)
+    .pipe(gulp.dest(paths.dest.server.staticFiles))
 );
 
 gulp.task('server', ['server-static-files', 'server-js']);
 
-gulp.task(
-  'client',
-  ['client-static-files', 'client-font-files', 'client-js', 'client-sass']
-);
+gulp.task('client', [
+  'client-static-files',
+  'client-font-files',
+  'client-js',
+  'client-sass'
+]);
 
 gulp.task('default', ['client', 'server']);
 

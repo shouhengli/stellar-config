@@ -11,12 +11,10 @@ describe('component config-delete', () => {
       configDeleteName: 'default',
       handleNameChange: () => {},
       handleCloseButtonClick: () => {},
-      handleDeleteButtonClick: () => {},
+      handleDeleteButtonClick: () => {}
     };
 
-    const component = renderer.create(
-      <ConfigDelete {...props} />
-    );
+    const component = renderer.create(<ConfigDelete {...props} />);
 
     const tree = component.toJSON();
 
@@ -31,12 +29,10 @@ describe('component config-delete', () => {
       configDeleteName: 'def',
       handleNameChange: () => {},
       handleCloseButtonClick: () => {},
-      handleDeleteButtonClick: () => {},
+      handleDeleteButtonClick: () => {}
     };
 
-    const component = renderer.create(
-      <ConfigDelete {...props} />
-    );
+    const component = renderer.create(<ConfigDelete {...props} />);
 
     const tree = component.toJSON();
 

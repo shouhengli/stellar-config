@@ -6,35 +6,36 @@ function loadSearchNames(configType, configNames) {
   return {
     type: actions.SEARCH_LOAD_NAMES,
     configType,
-    configNames,
+    configNames
   };
 }
 
 function loadSearchNamesAsync(configType) {
-  return (dispatch) => R.pipeP(
-    api.getConfigNames,
-    R.compose(dispatch, R.curry(loadSearchNames)(configType))
-  )(configType);
+  return dispatch =>
+    R.pipeP(
+      api.getConfigNames,
+      R.compose(dispatch, R.curry(loadSearchNames)(configType))
+    )(configType);
 }
 
 function setSearchText(searchText) {
   return {
     type: actions.SEARCH_SET_TEXT,
-    searchText,
+    searchText
   };
 }
 
 function hideSearch() {
-  return {type: actions.SEARCH_HIDE};
+  return { type: actions.SEARCH_HIDE };
 }
 
 function revealSearch() {
-  return {type: actions.SEARCH_REVEAL};
+  return { type: actions.SEARCH_REVEAL };
 }
 
 module.exports = {
   loadSearchNamesAsync,
   setSearchText,
   hideSearch,
-  revealSearch,
+  revealSearch
 };
