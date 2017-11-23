@@ -24,7 +24,7 @@ describe('config store module', () => {
       redis.createClient = jest.fn().mockReturnValue(mockRedisClient);
       return redis;
     });
-    jest.mock('../util', () => ({
+    jest.mock('../../lib/util', () => ({
       loadYamlSync: jest.fn().mockReturnValue(mockConfig)
     }));
     jest.spyOn(console, 'log');
@@ -38,7 +38,7 @@ describe('config store module', () => {
 
   describe('when imported', () => {
     it('connects to Redis server', () => {
-      require('../config-store');
+      require('../../lib/config-store');
       expect(redis.createClient).toHaveBeenCalledTimes(1);
     });
   });
@@ -49,7 +49,7 @@ describe('config store module', () => {
         if (event === 'connect') callback();
         return this;
       });
-      require('../config-store');
+      require('../../lib/config-store');
       expect(console.log).toHaveBeenCalledWith(
         'Connection to Redis has been established'
       );
@@ -59,7 +59,7 @@ describe('config store module', () => {
         if (event === 'reconnecting') callback({ attempt: 5, delay: 10 });
         return this;
       });
-      require('../config-store');
+      require('../../lib/config-store');
       expect(console.log).toHaveBeenCalledWith(
         'Reconnecting to Redis: attempt=5, delay=10.'
       );
@@ -69,7 +69,7 @@ describe('config store module', () => {
         if (event === 'error') callback('mockError');
         return this;
       });
-      require('../config-store');
+      require('../../lib/config-store');
       expect(console.log).toHaveBeenCalledWith(
         'Redis error is caught by the global error handler. mockError'
       );
@@ -78,12 +78,12 @@ describe('config store module', () => {
 
   describe('#disconnect', () => {
     it('quits redis connection', () => {
-      require('../config-store').disconnect();
+      require('../../lib/config-store').disconnect();
       expect(mockRedisClient.quit).toHaveBeenCalledTimes(1);
     });
 
     it('do nothing when already disconnected', () => {
-      const store = require('../config-store');
+      const store = require('../../lib/config-store');
       store.disconnect();
       store.disconnect();
       expect(mockRedisClient.quit).toHaveBeenCalledTimes(1);
@@ -92,7 +92,7 @@ describe('config store module', () => {
 
   describe('#connect', () => {
     it('connects to Redis server', () => {
-      const store = require('../config-store');
+      const store = require('../../lib/config-store');
       store.disconnect();
       store.connect();
       expect(redis.createClient).toHaveBeenCalledTimes(2);
@@ -105,7 +105,7 @@ describe('config store module', () => {
         key => key === 'config:type:name' && P.resolve('mockContent')
       );
       expect(
-        await require('../config-store').getConfig('type', 'name')
+        await require('../../lib/config-store').getConfig('type', 'name')
       ).toEqual('mockContent');
     });
 
@@ -114,7 +114,7 @@ describe('config store module', () => {
         .fn()
         .mockReturnValue(P.reject('mockError'));
 
-      require('../config-store')
+      require('../../lib/config-store')
         .getConfig('type', 'name')
         .catch(e => {
           expect(e).toEqual('mockError');
@@ -129,7 +129,7 @@ describe('config store module', () => {
       mockRedisClient.getAsync = jest.fn(
         key => key === 'config:type:name' && P.resolve(null)
       );
-      require('../config-store')
+      require('../../lib/config-store')
         .getConfig('type', 'name')
         .catch(e => {
           expect(e instanceof Error).toBeTruthy();
@@ -145,7 +145,7 @@ describe('config store module', () => {
         mockRedisClient.getAsync = jest.fn(
           key => key === 'config:type:name' && P.resolve('mockContent')
         );
-        const { disconnect, getConfig } = require('../config-store');
+        const { disconnect, getConfig } = require('../../lib/config-store');
         disconnect();
         await getConfig('type', 'name');
         expect(redis.createClient).toHaveBeenCalledTimes(2);
@@ -164,7 +164,11 @@ describe('config store module', () => {
     });
 
     it('sets the key-value pair', async () => {
-      await require('../config-store').defineConfig('type', 'name', 'content');
+      await require('../../lib/config-store').defineConfig(
+        'type',
+        'name',
+        'content'
+      );
       expect(mockRedisClient.set).toHaveBeenCalledWith(
         'config:type:name',
         'content'
@@ -172,12 +176,20 @@ describe('config store module', () => {
     });
 
     it('adds the config name to set', async () => {
-      await require('../config-store').defineConfig('type', 'name', 'content');
+      await require('../../lib/config-store').defineConfig(
+        'type',
+        'name',
+        'content'
+      );
       expect(mockRedisClient.sadd).toHaveBeenCalledWith('config:types', 'name');
     });
 
     it('batches commands and exec them all at once asynchronously', async () => {
-      await require('../config-store').defineConfig('type', 'name', 'content');
+      await require('../../lib/config-store').defineConfig(
+        'type',
+        'name',
+        'content'
+      );
       expect(mockRedisClient.multi).toHaveBeenCalled();
       expect(mockRedisClient.execAsync).toHaveBeenCalled();
     });
@@ -187,7 +199,7 @@ describe('config store module', () => {
         .fn()
         .mockReturnValue(P.reject('mockError'));
 
-      require('../config-store')
+      require('../../lib/config-store')
         .defineConfig('type', 'name', 'content')
         .catch(e => {
           expect(e).toEqual('mockError');
@@ -199,7 +211,7 @@ describe('config store module', () => {
     });
 
     it('returns response', async () => {
-      const r = await require('../config-store').defineConfig(
+      const r = await require('../../lib/config-store').defineConfig(
         'type',
         'name',
         'content'
@@ -209,7 +221,7 @@ describe('config store module', () => {
 
     describe('when redis connection is dropped', () => {
       it('tries to reconnect', async () => {
-        const { disconnect, defineConfig } = require('../config-store');
+        const { disconnect, defineConfig } = require('../../lib/config-store');
         disconnect();
         await defineConfig('type', 'name', 'content');
         expect(redis.createClient).toHaveBeenCalledTimes(2);
@@ -231,17 +243,17 @@ describe('config store module', () => {
     });
 
     it('removes config name from set', async () => {
-      await require('../config-store').deleteConfig('type', 'name');
+      await require('../../lib/config-store').deleteConfig('type', 'name');
       expect(mockRedisClient.srem).toHaveBeenCalledWith('config:types', 'name');
     });
 
     it('removes config key', async () => {
-      await require('../config-store').deleteConfig('type', 'name');
+      await require('../../lib/config-store').deleteConfig('type', 'name');
       expect(mockRedisClient.del).toHaveBeenCalledWith('config:type:name');
     });
 
     it('batches commands and exec them all at once asynchronously', async () => {
-      await require('../config-store').deleteConfig('type', 'name');
+      await require('../../lib/config-store').deleteConfig('type', 'name');
       expect(mockRedisClient.multi).toHaveBeenCalled();
       expect(mockRedisClient.execAsync).toHaveBeenCalled();
     });
@@ -251,7 +263,7 @@ describe('config store module', () => {
         .fn()
         .mockReturnValue(P.reject('mockError'));
 
-      require('../config-store')
+      require('../../lib/config-store')
         .deleteConfig('type', 'name')
         .catch(e => {
           expect(e).toEqual('mockError');
@@ -263,22 +275,25 @@ describe('config store module', () => {
     });
 
     it('returns response', async () => {
-      const r = await require('../config-store').deleteConfig('type', 'name');
+      const r = await require('../../lib/config-store').deleteConfig(
+        'type',
+        'name'
+      );
       expect(r).toEqual(mockResponse);
     });
 
     describe('when redis connection is dropped', () => {
       it('tries to reconnect', async () => {
-        const { disconnect, deleteConfig } = require('../config-store');
+        const { disconnect, deleteConfig } = require('../../lib/config-store');
         disconnect();
-        await require('../config-store').deleteConfig('type', 'name');
+        await require('../../lib/config-store').deleteConfig('type', 'name');
         expect(redis.createClient).toHaveBeenCalledTimes(2);
       });
     });
 
     it('throws error when config key not removed from set', done => {
       mockResponse[0] = 0;
-      require('../config-store')
+      require('../../lib/config-store')
         .deleteConfig('type', 'name')
         .catch(e => {
           expect(e instanceof Error).toBeTruthy();
@@ -291,7 +306,7 @@ describe('config store module', () => {
 
     it('throws error when config key-value pair not removed', done => {
       mockResponse[1] = 0;
-      require('../config-store')
+      require('../../lib/config-store')
         .deleteConfig('type', 'name')
         .catch(e => {
           expect(e instanceof Error).toBeTruthy();
@@ -312,7 +327,7 @@ describe('config store module', () => {
     });
 
     it('returns available configs in set', async () => {
-      let configs = await require('../config-store').listConfigs('type');
+      let configs = await require('../../lib/config-store').listConfigs('type');
       expect(mockRedisClient.smembersAsync).toHaveBeenCalledWith(
         'config:types'
       );
@@ -324,7 +339,7 @@ describe('config store module', () => {
         .fn()
         .mockReturnValue(P.reject('mockError'));
 
-      require('../config-store')
+      require('../../lib/config-store')
         .listConfigs('type')
         .catch(e => {
           expect(e).toEqual('mockError');
@@ -337,7 +352,7 @@ describe('config store module', () => {
 
     describe('when redis connection is dropped', () => {
       it('tries to reconnect', async () => {
-        const { disconnect, listConfigs } = require('../config-store');
+        const { disconnect, listConfigs } = require('../../lib/config-store');
         disconnect();
         await listConfigs('type');
         expect(redis.createClient).toHaveBeenCalledTimes(2);
@@ -347,15 +362,16 @@ describe('config store module', () => {
 
   describe('#listConfigTypes', () => {
     it('returns a list of config types', async () => {
-      expect(await require('../config-store').listConfigTypes()).toEqual([
-        'ingestion profile',
-        'other profile'
-      ]);
+      expect(await require('../../lib/config-store').listConfigTypes()).toEqual(
+        ['ingestion profile', 'other profile']
+      );
     });
 
     it('returns null if no config types', async () => {
       mockConfig.redis.configTypes = null;
-      expect(await require('../config-store').listConfigTypes()).toBeNull();
+      expect(
+        await require('../../lib/config-store').listConfigTypes()
+      ).toBeNull();
     });
   });
 
@@ -380,10 +396,10 @@ describe('config store module', () => {
 
     beforeEach(() => {
       jest.unmock('redis');
-      jest.unmock('../util');
-      util = require('../util');
-      store = require('../config-store');
-      config = util.loadYamlSync(__dirname, '../config-store.yaml');
+      jest.unmock('../../lib/util');
+      util = require('../../lib/util');
+      store = require('../../lib/config-store');
+      config = util.loadYamlSync(__dirname, '../../lib/config-store.yaml');
       P.all(
         configs.map(config =>
           store.defineConfig(configType, config.name, config.content)

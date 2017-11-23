@@ -35,10 +35,10 @@ describe('config router module', () => {
       Router: jest.fn().mockReturnValue(mockRouter)
     }));
     jest.mock('body-parser', () => mockBodyParser);
-    jest.mock('../config-store', () => mockStore);
-    jest.mock('../util', () => mockUtil);
+    jest.mock('../../lib/config-store', () => mockStore);
+    jest.mock('../../lib/util', () => mockUtil);
 
-    require('../config-router');
+    require('../../lib/config-router');
   });
 
   afterEach(() => {

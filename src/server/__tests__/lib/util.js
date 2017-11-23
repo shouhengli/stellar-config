@@ -8,7 +8,7 @@ describe('util module', () => {
     jest.mock('js-yaml', () => ({
       safeLoad: jest.fn().mockReturnValue('mock yaml')
     }));
-    util = require('../util');
+    util = require('../../lib/util');
     fs = require('fs');
     yaml = require('js-yaml');
     res = { sendStatus: jest.fn() };

@@ -1,13 +1,13 @@
-const express = require('express');
+import express from 'express';
+import config from './server.json';
+import configRouter from './lib/config-router';
+import ingestionRouter from './lib/ingestion-router';
+
 const app = express();
-const config = require('./server.json');
 
 app.use(express.static('public'));
-
-const configRouter = require('./lib/config-router');
 app.use('/config', configRouter);
-
-const ingestionRouter = require('./lib/ingestion-router');
 app.use('/ingestion', ingestionRouter);
-
-app.listen(config.port, () => console.log('Seaweed started on port 6161.'));
+app.listen(config.port, () =>
+  console.log(`Seaweed started on port ${config.port}.`)
+);
