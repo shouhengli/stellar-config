@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import store from './config-store';
+import * as store from './config-store';
 import { sendServerError, sendNotFound, sendOk } from './util';
 
 const router = express.Router();

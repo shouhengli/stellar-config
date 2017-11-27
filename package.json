@@ -77,7 +77,7 @@
     "redis": "^2.7.1"
   },
   "jest": {
-    "rootDir": "src/server",
+    "rootDir": "src/client",
     "verbose": true,
     "setupTestFrameworkScriptFile": "<rootDir>/../test-setup.js"
   }

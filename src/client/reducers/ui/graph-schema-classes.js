@@ -1,33 +1,44 @@
-const R = require('ramda');
-const { fromJS, Map } = require('immutable');
-const actions = require('../../actions');
+import R from 'ramda';
+import { fromJS, Map } from 'immutable';
+import actions from '../../actions';
+import utils from '../../util';
 
 const initialState = Map();
 
-function reduce(state = initialState, action) {
+export default function reduce(state = initialState, action) {
   switch (action.type) {
     case actions.GRAPH_SCHEMA_UPDATE_CONTENT:
       return R.reduce(
         (s, c) => s.set(c.name, fromJS(c)),
         Map(),
-        action.classes
+        utils.defaultToEmptyList(action.classes)
       );
 
     case actions.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS:
-      if (R.any(c => !state.has(c.name), action.classes)) {
-        return state;
-      } else {
+      if (R.any(c => state.has(c.name), action.classes)) {
         return R.reduce(
           (s, c) => s.setIn([c.name, 'x'], c.x).setIn([c.name, 'y'], c.y),
           state,
           action.classes
         );
+      } else {
+        return state;
       }
 
     case actions.GRAPH_SCHEMA_UPDATE_CLASS_POSITION:
-      return state
-        .setIn([action.name, 'x'], state.getIn([action.name, 'x']) + action.dx)
-        .setIn([action.name, 'y'], state.getIn([action.name, 'y']) + action.dy);
+      if (state.has(action.name)) {
+        return state
+          .setIn(
+            [action.name, 'x'],
+            state.getIn([action.name, 'x']) + action.dx
+          )
+          .setIn(
+            [action.name, 'y'],
+            state.getIn([action.name, 'y']) + action.dy
+          );
+      } else {
+        return state;
+      }
 
     case actions.GRAPH_SCHEMA_REVEAL_CLASS_PROP_TOOLTIP:
       return state.setIn(
@@ -50,5 +61,3 @@ function reduce(state = initialState, action) {
       return state;
   }
 }
-
-module.exports = reduce;

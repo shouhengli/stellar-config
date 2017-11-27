@@ -1,12 +1,11 @@
-const R = require('ramda');
-const { fromJS, is, Map, List, OrderedMap } = require('immutable');
-const actions = require('../actions');
-
-const {
+import R from 'ramda';
+import { fromJS, is, Map, List, OrderedMap } from 'immutable';
+import actions from '../actions';
+import {
   CONFIG_STATUS_NORMAL,
   CONFIG_STATUS_CHANGED,
   CONFIG_STATUS_SAVING
-} = require('../config-status');
+} from '../config-status';
 
 const {
   defaultToEmptyList,
@@ -100,14 +99,20 @@ function loadMapping(mapping) {
   );
 }
 
-function reduce(state = initialState, action) {
+export default function reduce(state = initialState, action) {
   switch (action.type) {
     case actions.INGESTION_PROFILE_LOAD:
       return state
         .set('name', action.name)
-        .set('sources', defaultToEmptyList(fromJS(action.content.sources)))
-        .set('graphSchema', loadGraphSchema(action.content.graphSchema))
-        .set('mapping', loadMapping(action.content.mapping))
+        .set(
+          'sources',
+          defaultToEmptyList(fromJS(action.content && action.content.sources))
+        )
+        .set(
+          'graphSchema',
+          loadGraphSchema(action.content && action.content.graphSchema)
+        )
+        .set('mapping', loadMapping(action.content && action.content.mapping))
         .set('status', CONFIG_STATUS_NORMAL);
 
     case actions.INGESTION_PROFILE_SAVE:
@@ -176,5 +181,3 @@ function reduce(state = initialState, action) {
       return state;
   }
 }
-
-module.exports = reduce;
