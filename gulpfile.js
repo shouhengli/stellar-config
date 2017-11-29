@@ -10,11 +10,7 @@ const paths = {
   src: {
     client: {
       all: 'src/client/**/*',
-      js: [
-        'src/client/**/*.js',
-        'src/client/**/*.jsx',
-        '!src/client/coverage/**/*'
-      ],
+      js: ['src/client/**/*.js', 'src/client/**/*.jsx'],
       jsEntries: ['src/client/index.js', 'src/client/force-layout-worker.js'],
       sass: 'src/client/**/*.scss',
       staticFiles: [
@@ -24,7 +20,7 @@ const paths = {
       fontFiles: 'node_modules/font-awesome/fonts/*'
     },
     server: {
-      js: ['src/server/**/*.js', '!src/server/coverage/**/*'],
+      js: ['src/server/**/*.js'],
       staticFiles: [
         'src/server/**/*.json',
         'src/server/**/*.yaml',

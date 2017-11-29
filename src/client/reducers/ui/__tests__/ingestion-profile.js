@@ -321,7 +321,7 @@ describe('reducer ui/ingestion-profile', () => {
         key: 'something'
       };
     });
-    it('resets mapping node active prop to initial state if the provided key exists and value is truthy', () => {
+    it('resets prop to initial state if the provided key exists and value is truthy', () => {
       next = reduceState(
         initialState.set(
           'mappingNodeActiveProp',
@@ -334,7 +334,7 @@ describe('reducer ui/ingestion-profile', () => {
       );
     });
 
-    it('sets new mapping node active prop key if the given key exists but value is falthy', () => {
+    it('sets prop key if the given key exists but value is falthy', () => {
       next = reduceState(
         initialState.set(
           'mappingNodeActiveProp',
@@ -380,7 +380,7 @@ describe('reducer ui/ingestion-profile', () => {
   });
 
   describe('when INGESTION_PROFILE_DELETE_MAPPING_NODE_PROP', () => {
-    let next, action;
+    let action;
     beforeEach(() => {
       action = {
         type: actions.INGESTION_PROFILE_DELETE_MAPPING_NODE_PROP,
@@ -758,7 +758,7 @@ describe('reducer ui/ingestion-profile', () => {
       };
     });
 
-    it('resets mapping link active prop to initial state if the provided key exists and value is truthy', () => {
+    it('resets prop to initial state if the provided key exists and value is truthy', () => {
       next = reduceState(
         initialState.set(
           'mappingLinkActiveProp',
@@ -1003,7 +1003,7 @@ describe('reducer ui/ingestion-profile', () => {
   });
 
   describe('when INGESTION_PROFILE_DELETE_MAPPING_LINK_PROP', () => {
-    let next, action;
+    let action;
 
     beforeEach(() => {
       action = {
