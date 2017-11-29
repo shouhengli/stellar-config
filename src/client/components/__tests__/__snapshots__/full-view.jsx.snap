@@ -2,7 +2,7 @@
 
 exports[`component full-view wraps its children 1`] = `
 <div
-  className="pane"
+  className="view"
 >
   content
 </div>

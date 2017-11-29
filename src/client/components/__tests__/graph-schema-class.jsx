@@ -4,7 +4,7 @@ const { mount, shallow } = require('enzyme');
 const { fromJS } = require('immutable');
 const Class = require('../graph-schema-class.jsx');
 
-const { createClass } = require('../../graph-schema');
+const { createClass } = require('../../ingestion-profile');
 
 describe('component graph-schema-class', () => {
   let props;

@@ -1,16 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`component config-search-toggle is clickable 1`] = `
-<button
-  className="button is-white"
+<span
+  className="button"
   onClick={[Function]}
 >
   <span
-    className="icon is-small"
+    className="icon"
   >
     <i
       className="fa fa-search"
     />
   </span>
-</button>
+</span>
 `;

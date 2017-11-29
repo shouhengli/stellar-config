@@ -8,7 +8,7 @@ const {
   getClassLinkKey,
   createClassLink,
   createClass
-} = require('../../graph-schema');
+} = require('../../ingestion-profile');
 
 describe('component graph-schema', () => {
   let props;
