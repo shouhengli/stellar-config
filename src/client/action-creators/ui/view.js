@@ -1,4 +1,4 @@
-const actions = require('../actions');
+import actions from '../actions';
 
 function change(view) {
   return {

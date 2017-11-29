@@ -1,5 +1,5 @@
 const P = require('bluebird');
-const actions = require('../../actions');
+import actions from '../../actions';
 const layout = require('../../force-layout');
 const layoutWorker = new Worker('/force-layout-worker.js');
 

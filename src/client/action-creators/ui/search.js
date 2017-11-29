@@ -1,5 +1,5 @@
 const R = require('ramda');
-const actions = require('../../actions');
+import actions from '../../actions';
 const api = require('../../api');
 
 function loadSearchNames(configType, configNames) {

@@ -1,8 +1,8 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
-const { Provider } = require('react-redux');
-const Main = require('./containers/main.jsx');
-const store = require('./store');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import Main from './containers/main.jsx';
+import store from './store';
 
 ReactDOM.render(
   <Provider store={store}>

@@ -1,5 +1,5 @@
 const P = require('bluebird');
-const actions = require('../actions');
+import actions from '../actions';
 const api = require('../api');
 const { INGESTION_PROFILE_CONFIG_TYPE } = require('../ingestion-profile');
 

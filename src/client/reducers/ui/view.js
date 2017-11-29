@@ -1,5 +1,5 @@
 const { fromJS } = require('immutable');
-const actions = require('../../actions');
+import actions from '../../actions';
 const { INGESTION_PROFILE } = require('../../views');
 
 const initialState = fromJS({

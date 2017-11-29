@@ -1,7 +1,7 @@
 const P = require('bluebird');
 const R = require('ramda');
 const api = require('../../api');
-const actions = require('../../actions');
+import actions from '../../actions';
 
 function revealNew() {
   return {
