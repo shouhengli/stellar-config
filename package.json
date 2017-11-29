@@ -67,7 +67,7 @@
     "watch": "gulp watch",
     "test": "jest",
     "test-coverage":
-      "jest --coverage && cat ./src/server/coverage/lcov.info | coveralls"
+      "jest --coverage && cat ./src/coverage/lcov.info | coveralls"
   },
   "dependencies": {
     "bluebird": "^3.5.0",
