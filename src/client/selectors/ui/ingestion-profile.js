@@ -1,95 +1,94 @@
-const { Map, List } = require('immutable');
-const R = require('ramda');
-const { createSelector } = require('reselect');
-
-const {
+import { Map, List } from 'immutable';
+import R from 'ramda';
+import { createSelector } from 'reselect';
+import {
   MAPPING_NODE_ID_KEY,
   MAPPING_NODE_TYPE_KEY,
   MAPPING_LINK_TYPE_KEY,
   MAPPING_LINK_SOURCE_KEY,
   MAPPING_LINK_DESTINATION_KEY
-} = require('../../ingestion-profile');
+} from '../../ingestion-profile';
 
 const ingestionProfileUiSelector = state =>
   state.getIn(['ui', 'ingestionProfile']);
 
-const newNameSelector = createSelector(
+export const newNameSelector = createSelector(
   ingestionProfileUiSelector,
   ingestionProfileUi => ingestionProfileUi.get('newName')
 );
 
-const newVisibleSelector = createSelector(
+export const newVisibleSelector = createSelector(
   ingestionProfileUiSelector,
   ingestionProfileUi => ingestionProfileUi.get('newVisible')
 );
 
-const deleteVisibleSelector = createSelector(
+export const deleteVisibleSelector = createSelector(
   ingestionProfileUiSelector,
   ingestionProfileUi => ingestionProfileUi.get('deleteVisible')
 );
 
-const deleteNameSelector = createSelector(
+export const deleteNameSelector = createSelector(
   ingestionProfileUiSelector,
   ingestionProfileUi => ingestionProfileUi.get('deleteName')
 );
 
-const activeTabSelector = createSelector(
+export const activeTabSelector = createSelector(
   ingestionProfileUiSelector,
   ingestionProfileUi => ingestionProfileUi.get('activeTab')
 );
 
-const newSourceVisibleSelector = createSelector(
+export const newSourceVisibleSelector = createSelector(
   ingestionProfileUiSelector,
   ingestionProfileUi => ingestionProfileUi.get('newSourceVisible')
 );
 
-const newSourceSelector = createSelector(
+export const newSourceSelector = createSelector(
   ingestionProfileUiSelector,
   ingestionProfileUi => ingestionProfileUi.get('newSource')
 );
 
-const deleteSourceVisibleSelector = createSelector(
+export const deleteSourceVisibleSelector = createSelector(
   ingestionProfileUiSelector,
   ingestionProfileUi => ingestionProfileUi.get('deleteSourceVisible')
 );
 
-const selectedSourceSelector = createSelector(
+export const selectedSourceSelector = createSelector(
   ingestionProfileUiSelector,
   ingestionProfileUi => ingestionProfileUi.get('selectedSource')
 );
 
-const samplesSelector = createSelector(
+export const samplesSelector = createSelector(
   ingestionProfileUiSelector,
   ingestionProfileUi => ingestionProfileUi.get('samples')
 );
 
-const sampleOfSelectedSourceSelector = createSelector(
+export const sampleOfSelectedSourceSelector = createSelector(
   samplesSelector,
   selectedSourceSelector,
   (samples, selectedSource) => samples.get(selectedSource)
 );
 
-const newNodeVisibleSelector = createSelector(
+export const newNodeVisibleSelector = createSelector(
   ingestionProfileUiSelector,
   ingestionProfileUi => ingestionProfileUi.get('newNodeVisible')
 );
 
-const newLinkVisibleSelector = createSelector(
+export const newLinkVisibleSelector = createSelector(
   ingestionProfileUiSelector,
   ingestionProfileUi => ingestionProfileUi.get('newLinkVisible')
 );
 
-const mappingNodeSelector = createSelector(
+export const mappingNodeSelector = createSelector(
   ingestionProfileUiSelector,
   ingestionProfileUi => ingestionProfileUi.get('mappingNode')
 );
 
-const mappingNodeActivePropSelector = createSelector(
+export const mappingNodeActivePropSelector = createSelector(
   ingestionProfileUiSelector,
   ingestionProfileUi => ingestionProfileUi.get('mappingNodeActiveProp')
 );
 
-const mappingNodeColumnOptionsSelector = createSelector(
+export const mappingNodeColumnOptionsSelector = createSelector(
   samplesSelector,
   mappingNodeSelector,
   mappingNodeActivePropSelector,
@@ -100,7 +99,7 @@ const mappingNodeColumnOptionsSelector = createSelector(
     )
 );
 
-const mappingNodeSaveEnabledSelector = createSelector(
+export const mappingNodeSaveEnabledSelector = createSelector(
   mappingNodeSelector,
   mappingNode => {
     if (
@@ -134,22 +133,22 @@ const mappingNodeSaveEnabledSelector = createSelector(
   }
 );
 
-const editingNodeIndexSelector = createSelector(
+export const editingNodeIndexSelector = createSelector(
   ingestionProfileUiSelector,
   ingestionProfileUi => ingestionProfileUi.get('editingNodeIndex')
 );
 
-const mappingLinkSelector = createSelector(
+export const mappingLinkSelector = createSelector(
   ingestionProfileUiSelector,
   ingestionProfileUi => ingestionProfileUi.get('mappingLink')
 );
 
-const mappingLinkActivePropSelector = createSelector(
+export const mappingLinkActivePropSelector = createSelector(
   ingestionProfileUiSelector,
   ingestionProfileUi => ingestionProfileUi.get('mappingLinkActiveProp')
 );
 
-const mappingLinkColumnOptionsSelector = createSelector(
+export const mappingLinkColumnOptionsSelector = createSelector(
   samplesSelector,
   mappingLinkSelector,
   mappingLinkActivePropSelector,
@@ -160,7 +159,7 @@ const mappingLinkColumnOptionsSelector = createSelector(
     )
 );
 
-const mappingLinkSaveEnabledSelector = createSelector(
+export const mappingLinkSaveEnabledSelector = createSelector(
   mappingLinkSelector,
   mappingLink => {
     if (
@@ -195,33 +194,7 @@ const mappingLinkSaveEnabledSelector = createSelector(
   }
 );
 
-const editingLinkIndexSelector = createSelector(
+export const editingLinkIndexSelector = createSelector(
   ingestionProfileUiSelector,
   ingestionProfileUi => ingestionProfileUi.get('editingLinkIndex')
 );
-
-module.exports = {
-  newNameSelector,
-  newVisibleSelector,
-  deleteVisibleSelector,
-  deleteNameSelector,
-  activeTabSelector,
-  newSourceVisibleSelector,
-  newSourceSelector,
-  deleteSourceVisibleSelector,
-  selectedSourceSelector,
-  samplesSelector,
-  sampleOfSelectedSourceSelector,
-  newNodeVisibleSelector,
-  mappingNodeSelector,
-  mappingNodeActivePropSelector,
-  mappingNodeColumnOptionsSelector,
-  mappingNodeSaveEnabledSelector,
-  editingNodeIndexSelector,
-  newLinkVisibleSelector,
-  mappingLinkSelector,
-  mappingLinkActivePropSelector,
-  mappingLinkColumnOptionsSelector,
-  mappingLinkSaveEnabledSelector,
-  editingLinkIndexSelector
-};

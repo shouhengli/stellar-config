@@ -26,6 +26,8 @@ const paths = {
       staticFiles: [
         'src/server/**/*.json',
         'src/server/**/*.yaml',
+        'package.json',
+        'yarn.lock',
         '!src/server/__tests__/**/*'
       ]
     }

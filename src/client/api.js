@@ -49,7 +49,7 @@ function getConfigNames(configType) {
 function getIngestionSample(source) {
   return P.fromCallback(callback =>
     request
-      .get(`/ingestion/sample`)
+      .get('/ingestion/sample')
       .accept('json')
       .query({ source })
       .end(callback)
