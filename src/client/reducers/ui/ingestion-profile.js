@@ -1,6 +1,6 @@
-const { is, fromJS, Map, OrderedMap } = require('immutable');
-const actions = require('../../actions');
-const { TAB_SOURCE } = require('../../ingestion-profile');
+import { is, fromJS, Map, OrderedMap } from 'immutable';
+import actions from '../../actions';
+import { TAB_SOURCE } from '../../ingestion-profile';
 
 const initialState = fromJS({
   activeTab: TAB_SOURCE,
@@ -147,6 +147,9 @@ function reduceState(state = initialState, action) {
       return state.deleteIn(['mappingNode', action.key]);
 
     case actions.INGESTION_PROFILE_SET_MAPPING_NODE_PROP_KEY: {
+      if (!state.hasIn(['mappingNode', action.prevKey])) {
+        return state;
+      }
       const prevValue = state.getIn(['mappingNode', action.prevKey]);
       return state
         .deleteIn(['mappingNode', action.prevKey])
@@ -159,7 +162,6 @@ function reduceState(state = initialState, action) {
 
     case actions.INGESTION_PROFILE_SET_MAPPING_NODE_PROP_VALUE: {
       state = state.setIn(['mappingNode', action.key], fromJS(action.value));
-
       if (action.shouldResetActiveProp) {
         return state.set(
           'mappingNodeActiveProp',
@@ -273,7 +275,11 @@ function reduceState(state = initialState, action) {
       return state;
 
     case actions.INGESTION_PROFILE_SET_MAPPING_LINK_PROP_KEY: {
+      if (!state.hasIn(['mappingLink', action.prevKey])) {
+        return state;
+      }
       const prevValue = state.getIn(['mappingLink', action.prevKey]);
+
       return state
         .deleteIn(['mappingLink', action.prevKey])
         .setIn(['mappingLink', action.key], prevValue)

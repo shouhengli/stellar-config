@@ -1,5 +1,5 @@
-const { fromJS } = require('immutable');
-const actions = require('../../actions');
+import { fromJS } from 'immutable';
+import actions from '../../actions';
 
 const initialState = fromJS({
   names: [],
@@ -7,7 +7,7 @@ const initialState = fromJS({
   text: ''
 });
 
-function reduce(state = initialState, action) {
+export default function reduce(state = initialState, action) {
   switch (action.type) {
     case actions.SEARCH_LOAD_NAMES:
       return state.set('names', fromJS(action.configNames));
@@ -25,5 +25,3 @@ function reduce(state = initialState, action) {
       return state;
   }
 }
-
-module.exports = reduce;

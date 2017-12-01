@@ -1,13 +1,13 @@
-const reduceIngestionProfileState = require('./ui/ingestion-profile');
-const reduceGraphSchemaState = require('./ui/graph-schema');
-const reduceGraphSchemaClassesState = require('./ui/graph-schema-classes');
-const reduceGraphSchemaClassLinksState = require('./ui/graph-schema-class-links');
-const reduceSearchState = require('./ui/search');
-const reduceViewState = require('./ui/view');
+import reduceIngestionProfileState from './ui/ingestion-profile';
+import reduceGraphSchemaState from './ui/graph-schema';
+import reduceGraphSchemaClassesState from './ui/graph-schema-classes';
+import reduceGraphSchemaClassLinksState from './ui/graph-schema-class-links';
+import reduceSearchState from './ui/search';
+import reduceViewState from './ui/view';
 
 const { combineReducers } = require('redux-immutable');
 
-module.exports = combineReducers({
+export default combineReducers({
   ingestionProfile: reduceIngestionProfileState,
   graphSchema: reduceGraphSchemaState,
   graphSchemaClasses: reduceGraphSchemaClassesState,

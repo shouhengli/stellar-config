@@ -2,7 +2,7 @@ const React = require('react');
 const renderer = require('react-test-renderer');
 const { shallow } = require('enzyme');
 const { fromJS } = require('immutable');
-const { createClassLink } = require('../../graph-schema');
+const { createClassLink } = require('../../ingestion-profile');
 const Label = require('../graph-schema-class-link-label.jsx');
 
 describe('component graph-schema-class-link-label', () => {

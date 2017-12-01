@@ -1,7 +1,6 @@
-const { fromJS, List, Map } = require('immutable');
-const actions = require('../../actions');
-
-const { ZOOM_STEP, MAX_ZOOM, MIN_ZOOM } = require('../../ingestion-profile');
+import { fromJS, List, Map } from 'immutable';
+import actions from '../../actions';
+import { ZOOM_STEP, MAX_ZOOM, MIN_ZOOM } from '../../ingestion-profile';
 
 /**
  * Initial UI state.
@@ -26,13 +25,16 @@ const initialState = fromJS({
   zoom: 1
 });
 
-function reduce(state = initialState, action) {
+export default function reduce(state = initialState, action) {
   switch (action.type) {
     case actions.INGESTION_PROFILE_LOAD:
-      return state.set('editorContent', action.content.editorContent);
+      return state.set(
+        'editorContent',
+        (action.content && action.content.editorContent) || ''
+      );
 
     case actions.GRAPH_SCHEMA_SET_EDITOR_CONTENT:
-      return state.set('editorContent', action.content);
+      return state.set('editorContent', action.content || '');
 
     case actions.GRAPH_SCHEMA_UPDATE_CONTENT:
       return state
@@ -142,5 +144,3 @@ function reduce(state = initialState, action) {
       return state;
   }
 }
-
-module.exports = reduce;

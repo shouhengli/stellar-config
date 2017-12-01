@@ -1,4 +1,2 @@
-const classLinksSelector = state =>
+export const classLinksSelector = state =>
   state.getIn(['ui', 'graphSchemaClassLinks']);
-
-module.exports = { classLinksSelector };

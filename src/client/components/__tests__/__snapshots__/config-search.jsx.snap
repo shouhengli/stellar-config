@@ -46,21 +46,17 @@ exports[`component config-search can be rendered 1`] = `
     </div>
   </div>
   <div
-    className="panel-tabs"
+    className="panel-block"
+    onClick={[Function]}
   >
-    <div
-      title="source"
-    />
-    <div
-      title="mapping"
-    />
-    <div
-      title="graphSchema"
-    />
+    <span
+      className="panel-icon"
+    >
+      <i
+        className="fa fa-book"
+      />
+    </span>
+    default
   </div>
-  <div
-    name="default"
-    type="mapping"
-  />
 </nav>
 `;

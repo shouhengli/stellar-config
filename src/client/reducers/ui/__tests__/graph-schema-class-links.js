@@ -1,7 +1,6 @@
-const { Map, is, fromJS } = require('immutable');
-const reduceState = require('../class-links');
-const actions = require('../../../actions');
-const { createClassLink, getClassLinkKey } = require('../../../graph-schema');
+import { Map, fromJS } from 'immutable';
+import reduceState from '../graph-schema-class-links';
+import actions from '../../../actions';
 
 describe('reducer class-links', () => {
   let initialState;
@@ -11,133 +10,287 @@ describe('reducer class-links', () => {
   });
 
   describe('when GRAPH_SCHEMA_UPDATE_CONTENT', () => {
-    test('forgets previous state', () => {
-      const classLink = createClassLink('has', 'Person', 'Car');
-      const state = initialState.set(
-        getClassLinkKey(classLink),
-        fromJS(classLink)
-      );
+    let state;
 
+    beforeEach(() => {
+      state = initialState.set(
+        fromJS({ name: 'lives-at', source: 'Person' }),
+        fromJS({ name: 'lives-at', source: 'Person', target: 'Street' })
+      );
+    });
+
+    it('updates class links with data provided in action', () => {
       const action = {
         type: actions.GRAPH_SCHEMA_UPDATE_CONTENT,
         classLinks: [
-          createClassLink('lives-at', 'Person', 'Place'),
-          createClassLink('receives', 'Person', 'Package')
+          { name: 'lives-at', source: 'Person', target: 'Place' },
+          { name: 'receives', source: 'Person', target: 'Package' }
         ]
       };
-
       const next = reduceState(state, action);
+      const expected = Map()
+        .set(
+          fromJS({ name: 'lives-at', source: 'Person' }),
+          fromJS({ name: 'lives-at', source: 'Person', target: 'Place' })
+        )
+        .set(
+          fromJS({ name: 'receives', source: 'Person' }),
+          fromJS({ name: 'receives', source: 'Person', target: 'Package' })
+        );
 
-      const expected = Map(
-        action.classLinks.map(l => [getClassLinkKey(l), fromJS(l)])
-      );
+      expect(next.equals(expected)).toBeTruthy();
+    });
 
-      expect(is(next, expected)).toBe(true);
+    it('sets classLinks to emtpy map if no class links provided in action', () => {
+      const action = {
+        type: actions.GRAPH_SCHEMA_UPDATE_CONTENT,
+        classLinks: []
+      };
+      const next = reduceState(state, action);
+      const expected = Map();
+
+      expect(next.equals(expected)).toBeTruthy();
     });
   });
 
   describe('when GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS', () => {
-    test('updates only position of class links', () => {
-      const classLink1 = createClassLink('has', 'Person', 'Car');
-      const classLink2 = createClassLink('lives-at', 'Person', 'Place');
-
-      const state = initialState
-        .set(getClassLinkKey(classLink1), fromJS(classLink1))
-        .set(getClassLinkKey(classLink2), fromJS(classLink2));
-
-      const action = {
-        type: actions.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS,
-        classLinks: [
-          createClassLink('lives-at', 'Person', 'Place', 10, 100, 1000),
-          createClassLink('has', 'Person', 'Car', 9, 99, 999)
-        ]
-      };
-
-      const next = reduceState(state, action);
-
-      const expected = state
-        .setIn([getClassLinkKey(classLink2), 'x'], 10)
-        .setIn([getClassLinkKey(classLink2), 'y'], 100)
-        .setIn([getClassLinkKey(classLink1), 'x'], 9)
-        .setIn([getClassLinkKey(classLink1), 'y'], 99);
-
-      expect(is(next, expected)).toBe(true);
+    let state;
+    beforeEach(() => {
+      state = initialState.set(
+        fromJS({ name: 'lives-at', source: 'Person' }),
+        fromJS({
+          name: 'lives-at',
+          source: 'Person',
+          target: 'Street',
+          x: 0,
+          y: 0
+        })
+      );
     });
 
-    test('will not update any class link if any matched key is found', () => {
-      const classLink1 = createClassLink('has', 'Person', 'Car');
-      const classLink2 = createClassLink('lives-at', 'Person', 'Place');
-
-      const state = initialState
-        .set(getClassLinkKey(classLink1), fromJS(classLink1))
-        .set(getClassLinkKey(classLink2), fromJS(classLink2));
-
+    it('updates only position of class links', () => {
       const action = {
         type: actions.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS,
         classLinks: [
-          createClassLink('rents-at', 'Person', 'Place', 10, 100, 1000),
-          createClassLink('has', 'Person', 'Car', 9, 99, 999)
+          { name: 'lives-at', source: 'Person', target: 'Place', x: 1, y: 1 }
+        ]
+      };
+      const next = reduceState(state, action);
+      const expected = Map().set(
+        fromJS({ name: 'lives-at', source: 'Person' }),
+        fromJS({
+          name: 'lives-at',
+          source: 'Person',
+          target: 'Street',
+          x: 1,
+          y: 1
+        })
+      );
+
+      expect(next.equals(expected)).toBe(true);
+    });
+
+    it('will not update any class link if any matched key is found', () => {
+      const action = {
+        type: actions.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS,
+        classLinks: [
+          { name: 'sleeps on', source: 'Person', target: 'Bed', x: 1, y: 1 }
         ]
       };
 
       const next = reduceState(state, action);
-
-      expect(is(next, state)).toBe(true);
+      const expected = Map().set(
+        fromJS({ name: 'lives-at', source: 'Person' }),
+        fromJS({
+          name: 'lives-at',
+          source: 'Person',
+          target: 'Street',
+          x: 0,
+          y: 0
+        })
+      );
+      expect(next.equals(expected)).toBe(true);
     });
   });
 
   describe('when GRAPH_SCHEMA_UPDATE_CLASS_LINK_POSITION', () => {
-    test('updates only position of matched class', () => {
-      const classLink1 = createClassLink('has', 'Person', 'Car', 10, 20);
-      const classLink2 = createClassLink('lives-at', 'Person', 'Place');
+    let state;
+    beforeEach(() => {
+      state = initialState.set(
+        fromJS({ name: 'lives-at', source: 'Person' }),
+        fromJS({
+          name: 'lives-at',
+          source: 'Person',
+          target: 'Street',
+          x: 0,
+          y: 0
+        })
+      );
+    });
 
-      const state = initialState
-        .set(getClassLinkKey(classLink1), fromJS(classLink1))
-        .set(getClassLinkKey(classLink2), fromJS(classLink2));
-
+    it('increments position of matched class links', () => {
       const action = {
         type: actions.GRAPH_SCHEMA_UPDATE_CLASS_LINK_POSITION,
-        name: 'has',
+        name: 'lives-at',
         source: 'Person',
-        target: 'Car',
+        target: 'Place',
         dx: 1,
-        dy: 2
+        dy: -1
       };
-
       const next = reduceState(state, action);
 
-      const expected = state
-        .setIn([getClassLinkKey(classLink1), 'x'], 11)
-        .setIn([getClassLinkKey(classLink1), 'y'], 22);
+      const expected = Map().set(
+        fromJS({ name: 'lives-at', source: 'Person' }),
+        fromJS({
+          name: 'lives-at',
+          source: 'Person',
+          target: 'Street',
+          x: 1,
+          y: -1
+        })
+      );
 
-      expect(is(next, expected)).toBe(true);
+      expect(next.equals(expected)).toBe(true);
+    });
+
+    it('leave unmatching class links untouched', () => {
+      const action = {
+        type: actions.GRAPH_SCHEMA_UPDATE_CLASS_LINK_POSITION,
+        name: 'sleeps on',
+        source: 'Person',
+        target: 'Street',
+        dx: 1,
+        dy: -1
+      };
+      const next = reduceState(state, action);
+
+      const expected = Map().set(
+        fromJS({ name: 'lives-at', source: 'Person' }),
+        fromJS({
+          name: 'lives-at',
+          source: 'Person',
+          target: 'Street',
+          x: 0,
+          y: 0
+        })
+      );
+
+      expect(next).toEqual(expected);
+      expect(next.equals(expected)).toBe(true);
     });
   });
 
   describe('when GRAPH_SCHEMA_UPDATE_CLASS_LINK_LENGTHS', () => {
-    test('updates only length of class links', () => {
-      const classLink1 = createClassLink('has', 'Person', 'Car');
-      const classLink2 = createClassLink('lives-at', 'Person', 'Place');
+    let state;
+    beforeEach(() => {
+      state = initialState
+        .set(
+          fromJS({ name: 'lives-at', source: 'Person' }),
+          fromJS({
+            name: 'lives-at',
+            source: 'Person',
+            target: 'Street',
+            length: 1,
+            x: 0,
+            y: 0
+          })
+        )
+        .set(
+          fromJS({ name: 'has', source: 'Person' }),
+          fromJS({
+            name: 'has',
+            source: 'Person',
+            target: 'Dog',
+            x: 100,
+            y: 100
+          })
+        );
+    });
 
-      const state = initialState
-        .set(getClassLinkKey(classLink1), fromJS(classLink1))
-        .set(getClassLinkKey(classLink2), fromJS(classLink2));
-
+    it('updates length of class links', () => {
       const action = {
         type: actions.GRAPH_SCHEMA_UPDATE_CLASS_LINK_LENGTHS,
         classLinks: [
-          createClassLink('lives-at', 'Person', 'Place', 10, 100, 1000),
-          createClassLink('has', 'Person', 'Car', 9, 99, 999)
+          { name: 'lives-at', source: 'Person', length: 11 },
+          { name: 'has', source: 'Person', length: 22 }
         ]
       };
-
       const next = reduceState(state, action);
 
       const expected = state
-        .setIn([getClassLinkKey(classLink2), 'length'], 1000)
-        .setIn([getClassLinkKey(classLink1), 'length'], 999);
+        .set(
+          fromJS({ name: 'lives-at', source: 'Person' }),
+          fromJS({
+            name: 'lives-at',
+            source: 'Person',
+            target: 'Street',
+            x: 0,
+            y: 0,
+            length: 11
+          })
+        )
+        .set(
+          fromJS({ name: 'has', source: 'Person' }),
+          fromJS({
+            name: 'has',
+            source: 'Person',
+            target: 'Dog',
+            x: 100,
+            y: 100,
+            length: 22
+          })
+        );
 
-      expect(is(next, expected)).toBe(true);
+      expect(next.equals(expected)).toBe(true);
+    });
+
+    it('leaves unmatching links untouched', () => {
+      const action = {
+        type: actions.GRAPH_SCHEMA_UPDATE_CLASS_LINK_LENGTHS,
+        classLinks: [{ name: 'sleeps on', source: 'Person', length: 11 }]
+      };
+      const next = reduceState(state, action);
+
+      const expected = state
+        .set(
+          fromJS({ name: 'lives-at', source: 'Person' }),
+          fromJS({
+            name: 'lives-at',
+            source: 'Person',
+            target: 'Street',
+            length: 1,
+            x: 0,
+            y: 0
+          })
+        )
+        .set(
+          fromJS({ name: 'has', source: 'Person' }),
+          fromJS({
+            name: 'has',
+            source: 'Person',
+            target: 'Dog',
+            x: 100,
+            y: 100
+          })
+        );
+
+      expect(next.equals(expected)).toBe(true);
+    });
+  });
+
+  describe('when other actions', () => {
+    it('leaves state untouched', () => {
+      const action = { type: 'some action' };
+      const next = reduceState(initialState, action);
+      expect(next).toEqual(initialState);
+    });
+  });
+
+  describe('when no state given', () => {
+    it('fallbacks to initial state', () => {
+      const action = { type: 'some action' };
+      const next = reduceState(undefined, action);
+      expect(next).toEqual(initialState);
     });
   });
 });

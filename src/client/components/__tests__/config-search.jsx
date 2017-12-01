@@ -8,15 +8,12 @@ describe('component config-search', () => {
 
   beforeEach(() => {
     props = {
-      Tab: 'div',
-      ActiveTab: 'div',
-      Item: 'div',
-      searchText: 'default',
-      configTypes: ['source', 'mapping', 'graphSchema'],
-      activeConfigType: 'mapping',
-      configNames: ['default', 'finance', 'hr'],
+      text: 'default',
+      names: ['default', 'finance', 'hr'],
       handleSearchTextChange: jest.fn(),
-      handleHideButtonClick: jest.fn()
+      handleHideButtonClick: jest.fn(),
+      handleItemClick: jest.fn(),
+      handleComponentDidMount: jest.fn()
     };
   });
 
@@ -32,7 +29,9 @@ describe('component config-search', () => {
     wrapper.find('input').simulate('change', event);
 
     expect(props.handleSearchTextChange).toHaveBeenCalledTimes(1);
-    expect(props.handleSearchTextChange).toHaveBeenCalledWith(event);
+    expect(props.handleSearchTextChange).toHaveBeenCalledWith(
+      event.target.value
+    );
   });
 
   test('can be hidden', () => {

@@ -14,13 +14,9 @@ exports[`component nav wraps its children 1`] = `
     </div>
   </div>
   <div
-    className="navbar-menu"
+    className="navbar-menu is-active"
   >
-    <div
-      className="navbar-start"
-    >
-      content
-    </div>
+    content
   </div>
 </nav>
 `;

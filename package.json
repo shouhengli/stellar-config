@@ -43,6 +43,7 @@
     "font-awesome": "^4.7.0",
     "gulp": "^3.9.1",
     "gulp-eslint": "^4.0.0",
+    "gulp-flatten": "^0.3.1",
     "gulp-sass": "^3.1.0",
     "immutable": "^3.8.2",
     "jest": "^21.2.1",
@@ -59,15 +60,16 @@
     "superagent": "^3.6.0",
     "vinyl-named": "^1.1.0",
     "webpack": "^3.3.0",
+    "webpack-node-externals": "^1.6.0",
     "webpack-stream": "^4.0.0"
   },
   "scripts": {
     "build": "gulp",
+    "start-dist": "cd dist && node server.js",
     "clean": "gulp clean",
     "watch": "gulp watch",
     "test": "jest",
-    "test-coverage":
-      "jest --coverage && cat ./src/server/coverage/lcov.info | coveralls"
+    "test-coverage": "jest --coverage && cat ./src/coverage/lcov.info | coveralls"
   },
   "dependencies": {
     "bluebird": "^3.5.0",
@@ -77,8 +79,8 @@
     "redis": "^2.7.1"
   },
   "jest": {
-    "rootDir": "src/server",
+    "rootDir": "src",
     "verbose": true,
-    "setupTestFrameworkScriptFile": "<rootDir>/../test-setup.js"
+    "setupTestFrameworkScriptFile": "<rootDir>/test-setup.js"
   }
 }

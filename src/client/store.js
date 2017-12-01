@@ -1,11 +1,13 @@
-const { createStore, applyMiddleware } = require('redux');
-const { combineReducers } = require('redux-immutable');
-const thunk = require('redux-thunk').default;
+import { createStore, applyMiddleware } from 'redux';
+import { combineReducers } from 'redux-immutable';
+import thunk from 'redux-thunk';
+import uiReducer from './reducers/ui';
+import ingestionProfileReducer from './reducers/ingestion-profile';
 
-module.exports = createStore(
+export default createStore(
   combineReducers({
-    ui: require('./reducers/ui'),
-    ingestionProfile: require('./reducers/ingestion-profile')
+    ui: uiReducer,
+    ingestionProfile: ingestionProfileReducer
   }),
   applyMiddleware(thunk)
 );

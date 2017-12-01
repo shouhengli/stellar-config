@@ -1,24 +1,55 @@
-const { Map, is, fromJS } = require('immutable');
-const reduceClassesState = require('../classes');
-const actions = require('../../../actions');
-const { createClass } = require('../../../graph-schema');
+import { Map, fromJS } from 'immutable';
+import reduceClassesState from '../graph-schema-classes';
+import actions from '../../../actions';
 
 describe('reducer classes', () => {
-  let initialState;
+  let state, initialState;
 
   beforeEach(() => {
     initialState = Map();
+    state = initialState
+      .set(
+        'Person',
+        fromJS({
+          name: 'Person',
+          props: {
+            name: 'string',
+            age: 'integer'
+          }
+        })
+      )
+      .set(
+        'Package',
+        fromJS({
+          name: 'Package',
+          props: {
+            id: 'string'
+          },
+          x: 10,
+          y: 20,
+          tooltipVisibleProp: undefined,
+          outerRadius: 200
+        })
+      );
   });
 
   describe('when GRAPH_SCHEMA_UPDATE_CONTENT', () => {
-    test('forgets previous state', () => {
-      const state = initialState.set('Dog', fromJS(createClass('Dog')));
-
+    it('updates state with data provided in action', () => {
       const action = {
         type: actions.GRAPH_SCHEMA_UPDATE_CONTENT,
         classes: [
-          createClass('Person', { name: 'string', age: 'integer' }),
-          createClass('Package', { id: 'string' }, 10, 20, undefined, 200)
+          {
+            name: 'Person',
+            props: {
+              name: 'string',
+              age: 'integer',
+              tooltipVisibleProp: undefined
+            }
+          },
+          {
+            name: 'Package',
+            props: { id: 'string', x: 10, y: 20, outerRadius: 200 }
+          }
         ]
       };
 
@@ -30,84 +61,73 @@ describe('reducer classes', () => {
         })
       );
 
-      expect(is(next, expected)).toBe(true);
+      expect(next).toEqual(expected);
+    });
+
+    it('sets state to empty map when classes are not provided in action', () => {
+      const action = {
+        type: actions.GRAPH_SCHEMA_UPDATE_CONTENT,
+        classes: null
+      };
+
+      const next = reduceClassesState(state, action);
+
+      const expected = Map({});
+
+      expect(next).toEqual(expected);
     });
   });
 
   describe('when GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS', () => {
-    test('updates only class positions', () => {
-      const state = initialState
-        .set(
-          'Person',
-          fromJS(createClass('Person', { name: 'string', age: 'integer' }))
-        )
-        .set(
-          'Package',
-          fromJS(
-            createClass('Package', { id: 'string' }, 10, 20, undefined, 200)
-          )
-        );
-
+    it('updates only class positions', () => {
       const action = {
         type: actions.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS,
         classes: [
-          createClass('Person', { address: 'string' }, 30, 55),
-          createClass('Package', null, 0, 1, false, 0)
+          {
+            name: 'Person',
+            props: {
+              name: 'new string',
+              age: 'new integer'
+            },
+            x: 10,
+            y: 20,
+            outerRadius: 200
+          }
         ]
       };
 
       const next = reduceClassesState(state, action);
 
       const expected = state
-        .setIn(['Person', 'x'], 30)
-        .setIn(['Person', 'y'], 55)
-        .setIn(['Package', 'x'], 0)
-        .setIn(['Package', 'y'], 1);
+        .setIn(['Person', 'x'], 10)
+        .setIn(['Person', 'y'], 20);
 
-      expect(is(next, expected)).toBe(true);
+      expect(next.get('Person')).toEqual(expected.get('Person'));
     });
 
-    test('will not update any class if any unmatched name is found', () => {
-      const state = initialState
-        .set(
-          'Person',
-          fromJS(createClass('Person', { name: 'string', age: 'integer' }))
-        )
-        .set(
-          'Package',
-          fromJS(
-            createClass('Package', { id: 'string' }, 10, 20, undefined, 200)
-          )
-        );
-
+    it('will not update any class if no matches found', () => {
       const action = {
         type: actions.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS,
         classes: [
-          createClass('Dog', { address: 'string' }, 30, 55),
-          createClass('Package', null, 0, 1, false, 0)
+          {
+            Dog: fromJS({
+              name: 'Dog',
+              props: {
+                name: 'Dog'
+              },
+              x: 30
+            })
+          }
         ]
       };
-
       const next = reduceClassesState(state, action);
 
-      expect(is(next, state)).toBe(true);
+      expect(next).toEqual(state);
     });
   });
 
   describe('when GRAPH_SCHEMA_UPDATE_CLASS_POSITION', () => {
-    test('updates only position of matched class', () => {
-      const state = initialState
-        .set(
-          'Person',
-          fromJS(createClass('Person', { name: 'string', age: 'integer' }))
-        )
-        .set(
-          'Package',
-          fromJS(
-            createClass('Package', { id: 'string' }, 10, 20, undefined, 200)
-          )
-        );
-
+    it('updates only position of matched class', () => {
       const action = {
         type: actions.GRAPH_SCHEMA_UPDATE_CLASS_POSITION,
         name: 'Package',
@@ -121,82 +141,83 @@ describe('reducer classes', () => {
         .setIn(['Package', 'x'], 11)
         .setIn(['Package', 'y'], 22);
 
-      expect(is(next, expected)).toBe(true);
+      expect(next.get('Package')).toEqual(expected.get('Package'));
+    });
+
+    it('leaves unmatching classes untouched', () => {
+      const action = {
+        type: actions.GRAPH_SCHEMA_UPDATE_CLASS_POSITION,
+        name: 'Package',
+        dx: 1,
+        dy: 2
+      };
+
+      const next = reduceClassesState(state, action);
+
+      expect(next.get('Person')).toEqual(state.get('Person'));
+    });
+
+    it('leave classes untouched when no matches found', () => {
+      const action = {
+        type: actions.GRAPH_SCHEMA_UPDATE_CLASS_POSITION,
+        name: 'Dog',
+        dx: 1,
+        dy: 2
+      };
+
+      const next = reduceClassesState(state, action);
+
+      expect(next).toEqual(state);
     });
   });
 
   describe('when GRAPH_SCHEMA_REVEAL_CLASS_PROP_TOOLTIP', () => {
-    test('sets tooltip-visible property', () => {
-      const state = initialState.set(
-        'Person',
-        fromJS(createClass('Person', { name: 'string', age: 'integer' }))
-      );
-
+    let next;
+    beforeEach(() => {
       const action = {
         type: actions.GRAPH_SCHEMA_REVEAL_CLASS_PROP_TOOLTIP,
         className: 'Person',
         propName: 'age'
       };
+      next = reduceClassesState(state, action);
+    });
+    it('sets matching tooltip-visible property', () => {
+      expect(next.getIn(['Person', 'tooltipVisibleProp'])).toEqual('age');
+    });
 
-      const next = reduceClassesState(state, action);
-
-      const expected = state.setIn(['Person', 'tooltipVisibleProp'], 'age');
-
-      expect(is(next, expected)).toBe(true);
+    it('leave unmatching classes untouched', () => {
+      expect(next.getIn(['Package', 'tooltipVisibleProp'])).toEqual(undefined);
     });
   });
 
   describe('when GRAPH_SCHEMA_HIDE_CLASS_PROP_TOOLTIP', () => {
-    test('resets tooltip visibility of matching property', () => {
-      const state = initialState
-        .set(
-          'Person',
-          fromJS(
-            createClass(
-              'Person',
-              { name: 'string' },
-              undefined,
-              undefined,
-              'name'
-            )
-          )
-        )
-        .set(
-          'Package',
-          fromJS(createClass('Package', { id: 'string' }, 10, 20, 'id', 200))
-        );
-
-      const ineffectiveAction = {
+    let next, action;
+    beforeEach(() => {
+      action = {
         type: actions.GRAPH_SCHEMA_HIDE_CLASS_PROP_TOOLTIP,
         className: 'Person',
         propName: 'age'
       };
+    });
 
-      const effectiveAction = {
-        type: actions.GRAPH_SCHEMA_HIDE_CLASS_PROP_TOOLTIP,
-        className: 'Package',
-        propName: 'id'
-      };
-
-      const first = reduceClassesState(state, ineffectiveAction);
-      const second = reduceClassesState(first, effectiveAction);
-
-      const expectedSecond = state.setIn(
-        ['Package', 'tooltipVisibleProp'],
-        null
+    it('only resets tooltip visibility of matching property', () => {
+      next = reduceClassesState(
+        state.setIn(['Person', 'tooltipVisibleProp'], 'age'),
+        action
       );
+      const expected = state.setIn(['Person', 'tooltipVisibleProp'], null);
+      expect(next).toEqual(expected);
+    });
 
-      expect(is(first, state)).toBe(true);
-      expect(is(second, expectedSecond)).toBe(true);
+    it('leaves unmatching property untouched', () => {
+      state = state.setIn(['Person', 'tooltipVisibleProp'], 'abc');
+      next = reduceClassesState(state, action);
+      expect(next).toEqual(state);
     });
   });
 
   describe('when GRAPH_SCHEMA_UPDATE_CLASS_OUTER_RADIUS', () => {
-    test('sets outer radius of class', () => {
-      const state = initialState
-        .set('Person', fromJS(createClass('Person')))
-        .set('Package', fromJS(createClass('Package')));
-
+    it('sets only outer radius of matching class', () => {
       const action = {
         type: actions.GRAPH_SCHEMA_UPDATE_CLASS_OUTER_RADIUS,
         className: 'Person',
@@ -207,7 +228,23 @@ describe('reducer classes', () => {
 
       const expected = state.setIn(['Person', 'outerRadius'], 1000);
 
-      expect(is(next, expected)).toBe(true);
+      expect(next).toEqual(expected);
+    });
+  });
+
+  describe('when other actions', () => {
+    it('leaves state untouched', () => {
+      const action = { type: 'some action' };
+      const next = reduceClassesState(state, action);
+      expect(next).toEqual(state);
+    });
+  });
+
+  describe('when no state given', () => {
+    it('fallbacks to initial state', () => {
+      const action = { type: 'some action' };
+      const next = reduceClassesState(undefined, action);
+      expect(next).toEqual(initialState);
     });
   });
 });

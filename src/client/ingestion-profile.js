@@ -4,17 +4,17 @@ const { Map } = require('immutable');
 const yaml = require('js-yaml');
 const ClientError = require('./error');
 
-const FONT_SIZE = 16;
-const CLASS_INNER_RADIUS = 75;
-const CLASS_OUTER_RADIUS = 125;
-const CLASS_PAD_ANGLE = 0.02;
-const CLASS_LINK_LABEL_MARGIN = 10;
+export const FONT_SIZE = 16;
+export const CLASS_INNER_RADIUS = 75;
+export const CLASS_OUTER_RADIUS = 125;
+export const CLASS_PAD_ANGLE = 0.02;
+export const CLASS_LINK_LABEL_MARGIN = 10;
 
-const ZOOM_STEP = 0.02;
-const MIN_ZOOM = 0.1;
-const MAX_ZOOM = 5;
+export const ZOOM_STEP = 0.02;
+export const MIN_ZOOM = 0.1;
+export const MAX_ZOOM = 5;
 
-const GRAPH_SCHEMA_CONFIG_TYPE = 'graph schema';
+export const GRAPH_SCHEMA_CONFIG_TYPE = 'graph schema';
 
 const createGlobalIndexGenerator = () => {
   let id = 0;
@@ -35,7 +35,7 @@ const generateClassLinkGlobalIndex = createGlobalIndexGenerator();
  * @param {boolean} [shouldGenerateGlobalIndex=true]
  * @return {object}
  */
-function createClass(
+export function createClass(
   name,
   props,
   x = 0,
@@ -65,7 +65,7 @@ function createClass(
  * @param {object} cls
  * @return {object}
  */
-function createPersistentClass(cls) {
+export function createPersistentClass(cls) {
   return {
     name: cls.name,
     props: R.clone(cls.props)
@@ -86,7 +86,7 @@ function createPersistentClass(cls) {
  * @param {boolean} [shouldGenerateGlobalIndex=true]
  * @return {object}
  */
-function createClassLink(
+export function createClassLink(
   name,
   source,
   target,
@@ -116,7 +116,7 @@ function createClassLink(
  * @param {object} classLink
  * @return {object}
  */
-function createPersistentClassLink(classLink) {
+export function createPersistentClassLink(classLink) {
   return {
     name: classLink.name,
     source: classLink.source,
@@ -129,7 +129,7 @@ function createPersistentClassLink(classLink) {
  * @param {object | Map} classLink
  * @return {string[]} The ID of the class link.
  */
-function getClassLinkId(classLink) {
+export function getClassLinkId(classLink) {
   if (Map.isMap(classLink)) {
     return {
       source: classLink.get('source'),
@@ -149,9 +149,9 @@ function getClassLinkId(classLink) {
  * @param {object} classLink
  * @return {List<string>} The key of the class link.
  */
-const getClassLinkKey = R.compose(Map, getClassLinkId);
+export const getClassLinkKey = R.compose(Map, getClassLinkId);
 
-class GraphSchemaFormatError extends ClientError {
+export class GraphSchemaFormatError extends ClientError {
   constructor(cause) {
     super(cause);
   }
@@ -163,7 +163,7 @@ const isInGraphSchemaPrimitiveTypes = R.contains(
   graphSchemaPrimitiveTypes
 );
 
-function convertGraphSchemaToClassesAndLinks(graphSchema) {
+export function convertGraphSchemaToClassesAndLinks(graphSchema) {
   if (R.type(graphSchema) !== 'Object') {
     throw new GraphSchemaFormatError('Graph schema is not a mapping.');
   }
@@ -209,7 +209,7 @@ function convertGraphSchemaToClassesAndLinks(graphSchema) {
   };
 }
 
-function parseYaml(yamlDoc) {
+export function parseYaml(yamlDoc) {
   return P.try(() => yaml.safeLoad(yamlDoc))
     .catch(error => {
       throw new GraphSchemaFormatError(error);
@@ -217,16 +217,16 @@ function parseYaml(yamlDoc) {
     .then(convertGraphSchemaToClassesAndLinks);
 }
 
-const INGESTION_PROFILE_CONFIG_TYPE = 'ingestion profile';
-const TAB_SOURCE = 'Source';
-const TAB_GRAPH_SCHEMA = 'Graph Schema';
-const TAB_MAPPING = 'Mapping';
+export const INGESTION_PROFILE_CONFIG_TYPE = 'ingestion profile';
+export const TAB_SOURCE = 'Source';
+export const TAB_GRAPH_SCHEMA = 'Graph Schema';
+export const TAB_MAPPING = 'Mapping';
 
-const MAPPING_NODE_TYPE_KEY = '@type';
-const MAPPING_NODE_ID_KEY = '@id';
-const MAPPING_LINK_TYPE_KEY = '@type';
-const MAPPING_LINK_SOURCE_KEY = '@src';
-const MAPPING_LINK_DESTINATION_KEY = '@dest';
+export const MAPPING_NODE_TYPE_KEY = '@type';
+export const MAPPING_NODE_ID_KEY = '@id';
+export const MAPPING_LINK_TYPE_KEY = '@type';
+export const MAPPING_LINK_SOURCE_KEY = '@src';
+export const MAPPING_LINK_DESTINATION_KEY = '@dest';
 
 /**
  * Creates a ingestion profile.
@@ -236,7 +236,7 @@ const MAPPING_LINK_DESTINATION_KEY = '@dest';
  *                           values are corresponding full property names.
  * @return {object} A ingestion profile.
  */
-function createIngestionProfile(sources, graphSchema, mapping) {
+export function createIngestionProfile(sources, graphSchema, mapping) {
   return {
     sources,
     graphSchema,
@@ -251,41 +251,9 @@ function createIngestionProfile(sources, graphSchema, mapping) {
  * @param {object} propSourceColumnMap - Object of the form {prop: {source, column}}.
  * @return {object}
  */
-function createMappingNode(nodeType, nodeId, propSourceColumnMap) {
+export function createMappingNode(nodeType, nodeId, propSourceColumnMap) {
   let node = R.clone(propSourceColumnMap);
   node[MAPPING_NODE_TYPE_KEY] = nodeType;
   node[MAPPING_NODE_ID_KEY] = nodeId;
   return node;
 }
-
-module.exports = {
-  INGESTION_PROFILE_CONFIG_TYPE,
-  TAB_SOURCE,
-  TAB_GRAPH_SCHEMA,
-  TAB_MAPPING,
-  MAPPING_NODE_ID_KEY,
-  MAPPING_NODE_TYPE_KEY,
-  MAPPING_LINK_TYPE_KEY,
-  MAPPING_LINK_SOURCE_KEY,
-  MAPPING_LINK_DESTINATION_KEY,
-  FONT_SIZE,
-  CLASS_INNER_RADIUS,
-  CLASS_OUTER_RADIUS,
-  CLASS_PAD_ANGLE,
-  CLASS_LINK_LABEL_MARGIN,
-  ZOOM_STEP,
-  MIN_ZOOM,
-  MAX_ZOOM,
-  GRAPH_SCHEMA_CONFIG_TYPE,
-  createIngestionProfile,
-  createMappingNode,
-  createClass,
-  createPersistentClass,
-  createClassLink,
-  createPersistentClassLink,
-  getClassLinkId,
-  getClassLinkKey,
-  parseYaml,
-  convertGraphSchemaToClassesAndLinks,
-  GraphSchemaFormatError
-};

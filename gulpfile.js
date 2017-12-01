@@ -5,11 +5,12 @@ const named = require('vinyl-named');
 const del = require('del');
 const eslint = require('gulp-eslint');
 const sass = require('gulp-sass');
+const nodeExternals = require('webpack-node-externals');
+const flatten = require('gulp-flatten');
 
 const paths = {
   src: {
     client: {
-      all: 'src/client/**/*',
       js: ['src/client/**/*.js', 'src/client/**/*.jsx'],
       jsEntries: ['src/client/index.js', 'src/client/force-layout-worker.js'],
       sass: 'src/client/**/*.scss',
@@ -20,12 +21,14 @@ const paths = {
       fontFiles: 'node_modules/font-awesome/fonts/*'
     },
     server: {
-      js: ['src/server/**/*.js', '!src/server/coverage/**/*'],
+      js: ['src/server/**/*.js'],
+      jsEntries: ['src/server/server.js'],
       staticFiles: [
         'src/server/**/*.json',
         'src/server/**/*.yaml',
         'package.json',
-        'yarn.lock'
+        'yarn.lock',
+        '!src/server/__tests__/**/*'
       ]
     }
   },
@@ -108,12 +111,42 @@ gulp.task('server-js-lint', () =>
 );
 
 gulp.task('server-js', ['server-js-lint'], () =>
-  gulp.src(paths.src.server.js).pipe(gulp.dest(paths.dest.server.js))
+  gulp
+    .src(paths.src.server.jsEntries)
+    .pipe(
+      gulpWebpack(
+        {
+          target: 'node',
+          node: {
+            __filename: false,
+            __dirname: false
+          },
+          externals: [nodeExternals()],
+          module: {
+            rules: [
+              {
+                test: /\.js?$/,
+                use: {
+                  loader: 'babel-loader',
+                  options: babelrc
+                }
+              }
+            ]
+          },
+          output: {
+            filename: 'server.js'
+          }
+        },
+        webpack
+      )
+    )
+    .pipe(gulp.dest(paths.dest.server.js))
 );
 
 gulp.task('server-static-files', () =>
   gulp
     .src(paths.src.server.staticFiles)
+    .pipe(flatten())
     .pipe(gulp.dest(paths.dest.server.staticFiles))
 );
 

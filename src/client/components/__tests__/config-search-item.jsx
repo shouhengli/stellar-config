@@ -15,6 +15,6 @@ describe('component config-search-item', () => {
 
     expect(tree).toMatchSnapshot();
     expect(props.handleClick).toHaveBeenCalledTimes(1);
-    expect(props.handleClick).toHaveBeenCalledWith(props.type, props.name);
+    expect(props.handleClick).toHaveBeenCalledWith(props.name);
   });
 });

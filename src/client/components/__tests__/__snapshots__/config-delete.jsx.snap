@@ -29,7 +29,7 @@ exports[`component config-delete disables yes button when not confirmed 1`] = `
           className="input is-danger"
           onChange={[Function]}
           type="text"
-          value="def"
+          value={undefined}
         />
       </div>
       <div
@@ -37,7 +37,7 @@ exports[`component config-delete disables yes button when not confirmed 1`] = `
       >
         <button
           className="button is-danger"
-          disabled={true}
+          onClick={[Function]}
         >
           Delete
         </button>
@@ -76,7 +76,7 @@ exports[`component config-delete enables yes button when confirmed 1`] = `
           className="input is-danger"
           onChange={[Function]}
           type="text"
-          value="default"
+          value={undefined}
         />
       </div>
       <div

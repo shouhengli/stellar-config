@@ -9,17 +9,17 @@ const {
 
 const ingestionProfileSelector = state => state.get('ingestionProfile');
 
-const nameSelector = createSelector(
+export const nameSelector = createSelector(
   ingestionProfileSelector,
   ingestionProfile => ingestionProfile.get('name')
 );
 
-const sourcesSelector = createSelector(
+export const sourcesSelector = createSelector(
   ingestionProfileSelector,
   ingestionProfile => ingestionProfile.get('sources')
 );
 
-const statusSelector = createSelector(
+export const statusSelector = createSelector(
   ingestionProfileSelector,
   ingestionProfile => ingestionProfile.get('status')
 );
@@ -29,12 +29,14 @@ const graphSchemaSelector = createSelector(
   ingestionProfile => ingestionProfile.get('graphSchema')
 );
 
-const classNamesSelector = createSelector(graphSchemaSelector, graphSchema =>
-  graphSchema.get('classes', List()).keySeq()
+export const classNamesSelector = createSelector(
+  graphSchemaSelector,
+  graphSchema => graphSchema.get('classes', List()).keySeq()
 );
 
-const classLinkKeysSelector = createSelector(graphSchemaSelector, graphSchema =>
-  graphSchema.get('classLinks', List()).keySeq()
+export const classLinkKeysSelector = createSelector(
+  graphSchemaSelector,
+  graphSchema => graphSchema.get('classLinks', List()).keySeq()
 );
 
 const mappingSelector = createSelector(
@@ -42,7 +44,7 @@ const mappingSelector = createSelector(
   ingestionProfile => ingestionProfile.get('mapping')
 );
 
-const persistentIngestionProfileSelector = createSelector(
+export const persistentIngestionProfileSelector = createSelector(
   sourcesSelector,
   graphSchemaSelector,
   mappingSelector,
@@ -63,21 +65,21 @@ const persistentIngestionProfileSelector = createSelector(
       mapping: mapping.toJS(),
       // This is just a temporary workaround for using an editor to build graph schema.
       // Changes will be introduced to replace the editor with form controls. This field will then
-      // beremoved.
+      // be removed.
       editorContent
     };
   }
 );
 
-const mappingNodesSelector = createSelector(mappingSelector, mapping =>
+export const mappingNodesSelector = createSelector(mappingSelector, mapping =>
   mapping.get('nodes', List())
 );
 
-const mappingLinksSelector = createSelector(mappingSelector, mapping =>
+export const mappingLinksSelector = createSelector(mappingSelector, mapping =>
   mapping.get('links', List())
 );
 
-const mappingNodePropOptionsSelector = createSelector(
+export const mappingNodePropOptionsSelector = createSelector(
   graphSchemaSelector,
   mappingNodeSelector,
   (graphSchema, mappingNode) =>
@@ -91,7 +93,7 @@ const mappingNodePropOptionsSelector = createSelector(
       .subtract(mappingNode.keySeq())
 );
 
-const mappingLinkPropOptionsSelector = createSelector(
+export const mappingLinkPropOptionsSelector = createSelector(
   graphSchemaSelector,
   mappingLinkSelector,
   (graphSchema, mappingLink) =>
@@ -104,16 +106,3 @@ const mappingLinkPropOptionsSelector = createSelector(
       .toSet()
       .subtract(mappingLink.keySeq())
 );
-
-module.exports = {
-  nameSelector,
-  sourcesSelector,
-  statusSelector,
-  classNamesSelector,
-  classLinkKeysSelector,
-  persistentIngestionProfileSelector,
-  mappingNodesSelector,
-  mappingLinksSelector,
-  mappingNodePropOptionsSelector,
-  mappingLinkPropOptionsSelector
-};
