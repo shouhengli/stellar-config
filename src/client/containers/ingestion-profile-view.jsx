@@ -1,23 +1,18 @@
-const React = require('react');
-const { connect } = require('react-redux');
-const R = require('ramda');
-
-const View = require('../components/ingestion-profile-view.jsx');
-const SourceView = require('./ingestion-profile-source-view.jsx');
-const GraphSchema = require('./graph-schema.jsx');
-const ConfigEditor = require('./config-editor.jsx');
-const MappingView = require('./ingestion-profile-mapping-view.jsx');
-
-const {
+import React from 'react';
+import { connect } from 'react-redux';
+import R from 'ramda';
+import View from '../components/ingestion-profile-view.jsx';
+import SourceView from './ingestion-profile-source-view.jsx';
+import MappingView from './ingestion-profile-mapping-view.jsx';
+import {
   activeTabSelector,
   samplesSelector
-} = require('../selectors/ui/ingestion-profile');
-const {
+} from '../selectors/ui/ingestion-profile';
+import {
   nameSelector,
   sourcesSelector
-} = require('../selectors/ingestion-profile');
-
-const { loadSamplesAsync } = require('../action-creators/ui/ingestion-profile');
+} from '../selectors/ingestion-profile';
+import { loadSamplesAsync } from '../action-creators/ui/ingestion-profile';
 
 function mapStateToProps(state) {
   return {
@@ -34,12 +29,6 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(props => (
-  <View
-    SourceView={SourceView}
-    GraphSchema={GraphSchema}
-    ConfigEditor={ConfigEditor}
-    MappingView={MappingView}
-    {...props}
-  />
+export default connect(mapStateToProps, mapDispatchToProps)(props => (
+  <View SourceView={SourceView} MappingView={MappingView} {...props} />
 ));

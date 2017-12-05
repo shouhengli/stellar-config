@@ -77,12 +77,8 @@ div.view {
   margin-top: $navbar-height;
   overflow: auto;
 
-  &.is-half {
-    width: 50%;
-
-    &:first-of-type {
-      border-right: 1px solid $border;
-    }
+  &.is-one-quarter:first-of-type {
+    border-right: 1px solid $border;
   }
 }
 
@@ -271,7 +267,8 @@ div.view {
       table {
         table-layout: fixed;
 
-        th, td {
+        th,
+        td {
           padding-left: 0.5rem;
           padding-right: 0.5rem;
           // width: 50%;
@@ -291,4 +288,15 @@ div.view {
   overflow-y: auto;
   max-height: 20rem;
   white-space: nowrap;
+}
+
+.split-view {
+  >.column:nth-last-of-type(2){
+    border-right: 1px solid $border;
+  }
+.schema-editor {
+  form:first-of-type {
+    border-right: 1px solid $border;
+  }
+}
 }

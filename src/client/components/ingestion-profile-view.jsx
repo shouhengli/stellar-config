@@ -1,5 +1,5 @@
-const React = require('react');
-const SplitView = require('./split-view.jsx');
+import React from 'react';
+import SplitView from '../containers/split-view.jsx';
 
 const {
   TAB_SOURCE,
@@ -9,7 +9,7 @@ const {
 
 const { isNotEmpty } = require('../util');
 
-class IngestionProfileView extends React.Component {
+export default class IngestionProfileView extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -19,8 +19,6 @@ class IngestionProfileView extends React.Component {
       name,
       activeTab,
       SourceView,
-      GraphSchema,
-      ConfigEditor,
       MappingView
     } = this.props;
 
@@ -30,10 +28,7 @@ class IngestionProfileView extends React.Component {
           return <SourceView />;
         case TAB_GRAPH_SCHEMA:
           return (
-            <SplitView>
-              <ConfigEditor />
-              <GraphSchema />
-            </SplitView>
+            <SplitView />
           );
         case TAB_MAPPING:
           return <MappingView />;
@@ -49,5 +44,3 @@ class IngestionProfileView extends React.Component {
     }
   }
 }
-
-module.exports = IngestionProfileView;
