@@ -291,6 +291,7 @@ div.view {
 }
 
 .split-view {
+  margin-top: 0;
   >.column:nth-last-of-type(2){
     border-right: 1px solid $border;
   }

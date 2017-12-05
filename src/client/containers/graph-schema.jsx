@@ -1,22 +1,22 @@
-const React = require('react');
-const { connect } = require('react-redux');
-const R = require('ramda');
-const { Map } = require('immutable');
+import React from 'react';
+import { connect } from 'react-redux';
+import R from 'ramda';
+import { Map } from 'immutable';
 
-const Arrow = require('../components/graph-schema-arrow.jsx');
-const ClassLink = require('../components/graph-schema-class-link.jsx');
-const ClassLinkPath = require('../components/graph-schema-class-link-path.jsx');
-const ClassLinkLabel = require('./graph-schema-class-link-label.jsx');
-const Class = require('./graph-schema-class.jsx');
-const GraphSchema = require('../components/graph-schema.jsx');
+import Arrow from '../components/graph-schema-arrow.jsx';
+import ClassLink from '../components/graph-schema-class-link.jsx';
+import ClassLinkPath from '../components/graph-schema-class-link-path.jsx';
+import ClassLinkLabel from './graph-schema-class-link-label.jsx';
+import Class from './graph-schema-class.jsx';
+import GraphSchema from '../components/graph-schema.jsx';
 
-const {
+import {
   GraphSchemaFormatError,
   getClassLinkKey,
   parseYaml
-} = require('../ingestion-profile');
+} from '../ingestion-profile';
 
-const {
+import {
   editorContentSelector,
   shouldUpdateClassLinkLengthsSelector,
   dimensionsSelector,
@@ -24,14 +24,15 @@ const {
   panSelector,
   zoomSelector,
   dragSelector
-} = require('../selectors/ui/graph-schema');
+} from '../selectors/ui/graph-schema';
 
-const { classesSelector } = require('../selectors/ui/graph-schema-classes');
-const {
+import { classesSelector } from '../selectors/ui/graph-schema-classes';
+import {
   classLinksSelector
-} = require('../selectors/ui/graph-schema-class-links');
+} from '../selectors/ui/graph-schema-class-links';
+import { selectedClassSelector, relatedClassLinksSelector, relatedClassesSelector } from '../selectors/ui/split-view';
 
-const {
+import {
   setLayoutDimensionsAndCoordinates,
   startLayoutAsync,
   startPan,
@@ -42,17 +43,18 @@ const {
   updateClassPosition,
   updatePan,
   zoom
-} = require('../action-creators/ui/graph-schema');
+} from '../action-creators/ui/graph-schema';
 
-const {
+import {
   loadGraphSchemaContent
-} = require('../action-creators/ingestion-profile');
+} from '../action-creators/ingestion-profile';
 
 function mapStateToProps(state) {
+  const selectedClass = selectedClassSelector(state);
   return {
     editorContent: editorContentSelector(state),
-    classes: classesSelector(state),
-    classLinks: classLinksSelector(state),
+    classes: R.isNil(selectedClass) ? classesSelector(state) : relatedClassesSelector(state),
+    classLinks: R.isNil(selectedClass) ? classLinksSelector(state) : relatedClassLinksSelector(state),
     shouldUpdateClassLinkLengths: shouldUpdateClassLinkLengthsSelector(state),
     dimensions: dimensionsSelector(state),
     coordinates: coordinatesSelector(state),
@@ -206,7 +208,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-module.exports = connect(mapStateToProps, mapDispatchToProps)(props => (
+export default connect(mapStateToProps, mapDispatchToProps)(props => (
   <GraphSchema
     Arrow={Arrow}
     ClassLink={ClassLink}

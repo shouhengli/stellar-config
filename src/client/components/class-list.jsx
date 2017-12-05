@@ -20,12 +20,12 @@ export default class ClassList extends React.Component {
           </p>
         </div>
 
-        {classes.toJS().map(cls => (
+        {classes.map(cls => (
           <a
-            key={cls.name}
+            key={cls.get('name')}
             onClick={() => handleClassClicked(cls)}
             className="panel-block is-active">
-            {cls.name}
+            {cls.get('name')}
           </a>
         ))}
 

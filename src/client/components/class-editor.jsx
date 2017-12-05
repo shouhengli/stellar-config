@@ -1,5 +1,4 @@
 import React from 'react';
-import R from 'ramda';
 
 export default class ClassEditor extends React.Component {
   render() {
@@ -7,7 +6,7 @@ export default class ClassEditor extends React.Component {
 
     return (
       <div className="panel schema-editor">
-        <div className="panel-heading">I am a header</div>
+        <div className="panel-heading">{selectedClass.get('name')}</div>
         <div className="panel-block is-size-7">
           <form className="column is-half">
             <div className="subtitle">Attributes</div>
@@ -20,7 +19,7 @@ export default class ClassEditor extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {R.toPairs(selectedClass.props).map(entry => (
+                {selectedClass.get('props').entrySeq().map(entry => (
                   <tr key={entry[0]}>
                     <th>{entry[0]}</th>
                     <td>{entry[1]}</td>
