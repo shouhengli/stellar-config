@@ -1,10 +1,10 @@
-const R = require('ramda');
-const React = require('react');
-const { connect } = require('react-redux');
-const Main = require('../components/main.jsx');
-const Nav = require('./ingestion-profile-nav.jsx');
-const View = require('./ingestion-profile-view.jsx');
-const { initLayoutAsync } = require('../action-creators/ui/graph-schema');
+import R from 'ramda';
+import React from 'react';
+import { connect } from 'react-redux';
+import Main from '../components/main.jsx';
+import Nav from './ingestion-profile-nav.jsx';
+import View from './ingestion-profile-view.jsx';
+import { initLayoutAsync } from '../action-creators/ui/graph-schema';
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -12,6 +12,6 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-module.exports = connect(null, mapDispatchToProps)(props => (
+export default connect(null, mapDispatchToProps)(props => (
   <Main Nav={Nav} View={View} {...props} />
 ));

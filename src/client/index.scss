@@ -294,9 +294,12 @@ div.view {
   >.column:nth-last-of-type(2){
     border-right: 1px solid $border;
   }
-.schema-editor {
-  form:first-of-type {
-    border-right: 1px solid $border;
+  .schema-editor {
+    .panel-block {
+      align-items: baseline;
+      form:first-of-type {
+        border-right: 1px solid $border;
+      }
+    }
   }
-}
 }

@@ -1,6 +1,6 @@
-const React = require('react');
+import React from 'react';
 
-class Main extends React.Component {
+export default class Main extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -15,5 +15,3 @@ class Main extends React.Component {
     this.props.handleComponentDidMount();
   }
 }
-
-module.exports = Main;

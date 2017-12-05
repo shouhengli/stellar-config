@@ -5,7 +5,7 @@ import GraphSchema from '../containers/graph-schema.jsx';
 
 export default class SplitView extends React.Component {
   render() {
-    const { classes, selectedClass, handleClassClicked } = this.props;
+    const { classes, relatedClassLinks, selectedClass, handleClassClicked } = this.props;
     const rightChildClassName = `view column ${selectedClass ? 'is-two-fifths' : 'is-four-fifths'} is-pulled-right`;
 
     return (
@@ -17,7 +17,7 @@ export default class SplitView extends React.Component {
           <div
             key="midChild"
             className="view column is-two-fifths is-pulled-left">
-            <ClassEditor />
+            <ClassEditor selectedClass={selectedClass} relatedClassLinks={relatedClassLinks} />
           </div>
         ) : (
             ''
