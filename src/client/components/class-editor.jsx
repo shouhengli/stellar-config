@@ -52,7 +52,7 @@ export default class ClassEditor extends React.Component {
               </thead>
               <tbody>
                 {relatedClassLinks.toJS().map(link => (
-                  <tr key={link.globalIndex}>
+                  <tr key={link.name}>
                     <th>{link.name}</th>
                     <td>{link.source}</td>
                     <td>{link.target}</td>

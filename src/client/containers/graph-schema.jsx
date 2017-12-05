@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import R from 'ramda';
+import { defaultTo, values } from 'ramda';
 import { Map } from 'immutable';
 
 import Arrow from '../components/graph-schema-arrow.jsx';
@@ -30,7 +30,6 @@ import { classesSelector } from '../selectors/ui/graph-schema-classes';
 import {
   classLinksSelector
 } from '../selectors/ui/graph-schema-class-links';
-import { selectedClassSelector, relatedClassLinksSelector, relatedClassesSelector } from '../selectors/ui/split-view';
 
 import {
   setLayoutDimensionsAndCoordinates,
@@ -50,11 +49,10 @@ import {
 } from '../action-creators/ingestion-profile';
 
 function mapStateToProps(state) {
-  const selectedClass = selectedClassSelector(state);
   return {
     editorContent: editorContentSelector(state),
-    classes: R.isNil(selectedClass) ? classesSelector(state) : relatedClassesSelector(state),
-    classLinks: R.isNil(selectedClass) ? classLinksSelector(state) : relatedClassLinksSelector(state),
+    classes: classesSelector(state),
+    classLinks: classLinksSelector(state),
     shouldUpdateClassLinkLengths: shouldUpdateClassLinkLengthsSelector(state),
     dimensions: dimensionsSelector(state),
     coordinates: coordinatesSelector(state),
@@ -77,17 +75,17 @@ function handleEditorContentChange(
       const [defaultX, defaultY] = layoutDimensions.map(d => d / 2);
 
       classes.forEach(cls => {
-        cls.x = R.defaultTo(defaultX, currentClasses.getIn([cls.name, 'x']));
-        cls.y = R.defaultTo(defaultY, currentClasses.getIn([cls.name, 'y']));
+        cls.x = defaultTo(defaultX, currentClasses.getIn([cls.name, 'x']));
+        cls.y = defaultTo(defaultY, currentClasses.getIn([cls.name, 'y']));
       });
 
       classLinks.forEach(l => {
-        l.x = R.defaultTo(
+        l.x = defaultTo(
           defaultX,
           currentClassLinks.getIn([getClassLinkKey(l), 'x'])
         );
 
-        l.y = R.defaultTo(
+        l.y = defaultTo(
           defaultY,
           currentClassLinks.getIn([getClassLinkKey(l), 'y'])
         );
@@ -110,7 +108,7 @@ function mapDispatchToProps(dispatch) {
     updateClassLinkLengths: classLinkPaths =>
       dispatch(
         updateClassLinkLengthsAsync(
-          R.values(classLinkPaths).map(({ l, p }) => {
+          values(classLinkPaths).map(({ l, p }) => {
             const classLink = l.toJS();
             classLink.length = p.getLength();
             return classLink;
