@@ -18,3 +18,13 @@ export const relatedClassLinksSelector = createSelector(
       classLinks.valueSeq().filter(link =>
         contains(selectedClass.get('name'), [link.get('source'), link.get('target')]))
 );
+
+export const classIndexesToEditSelector = createSelector(
+  splitViewSelector,
+  splitView => splitView.get('classIndexesToEdit')
+);
+
+export const classLinkIndexesToEditSelector = createSelector(
+  splitViewSelector,
+  splitView => splitView.get('classLinkIndexesToEdit')
+);

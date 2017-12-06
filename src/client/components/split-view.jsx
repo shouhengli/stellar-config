@@ -6,18 +6,37 @@ import R from 'ramda';
 
 export default class SplitView extends React.Component {
   render() {
-    const { classes, relatedClassLinks, selectedClass, handleClassClicked } = this.props;
+    const {
+      classes,
+      relatedClassLinks,
+      selectedClass,
+      classIndexesToEdit,
+      classLinkIndexesToEdit,
+      handleClassClicked,
+      handleCreateNewClass,
+      editAttribute,
+      editClassLink,
+      classNames
+     } = this.props;
 
     return (
       <div className="split-view columns">
         <div key="leftChild" className="view column is-one-fifth">
-          <ClassList classes={classes} handleClassClicked={handleClassClicked} />
+          <ClassList classes={classes} handleClassClicked={handleClassClicked} handleCreateNewClass={handleCreateNewClass} />
         </div>
         {R.isNil(selectedClass) ? '' : (
           <div
             key="midChild"
-            className="view column is-half">
-            <ClassEditor selectedClass={selectedClass} relatedClassLinks={relatedClassLinks} />
+            className="view column is-two-fifths">
+            <ClassEditor
+              selectedClass={selectedClass}
+              classIndexesToEdit={classIndexesToEdit}
+              classLinkIndexesToEdit={classLinkIndexesToEdit}
+              relatedClassLinks={relatedClassLinks}
+              editAttribute={editAttribute}
+              editClassLink={editClassLink}
+              classNames={classNames}
+            />
           </div>
         )}
         <div

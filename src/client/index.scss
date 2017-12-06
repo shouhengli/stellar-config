@@ -298,8 +298,34 @@ div.view {
   .schema-editor {
     .panel-block {
       align-items: baseline;
-      form:first-of-type {
-        border-right: 1px solid $border;
+      .column {
+        &:first-of-type {
+          border-right: 1px solid $border;
+        }
+        td.is-narrow, th.is-narrow {
+          padding-left: 5px;
+          padding-right: 5px;
+        }
+        tr {
+          td.is-narrow a {
+            visibility: hidden;
+          }
+          &:hover {
+            td.is-narrow a {
+              visibility: visible;
+            }
+          }
+          td div[contenteditable="true"] {
+            border: 1px solid $input-border-color;
+            &:focus {
+              border-color: $input-focus-border-color;
+            }
+            &:hover {
+              border-color: $input-hover-border-color;
+            }
+            padding: 3.5px 6.5px;
+          }
+        }
       }
     }
   }

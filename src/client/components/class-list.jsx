@@ -2,7 +2,7 @@ import React from 'react';
 
 export default class ClassList extends React.Component {
   render() {
-    const { classes, handleClassClicked } = this.props;
+    const { classes, handleClassClicked, handleCreateNewClass } = this.props;
 
     return (
       <nav className="panel">
@@ -30,7 +30,9 @@ export default class ClassList extends React.Component {
         ))}
 
         <div className="panel-block">
-          <button className="button is-link is-outlined is-fullwidth">
+          <button
+            onClick={handleCreateNewClass}
+            className="button is-link is-outlined is-fullwidth">
             <span className="panel-icon">
               <i className="fa fa-plus" />
             </span>
