@@ -11,12 +11,30 @@ export default class ClassEditor extends React.Component {
       editClassLink,
       classIndexesToEdit,
       classLinkIndexesToEdit,
-      classNames
+      classNames,
+      isEditing,
+      saveEdit,
+      cancelEdit
     } = this.props;
 
     return (
       <div className="panel schema-editor">
-        <div className="panel-heading">{selectedClass.get('name')}</div>
+        <div className="panel-heading">
+          {selectedClass.get('name') || 'New Class'}
+          <div className="field is-grouped is-pulled-right">
+            <p className="control">
+              <a className={'button is-small is-primary ' + (isEditing ? '' : 'is-invisible')}
+                onClick={saveEdit}>
+                Save
+              </a>
+            </p>
+            <p className="control">
+              <a className="button is-small" onClick={cancelEdit}>
+                Cancel
+              </a>
+            </p>
+          </div>
+        </div>
         <div className="panel-block is-size-7">
           <form className="column is-half">
             <div className="subtitle">Attributes</div>

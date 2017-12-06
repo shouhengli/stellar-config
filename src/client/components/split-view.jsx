@@ -16,7 +16,10 @@ export default class SplitView extends React.Component {
       handleCreateNewClass,
       editAttribute,
       editClassLink,
-      classNames
+      classNames,
+      isEditing,
+      saveEdit,
+      cancelEdit
      } = this.props;
 
     return (
@@ -36,6 +39,9 @@ export default class SplitView extends React.Component {
               editAttribute={editAttribute}
               editClassLink={editClassLink}
               classNames={classNames}
+              isEditing={isEditing}
+              saveEdit={saveEdit}
+              cancelEdit={cancelEdit}
             />
           </div>
         )}

@@ -4,7 +4,8 @@ import actions from '../../actions';
 const initialState = fromJS({
   selectedClass: null,
   classIndexesToEdit: [],
-  classLinkIndexesToEdit: []
+  classLinkIndexesToEdit: [],
+  isEditing: false
 });
 
 export default function reduce(state = initialState, action) {
@@ -14,12 +15,23 @@ export default function reduce(state = initialState, action) {
         .set('selectedClass', action.selectedClass)
         .set('classIndexesToEdit', fromJS([]))
         .set('classLinkIndexesToEdit', fromJS([]));
-    case actions.SPLIT_VIEW_CLASS_EDIT_CLASS:
+    case actions.SPLIT_VIEW_EDIT_CLASS:
       return state.set('classIndexesToEdit',
-        state.get('classIndexesToEdit').push(action.classIndex));
-    case actions.SPLIT_VIEW_CLASS_LINK_EDIT_CLASS:
+        state.get('classIndexesToEdit').push(action.classIndex))
+        .set('isEditing', true);
+    case actions.SPLIT_VIEW_EDIT_CLASS_LINK:
       return state.set('classLinkIndexesToEdit',
-        state.get('classLinkIndexesToEdit').push(action.classLinkIndex));
+        state.get('classLinkIndexesToEdit').push(action.classLinkIndex))
+        .set('isEditing', true);
+    case actions.SPLIT_VIEW_SAVE_EDIT:
+      return state.set('isEditing', false)
+        .set('classIndexesToEdit', fromJS([]))
+        .set('classLinkIndexesToEdit', fromJS([]));
+    case actions.SPLIT_VIEW_CANCEL_EDIT:
+      return state.set('isEditing', false)
+        .set('selectedClass', null)
+        .set('classIndexesToEdit', fromJS([]))
+        .set('classLinkIndexesToEdit', fromJS([]));
     default:
       return state;
   }

@@ -6,13 +6,16 @@ import {
   classSelected,
   addNewClass,
   editAttribute,
-  editClassLink
+  editClassLink,
+  saveEdit,
+  cancelEdit
 } from '../action-creators/ui/split-view';
 import {
   selectedClassSelector,
   relatedClassLinksSelector,
   classIndexesToEditSelector,
-  classLinkIndexesToEditSelector
+  classLinkIndexesToEditSelector,
+  isEditingSelector
 } from '../selectors/ui/split-view';
 
 function mapStateToProps(state) {
@@ -22,7 +25,8 @@ function mapStateToProps(state) {
     classNames: classNamesSelector(state),
     relatedClassLinks: relatedClassLinksSelector(state),
     classIndexesToEdit: classIndexesToEditSelector(state),
-    classLinkIndexesToEdit: classLinkIndexesToEditSelector(state)
+    classLinkIndexesToEdit: classLinkIndexesToEditSelector(state),
+    isEditing: isEditingSelector(state)
   };
 }
 
@@ -31,7 +35,9 @@ function mapDispatchToProps(dispatch, ownProps) {
     handleClassClicked: compose(dispatch, classSelected),
     handleCreateNewClass: compose(dispatch, addNewClass),
     editAttribute: compose(dispatch, editAttribute),
-    editClassLink: compose(dispatch, editClassLink)
+    editClassLink: compose(dispatch, editClassLink),
+    saveEdit: compose(dispatch, saveEdit),
+    cancelEdit: compose(dispatch, cancelEdit)
   };
 }
 

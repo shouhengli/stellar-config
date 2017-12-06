@@ -28,3 +28,8 @@ export const classLinkIndexesToEditSelector = createSelector(
   splitViewSelector,
   splitView => splitView.get('classLinkIndexesToEdit')
 );
+
+export const isEditingSelector = createSelector(
+  splitViewSelector,
+  splitView => splitView.get('isEditing')
+);

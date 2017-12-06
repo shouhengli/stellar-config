@@ -17,14 +17,26 @@ export function addNewClass() {
 
 export function editAttribute(classIndex) {
   return {
-    type: actions.SPLIT_VIEW_CLASS_EDIT_CLASS,
+    type: actions.SPLIT_VIEW_EDIT_CLASS,
     classIndex
   };
 }
 
 export function editClassLink(classLinkIndex) {
   return {
-    type: actions.SPLIT_VIEW_CLASS_LINK_EDIT_CLASS,
+    type: actions.SPLIT_VIEW_EDIT_CLASS_LINK,
     classLinkIndex
+  };
+}
+
+export function saveEdit() {
+  return {
+    type: actions.SPLIT_VIEW_SAVE_EDIT
+  };
+}
+
+export function cancelEdit() {
+  return {
+    type: actions.SPLIT_VIEW_CANCEL_EDIT
   };
 }
