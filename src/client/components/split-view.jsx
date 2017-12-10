@@ -15,38 +15,53 @@ export default class SplitView extends React.Component {
       handleClassClicked,
       handleCreateNewClass,
       editAttribute,
+      editClassName,
       editClassLink,
       classNames,
       isEditing,
+      isEditingClassName,
       saveEdit,
-      cancelEdit
-     } = this.props;
+      cancelEdit,
+      closeEdit,
+      addNewAttribute,
+      addNewLink
+    } = this.props;
 
     return (
       <div className="split-view columns">
         <div key="leftChild" className="view column is-one-fifth">
-          <ClassList classes={classes} handleClassClicked={handleClassClicked} handleCreateNewClass={handleCreateNewClass} />
+          <ClassList
+            classes={classes}
+            handleClassClicked={handleClassClicked}
+            handleCreateNewClass={handleCreateNewClass}
+            isEditing={isEditing}
+            selectedClass={selectedClass}
+          />
         </div>
-        {R.isNil(selectedClass) ? '' : (
-          <div
-            key="midChild"
-            className="view column is-two-fifths">
+        {R.isNil(selectedClass) ? (
+          ''
+        ) : (
+          <div key="midChild" className="view column is-two-fifths">
             <ClassEditor
               selectedClass={selectedClass}
               classIndexesToEdit={classIndexesToEdit}
               classLinkIndexesToEdit={classLinkIndexesToEdit}
               relatedClassLinks={relatedClassLinks}
               editAttribute={editAttribute}
+              editClassName={editClassName}
               editClassLink={editClassLink}
               classNames={classNames}
               isEditing={isEditing}
+              isEditingClassName={isEditingClassName}
               saveEdit={saveEdit}
               cancelEdit={cancelEdit}
+              closeEdit={closeEdit}
+              addNewAttribute={addNewAttribute}
+              addNewLink={addNewLink}
             />
           </div>
         )}
-        <div
-          key="rightChild" className="view column">
+        <div key="rightChild" className="view column">
           <GraphSchema />
         </div>
       </div>

@@ -1,5 +1,4 @@
 import actions from '../../actions';
-import { fromJS } from 'immutable';
 
 export function classSelected(selectedClass) {
   return {
@@ -8,10 +7,10 @@ export function classSelected(selectedClass) {
   };
 }
 
-export function addNewClass() {
+export function addNewClass(cls) {
   return {
-    type: actions.SPLIT_VIEW_CLASS_SELECTED,
-    selectedClass: fromJS({ props: {} })
+    type: actions.SPLIT_VIEW_ADD_NEW_CLASS,
+    class: cls
   };
 }
 
@@ -29,6 +28,12 @@ export function editClassLink(classLinkIndex) {
   };
 }
 
+export function editClassName() {
+  return {
+    type: actions.SPLIT_VIEW_EDIT_CLASS_NAME
+  };
+}
+
 export function saveEdit() {
   return {
     type: actions.SPLIT_VIEW_SAVE_EDIT
@@ -38,5 +43,23 @@ export function saveEdit() {
 export function cancelEdit() {
   return {
     type: actions.SPLIT_VIEW_CANCEL_EDIT
+  };
+}
+
+export function closeEdit() {
+  return {
+    type: actions.SPLIT_VIEW_CLOSE_EDIT
+  };
+}
+
+export function addNewAttribute() {
+  return {
+    type: actions.SPLIT_VIEW_ADD_NEW_ATTRIBUTE
+  };
+}
+
+export function addNewLink() {
+  return {
+    type: actions.SPLIT_VIEW_ADD_NEW_LINK
   };
 }

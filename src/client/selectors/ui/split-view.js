@@ -14,9 +14,16 @@ export const relatedClassLinksSelector = createSelector(
   selectedClassSelector,
   classLinksSelector,
   (selectedClass, classLinks) =>
-    isNil(selectedClass) ? List() :
-      classLinks.valueSeq().filter(link =>
-        contains(selectedClass.get('name'), [link.get('source'), link.get('target')]))
+    isNil(selectedClass)
+      ? List()
+      : classLinks
+          .valueSeq()
+          .filter(link =>
+            contains(selectedClass.get('name'), [
+              link.get('source'),
+              link.get('target')
+            ])
+          )
 );
 
 export const classIndexesToEditSelector = createSelector(
@@ -29,7 +36,11 @@ export const classLinkIndexesToEditSelector = createSelector(
   splitView => splitView.get('classLinkIndexesToEdit')
 );
 
-export const isEditingSelector = createSelector(
+export const isEditingSelector = createSelector(splitViewSelector, splitView =>
+  splitView.get('isEditing')
+);
+
+export const isEditingClassNameSelector = createSelector(
   splitViewSelector,
-  splitView => splitView.get('isEditing')
+  splitView => splitView.get('isEditingClassName')
 );

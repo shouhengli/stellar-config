@@ -292,38 +292,61 @@ div.view {
 
 .split-view {
   margin-top: 0;
-  >.column:nth-last-of-type(2){
+  margin-left: 0;
+  > .column:nth-last-of-type(2) {
     border-right: 1px solid $border;
   }
+  *[contenteditable='true'] {
+    border: 1px solid $input-border-color;
+    padding: 3.5px 6.5px;
+    background-color: white;
+    &:focus {
+      border-color: $input-focus-border-color;
+    }
+    &:hover {
+      border-color: $input-hover-border-color;
+    }
+  }
   .schema-editor {
+    .panel-heading {
+      .button.hover-button {
+        visibility: hidden;
+        color: #3273dc;
+      }
+      &:hover {
+        .button.is-text {
+          visibility: visible;
+        }
+      }
+      .close-editor {
+        margin-top: -9px;
+        margin-right: -15px;
+        border: none;
+        background: transparent;
+      }
+      span[contenteditable='true'] {
+        padding: 5px 15px;
+      }
+    }
     .panel-block {
       align-items: baseline;
       .column {
         &:first-of-type {
           border-right: 1px solid $border;
         }
-        td.is-narrow, th.is-narrow {
+        td.is-narrow,
+        th.is-narrow {
           padding-left: 3px;
           padding-right: 3px;
         }
         tr {
-          td.is-narrow a {
+          td .hover-button {
             visibility: hidden;
           }
           &:hover {
-            td.is-narrow a {
+            td .hover-button {
               visibility: visible;
             }
-          }
-          td div[contenteditable="true"] {
-            border: 1px solid $input-border-color;
-            &:focus {
-              border-color: $input-focus-border-color;
-            }
-            &:hover {
-              border-color: $input-hover-border-color;
-            }
-            padding: 3.5px 6.5px;
           }
         }
       }

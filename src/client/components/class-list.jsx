@@ -2,7 +2,13 @@ import React from 'react';
 
 export default class ClassList extends React.Component {
   render() {
-    const { classes, handleClassClicked, handleCreateNewClass } = this.props;
+    const {
+      selectedClass,
+      classes,
+      handleClassClicked,
+      handleCreateNewClass,
+      isEditing
+    } = this.props;
 
     return (
       <nav className="panel">
@@ -24,12 +30,17 @@ export default class ClassList extends React.Component {
           <a
             key={cls.get('name')}
             onClick={() => handleClassClicked(cls)}
-            className="panel-block is-active">
+            className={
+              'panel-block' +
+              (selectedClass && cls.get('name') === selectedClass.get('name')
+                ? ' is-active'
+                : '')
+            }>
             {cls.get('name')}
           </a>
         ))}
 
-        <div className="panel-block">
+        <div className={'panel-block' + (isEditing ? ' is-invisible' : '')}>
           <button
             onClick={handleCreateNewClass}
             className="button is-link is-outlined is-fullwidth">

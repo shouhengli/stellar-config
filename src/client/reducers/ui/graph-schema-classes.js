@@ -56,7 +56,6 @@ export default function reduce(state = initialState, action) {
 
     case actions.GRAPH_SCHEMA_UPDATE_CLASS_OUTER_RADIUS:
       return state.setIn([action.className, 'outerRadius'], action.outerRadius);
-
     default:
       return state;
   }

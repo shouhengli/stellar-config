@@ -13,18 +13,40 @@ export default class ClassEditor extends React.Component {
       classLinkIndexesToEdit,
       classNames,
       isEditing,
+      isEditingClassName,
       saveEdit,
-      cancelEdit
+      cancelEdit,
+      closeEdit,
+      addNewAttribute,
+      addNewLink,
+      editClassName
     } = this.props;
 
     return (
       <div className="panel schema-editor">
         <div className="panel-heading">
-          {selectedClass.get('name') || 'New Class'}
-          <div className="field is-grouped is-pulled-right">
+          <span contentEditable={isEditingClassName}>
+            {selectedClass.get('name')}
+          </span>
+          <a
+            className={`hover-button button is-small is-text fa fa-pencil ${(isEditingClassName &&
+              'is-invisible') ||
+              ''}`}
+            onClick={editClassName}
+          />
+          <a
+            className={`close-editor button is-pulled-right is-medium ${
+              isEditing ? 'is-invisible' : ''
+            }`}
+            onClick={closeEdit}>
+            <span className="icon is-medium fa fa-times fa-lg" />
+          </a>
+          <div
+            className={`field is-grouped is-pulled-right ${
+              isEditing ? '' : 'is-invisible'
+            }`}>
             <p className="control">
-              <a className={'button is-small is-primary ' + (isEditing ? '' : 'is-invisible')}
-                onClick={saveEdit}>
+              <a className="button is-small is-primary" onClick={saveEdit}>
                 Save
               </a>
             </p>
@@ -43,44 +65,60 @@ export default class ClassEditor extends React.Component {
                 <tr>
                   <th>Name</th>
                   <th>Type</th>
-                  <th className="is-narrow"></th>
-                  <th className="is-narrow"></th>
+                  <th className="is-narrow" />
+                  <th className="is-narrow" />
                 </tr>
               </thead>
               <tbody>
-                {selectedClass.get('props').entrySeq().map((entry, index) => (
-                  <tr key={index}>
-                    <td>
-                      <div contentEditable={classIndexesToEdit.contains(index)}>{entry[0]}</div>
-                    </td>
-                    <td>
-                      {classIndexesToEdit.contains(index) ? (
-                        <div className="select">
-                          <select value={entry[1]}>
-                            {graphSchemaPrimitiveTypes.map(t => <option key={t}>{t}</option>)}
-                          </select>
-                        </div>)
-                        :
-                        entry[1]
-                      }
-                    </td>
-                    <td className="is-narrow">
-                      <a className={classIndexesToEdit.contains(index) ? 'fa fa-pencil is-invisible' : 'fa fa-pencil'}
-                        onClick={() => editAttribute(index)} />
-                    </td>
-                    <td className="is-narrow">
-                      <a className="fa fa-times" />
-                    </td>
-                  </tr>
-                ))}
+                {selectedClass
+                  .get('props')
+                  .entrySeq()
+                  .map((entry, index) => (
+                    <tr key={index}>
+                      <td>
+                        <div
+                          contentEditable={classIndexesToEdit.contains(index)}>
+                          {entry[0]}
+                        </div>
+                      </td>
+                      <td>
+                        {classIndexesToEdit.contains(index) ? (
+                          <div className="select">
+                            <select value={entry[1]}>
+                              {graphSchemaPrimitiveTypes.map(t => (
+                                <option key={t}>{t}</option>
+                              ))}
+                            </select>
+                          </div>
+                        ) : (
+                          entry[1]
+                        )}
+                      </td>
+                      <td className="is-narrow">
+                        <a
+                          className={`hover-button fa fa-pencil ${
+                            classIndexesToEdit.contains(index)
+                              ? 'is-invisible'
+                              : ''
+                          }`}
+                          onClick={() => editAttribute(index)}
+                        />
+                      </td>
+                      <td className="is-narrow">
+                        <a className="fa fa-times hover-button" />
+                      </td>
+                    </tr>
+                  ))}
                 <tr>
                   <td colSpan="4">
-                    <button className="button is-link is-outlined is-fullwidth">
+                    <a
+                      onClick={addNewAttribute}
+                      className="button is-link is-outlined is-fullwidth">
                       <span className="panel-icon">
                         <i className="fa fa-plus" />
                       </span>
                       Add a new attribute
-                    </button>
+                    </a>
                   </td>
                 </tr>
               </tbody>
@@ -94,15 +132,18 @@ export default class ClassEditor extends React.Component {
                   <th>Name</th>
                   <th>Source</th>
                   <th>target</th>
-                  <td className="is-narrow"></td>
-                  <th className="is-narrow"></th>
+                  <td className="is-narrow" />
+                  <th className="is-narrow" />
                 </tr>
               </thead>
               <tbody>
                 {relatedClassLinks.toJS().map((link, index) => (
                   <tr key={link.name}>
                     <td>
-                      <div contentEditable={classLinkIndexesToEdit.contains(index)}>
+                      <div
+                        contentEditable={classLinkIndexesToEdit.contains(
+                          index
+                        )}>
                         {link.name}
                       </div>
                     </td>
@@ -112,10 +153,10 @@ export default class ClassEditor extends React.Component {
                           <select value={link.source}>
                             {classNames.map(t => <option key={t}>{t}</option>)}
                           </select>
-                        </div>)
-                        :
+                        </div>
+                      ) : (
                         link.source
-                      }
+                      )}
                     </td>
                     <td>
                       {classLinkIndexesToEdit.contains(index) ? (
@@ -123,26 +164,36 @@ export default class ClassEditor extends React.Component {
                           <select value={link.target}>
                             {classNames.map(t => <option key={t}>{t}</option>)}
                           </select>
-                        </div>)
-                        :
+                        </div>
+                      ) : (
                         link.target
-                      }
+                      )}
                     </td>
                     <td className="is-narrow">
-                      <a className={classLinkIndexesToEdit.contains(index) ? 'fa fa-pencil is-invisible' : 'fa fa-pencil'}
-                        onClick={() => editClassLink(index)} />
+                      <a
+                        className={`hover-button fa fa-pencil ${
+                          classLinkIndexesToEdit.contains(index)
+                            ? 'is-invisible'
+                            : ''
+                        }`}
+                        onClick={() => editClassLink(index)}
+                      />
                     </td>
-                    <td className="is-narrow"><a className="fa fa-times" /></td>
+                    <td className="is-narrow">
+                      <a className="hover-button fa fa-times" />
+                    </td>
                   </tr>
                 ))}
                 <tr>
                   <td colSpan="5">
-                    <button className="button is-link is-outlined is-fullwidth">
+                    <a
+                      onClick={addNewLink}
+                      className="button is-link is-outlined is-fullwidth">
                       <span className="panel-icon">
                         <i className="fa fa-plus" />
                       </span>
                       Add a new link
-                    </button>
+                    </a>
                   </td>
                 </tr>
               </tbody>
