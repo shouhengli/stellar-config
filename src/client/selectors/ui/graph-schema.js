@@ -1,12 +1,6 @@
 const { createSelector } = require('reselect');
-const { defaultToEmptyString } = require('../../util');
 
 const graphSchemaSelector = state => state.getIn(['ui', 'graphSchema']);
-
-export const editorContentSelector = createSelector(
-  graphSchemaSelector,
-  graphSchema => defaultToEmptyString(graphSchema.get('editorContent'))
-);
 
 export const shouldUpdateClassLinkLengthsSelector = createSelector(
   graphSchemaSelector,

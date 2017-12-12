@@ -58,13 +58,14 @@ function updateGraphSchema(graphSchema) {
     R.evolve(
       {
         classes: R.pipe(
-          defaultToEmptyArray,
-          R.map(cls => [cls.name, createPersistentClass(cls)]),
+          defaultToEmptyList,
+          R.map(cls => [cls.get('name'), createPersistentClass(cls)]),
+          pairs => pairs.toJS(),
           R.fromPairs,
           fromJS
         ),
         classLinks: R.pipe(
-          defaultToEmptyArray,
+          defaultToEmptyList,
           R.reduce(
             (s, l) =>
               s.set(getClassLinkKey(l), fromJS(createPersistentClassLink(l))),
@@ -105,12 +106,12 @@ export default function reduce(state = initialState, action) {
       return state
         .set('name', action.name)
         .set(
-          'sources',
-          defaultToEmptyList(fromJS(action.content && action.content.sources))
+        'sources',
+        defaultToEmptyList(fromJS(action.content && action.content.sources))
         )
         .set(
-          'graphSchema',
-          loadGraphSchema(action.content && action.content.graphSchema)
+        'graphSchema',
+        loadGraphSchema(action.content && action.content.graphSchema)
         )
         .set('mapping', loadMapping(action.content && action.content.mapping))
         .set('status', CONFIG_STATUS_NORMAL);
@@ -132,8 +133,8 @@ export default function reduce(state = initialState, action) {
     case actions.INGESTION_PROFILE_DELETE_SOURCE:
       return state
         .set(
-          'sources',
-          state.get('sources').filterNot(R.curry(is)(action.source))
+        'sources',
+        state.get('sources').filterNot(R.curry(is)(action.source))
         )
         .set('status', CONFIG_STATUS_CHANGED);
 

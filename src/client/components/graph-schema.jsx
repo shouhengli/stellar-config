@@ -86,9 +86,9 @@ class GraphSchema extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!is(prevProps.editorContent, this.props.editorContent)) {
-      this.props.handleEditorContentChange(
-        this.props.editorContent,
+    if (!is(prevProps.graphSchema, this.props.graphSchema)) {
+      this.props.handleGraphSchemaChange(
+        this.props.graphSchema,
         this.props.dimensions.toJS(),
         this.props.classes,
         this.props.classLinks
@@ -103,7 +103,7 @@ class GraphSchema extends React.Component {
     this.props.init(
       [this.svg.clientWidth, this.svg.clientHeight],
       [left, top],
-      this.props.editorContent
+      this.props.graphSchema
     );
   }
 

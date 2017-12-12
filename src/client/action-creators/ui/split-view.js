@@ -15,9 +15,12 @@ export function addNewClass(cls) {
 }
 
 export function editAttribute(classIndex) {
-  return {
-    type: actions.SPLIT_VIEW_EDIT_CLASS,
-    classIndex
+  return dispatch => {
+    dispatch({
+      type: actions.SPLIT_VIEW_EDIT_CLASS,
+      classIndex
+    });
+    dispatch({ type: actions.GRAPH_SCHEMA_SET_GRAPH_SCHEMA });
   };
 }
 

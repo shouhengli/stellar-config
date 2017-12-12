@@ -19,13 +19,16 @@ export default class ClassEditor extends React.Component {
       closeEdit,
       addNewAttribute,
       addNewLink,
-      editClassName
+      editClassName,
+      updateAttributeName,
+      updateAttributeType,
+      updateClassName
     } = this.props;
 
     return (
       <div className="panel schema-editor">
         <div className="panel-heading">
-          <span contentEditable={isEditingClassName}>
+          <span onChange={updateClassName} contentEditable={isEditingClassName}>
             {selectedClass.get('name')}
           </span>
           <a
@@ -77,6 +80,7 @@ export default class ClassEditor extends React.Component {
                     <tr key={index}>
                       <td>
                         <div
+                          onChange={updateAttributeName}
                           contentEditable={classIndexesToEdit.contains(index)}>
                           {entry[0]}
                         </div>
@@ -84,7 +88,9 @@ export default class ClassEditor extends React.Component {
                       <td>
                         {classIndexesToEdit.contains(index) ? (
                           <div className="select">
-                            <select value={entry[1]}>
+                            <select
+                              value={entry[1]}
+                              onChange={updateAttributeType}>
                               {graphSchemaPrimitiveTypes.map(t => (
                                 <option key={t}>{t}</option>
                               ))}

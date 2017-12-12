@@ -168,13 +168,6 @@ function zoom(offset, w, h) {
   };
 }
 
-function setEditorContent(content) {
-  return {
-    type: actions.GRAPH_SCHEMA_SET_EDITOR_CONTENT,
-    content
-  };
-}
-
 module.exports = {
   startClassDrag,
   startClassLinkDrag,
@@ -191,6 +184,5 @@ module.exports = {
   updateClassPosition,
   updateClassLinkPosition,
   updatePan,
-  zoom,
-  setEditorContent
+  zoom
 };

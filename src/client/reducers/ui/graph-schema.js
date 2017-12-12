@@ -13,7 +13,6 @@ import { ZOOM_STEP, MAX_ZOOM, MIN_ZOOM } from '../../ingestion-profile';
  * @type {Map}
  */
 const initialState = fromJS({
-  editorContent: '',
   drag: {},
   shouldUpdateClassLinkLengths: false,
   dimensions: [0, 0],
@@ -27,15 +26,6 @@ const initialState = fromJS({
 
 export default function reduce(state = initialState, action) {
   switch (action.type) {
-    case actions.INGESTION_PROFILE_LOAD:
-      return state.set(
-        'editorContent',
-        (action.content && action.content.editorContent) || ''
-      );
-
-    case actions.GRAPH_SCHEMA_SET_EDITOR_CONTENT:
-      return state.set('editorContent', action.content || '');
-
     case actions.GRAPH_SCHEMA_UPDATE_CONTENT:
       return state
         .set('shouldUpdateClassLinkLengths', false)
@@ -82,36 +72,36 @@ export default function reduce(state = initialState, action) {
     case actions.GRAPH_SCHEMA_UPDATE_CLASS_POSITION:
       return state
         .setIn(
-          ['drag', 'class', 'fromX'],
-          state.getIn(['drag', 'class', 'fromX']) + action.dx
+        ['drag', 'class', 'fromX'],
+        state.getIn(['drag', 'class', 'fromX']) + action.dx
         )
         .setIn(
-          ['drag', 'class', 'fromY'],
-          state.getIn(['drag', 'class', 'fromY']) + action.dy
+        ['drag', 'class', 'fromY'],
+        state.getIn(['drag', 'class', 'fromY']) + action.dy
         )
         .set('shouldUpdateClassLinkLengths', true);
 
     case actions.GRAPH_SCHEMA_UPDATE_CLASS_LINK_POSITION:
       return state
         .setIn(
-          ['drag', 'classLink', 'fromX'],
-          state.getIn(['drag', 'classLink', 'fromX']) + action.dx
+        ['drag', 'classLink', 'fromX'],
+        state.getIn(['drag', 'classLink', 'fromX']) + action.dx
         )
         .setIn(
-          ['drag', 'classLink', 'fromY'],
-          state.getIn(['drag', 'classLink', 'fromY']) + action.dy
+        ['drag', 'classLink', 'fromY'],
+        state.getIn(['drag', 'classLink', 'fromY']) + action.dy
         )
         .set('shouldUpdateClassLinkLengths', true);
 
     case actions.GRAPH_SCHEMA_UPDATE_PAN:
       return state
         .setIn(
-          ['drag', 'pan', 'fromX'],
-          state.getIn(['drag', 'pan', 'fromX']) + action.dx
+        ['drag', 'pan', 'fromX'],
+        state.getIn(['drag', 'pan', 'fromX']) + action.dx
         )
         .setIn(
-          ['drag', 'pan', 'fromY'],
-          state.getIn(['drag', 'pan', 'fromY']) + action.dy
+        ['drag', 'pan', 'fromY'],
+        state.getIn(['drag', 'pan', 'fromY']) + action.dy
         )
         .setIn(['pan', 'x'], state.getIn(['pan', 'x']) + action.dx)
         .setIn(['pan', 'y'], state.getIn(['pan', 'y']) + action.dy);

@@ -13,11 +13,12 @@ import GraphSchema from '../components/graph-schema.jsx';
 import {
   GraphSchemaFormatError,
   getClassLinkKey,
-  parseYaml
+  createUIClassesAndLinksFromGraphSchema
 } from '../ingestion-profile';
 
+import { graphSchemaSelector } from '../selectors/ingestion-profile';
+
 import {
-  editorContentSelector,
   shouldUpdateClassLinkLengthsSelector,
   dimensionsSelector,
   coordinatesSelector,
@@ -50,9 +51,9 @@ import {
 
 function mapStateToProps(state) {
   return {
-    editorContent: editorContentSelector(state),
     classes: classesSelector(state),
     classLinks: classLinksSelector(state),
+    graphSchema: graphSchemaSelector(state),
     shouldUpdateClassLinkLengths: shouldUpdateClassLinkLengthsSelector(state),
     dimensions: dimensionsSelector(state),
     coordinates: coordinatesSelector(state),
@@ -62,41 +63,40 @@ function mapStateToProps(state) {
   };
 }
 
-function handleEditorContentChange(
+function handleGraphSchemaChange(
   dispatch,
-  editorContent,
+  graphSchema,
   layoutDimensions,
   currentClasses = Map(),
   currentClassLinks = Map()
 ) {
   dispatch(stopLayoutAsync())
-    .then(() => parseYaml(editorContent))
+    .then(() => createUIClassesAndLinksFromGraphSchema(graphSchema))
     .then(({ classes, classLinks }) => {
       const [defaultX, defaultY] = layoutDimensions.map(d => d / 2);
 
-      classes.forEach(cls => {
-        cls.x = defaultTo(defaultX, currentClasses.getIn([cls.name, 'x']));
-        cls.y = defaultTo(defaultY, currentClasses.getIn([cls.name, 'y']));
-      });
+      const transformedClasses = classes.map(cls => cls
+        .set('x', defaultTo(defaultX, currentClasses.getIn([cls.get('name'), 'x'])))
+        .set('y', defaultTo(defaultY, currentClasses.getIn([cls.get('name'), 'y'])))
+      );
 
-      classLinks.forEach(l => {
-        l.x = defaultTo(
+      const transformedClassLinks = classLinks.map(l => l
+        .set('x', defaultTo(
           defaultX,
           currentClassLinks.getIn([getClassLinkKey(l), 'x'])
-        );
-
-        l.y = defaultTo(
+        ))
+        .set('y', defaultTo(
           defaultY,
           currentClassLinks.getIn([getClassLinkKey(l), 'y'])
-        );
-      });
+        ))
+      );
 
-      dispatch(loadGraphSchemaContent(classes, classLinks));
+      dispatch(loadGraphSchemaContent(transformedClasses, transformedClassLinks));
 
-      return { classes, classLinks };
+      return [transformedClasses, transformedClassLinks];
     })
-    .then(({ classes, classLinks }) =>
-      dispatch(startLayoutAsync(classes, classLinks, layoutDimensions))
+    .then(([classes, classLinks]) =>
+      dispatch(startLayoutAsync(classes.toJS(), classLinks.toJS(), layoutDimensions))
     )
     .catch(GraphSchemaFormatError, error => {
       console.log(error.message);
@@ -167,27 +167,26 @@ function mapDispatchToProps(dispatch) {
       dispatch(startPan(event.pageX / zoom, event.pageY / zoom));
     },
 
-    init: (dimensions, coordinates, editorContent) => {
+    init: (dimensions, coordinates, graphSchema) => {
       dispatch(setLayoutDimensionsAndCoordinates(dimensions, coordinates));
-      handleEditorContentChange(dispatch, editorContent, dimensions);
+      handleGraphSchemaChange(dispatch, graphSchema, dimensions);
     },
 
     stopLayout: () => dispatch(stopLayoutAsync()),
 
-    handleEditorContentChange: (
-      editorContent,
+    handleGraphSchemaChange: (
+      graphSchema,
       layoutDimensions,
       currentClasses,
       currentClassLinks
     ) =>
-      handleEditorContentChange(
+      handleGraphSchemaChange(
         dispatch,
-        editorContent,
+        graphSchema,
         layoutDimensions,
         currentClasses,
         currentClassLinks
       ),
-
     handleWheel: (event, coordinates, drag) => {
       event.preventDefault();
       event.stopPropagation();

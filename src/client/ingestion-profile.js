@@ -1,7 +1,5 @@
 const R = require('ramda');
-const P = require('bluebird');
-const { Map } = require('immutable');
-const yaml = require('js-yaml');
+const { Map, fromJS } = require('immutable');
 const ClientError = require('./error');
 
 export const FONT_SIZE = 16;
@@ -57,7 +55,7 @@ export function createClass(
     cls.globalIndex = generateClassGlobalIndex();
   }
 
-  return cls;
+  return fromJS(cls);
 }
 
 /**
@@ -67,8 +65,8 @@ export function createClass(
  */
 export function createPersistentClass(cls) {
   return {
-    name: cls.name,
-    props: R.clone(cls.props)
+    name: cls.get('name'),
+    props: cls.get('props')
   };
 }
 
@@ -108,7 +106,7 @@ export function createClassLink(
     classLink.globalIndex = generateClassLinkGlobalIndex();
   }
 
-  return classLink;
+  return fromJS(classLink);
 }
 
 /**
@@ -118,9 +116,9 @@ export function createClassLink(
  */
 export function createPersistentClassLink(classLink) {
   return {
-    name: classLink.name,
-    source: classLink.source,
-    target: classLink.target
+    name: classLink.get('name'),
+    source: classLink.get('source'),
+    target: classLink.get('target')
   };
 }
 
@@ -157,64 +155,16 @@ export class GraphSchemaFormatError extends ClientError {
   }
 }
 
-const graphSchemaPrimitiveTypes = ['string', 'boolean', 'integer', 'float'];
-const isInGraphSchemaPrimitiveTypes = R.contains(
-  R.__,
-  graphSchemaPrimitiveTypes
-);
-
-export function convertGraphSchemaToClassesAndLinks(graphSchema) {
-  if (R.type(graphSchema) !== 'Object') {
-    throw new GraphSchemaFormatError('Graph schema is not a mapping.');
-  }
-
-  const [classes, classLinkLists] = R.pipe(
-    R.toPairs,
-    R.map(([className, classProps]) => {
-      if (R.type(classProps) !== 'Object') {
-        throw new GraphSchemaFormatError(
-          `Properties of class "${className}" is not a mapping.`
-        );
-      }
-
-      const [primitivePropPairs, linkPropPairs] = R.partition(
-        ([n, t]) => isInGraphSchemaPrimitiveTypes(t),
-        R.toPairs(classProps)
-      );
-
-      const cls = createClass(className, R.fromPairs(primitivePropPairs));
-
-      const classLinks = linkPropPairs.map(([n, t]) =>
-        createClassLink(n, className, t)
-      );
-
-      return [cls, classLinks];
-    }),
-    R.transpose
-  )(graphSchema);
-
-  const classLinks = R.unnest(classLinkLists);
-
-  classLinks.forEach(l => {
-    if (!R.has(l.target, graphSchema)) {
-      throw new GraphSchemaFormatError(
-        `Cannot find class link target "${l.target}".`
-      );
-    }
-  });
+export function createUIClassesAndLinksFromGraphSchema(graphSchema) {
+  const classes = graphSchema.get('classes')
+    .valueSeq().map(cls => createClass(cls.get('name'), cls.get('props')));
+  const classLinks = graphSchema.get('classLinks')
+    .valueSeq().map(l => createClassLink(l.get('name'), l.get('source'), l.get('target')));
 
   return {
     classes,
     classLinks
   };
-}
-
-export function parseYaml(yamlDoc) {
-  return P.try(() => yaml.safeLoad(yamlDoc))
-    .catch(error => {
-      throw new GraphSchemaFormatError(error);
-    })
-    .then(convertGraphSchemaToClassesAndLinks);
 }
 
 export const INGESTION_PROFILE_CONFIG_TYPE = 'ingestion profile';

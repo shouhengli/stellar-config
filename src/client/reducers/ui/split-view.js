@@ -56,7 +56,7 @@ export default function reduce(state = initialState, action) {
           ['selectedClass', 'props'],
           state
             .getIn(['selectedClass', 'props'])
-            .set(`newAttribute${newAttributeIdx}`, '')
+            .set(`newAttribute${newAttributeIdx}`, 'string')
         )
         .set(
           'classIndexesToEdit',

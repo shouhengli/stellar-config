@@ -24,7 +24,7 @@ export const statusSelector = createSelector(
   ingestionProfile => ingestionProfile.get('status')
 );
 
-const graphSchemaSelector = createSelector(
+export const graphSchemaSelector = createSelector(
   ingestionProfileSelector,
   ingestionProfile => ingestionProfile.get('graphSchema')
 );
@@ -57,8 +57,7 @@ export const persistentIngestionProfileSelector = createSelector(
   sourcesSelector,
   graphSchemaSelector,
   mappingSelector,
-  require('./ui/graph-schema').editorContentSelector,
-  (sources, graphSchema, mapping, editorContent) => {
+  (sources, graphSchema, mapping) => {
     return {
       sources: sources.toJS(),
       graphSchema: {
@@ -71,11 +70,7 @@ export const persistentIngestionProfileSelector = createSelector(
           .valueSeq()
           .toJS()
       },
-      mapping: mapping.toJS(),
-      // This is just a temporary workaround for using an editor to build graph schema.
-      // Changes will be introduced to replace the editor with form controls. This field will then
-      // be removed.
-      editorContent
+      mapping: mapping.toJS()
     };
   }
 );
