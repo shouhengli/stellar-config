@@ -9,7 +9,7 @@ export default class ClassEditor extends React.Component {
       relatedClassLinks,
       editAttribute,
       editClassLink,
-      classIndexesToEdit,
+      classAttributeIndexesToEdit,
       classLinkIndexesToEdit,
       classNames,
       isEditing,
@@ -28,9 +28,11 @@ export default class ClassEditor extends React.Component {
     return (
       <div className="panel schema-editor">
         <div className="panel-heading">
-          <span onChange={updateClassName} contentEditable={isEditingClassName}>
-            {selectedClass.get('name')}
-          </span>
+          <span
+            onBlur={updateClassName}
+            contentEditable={isEditingClassName}
+            dangerouslySetInnerHTML={{ __html: selectedClass.get('name') }}
+          />
           <a
             className={`hover-button button is-small is-text fa fa-pencil ${(isEditingClassName &&
               'is-invisible') ||
@@ -80,13 +82,15 @@ export default class ClassEditor extends React.Component {
                     <tr key={index}>
                       <td>
                         <div
-                          onChange={updateAttributeName}
-                          contentEditable={classIndexesToEdit.contains(index)}>
-                          {entry[0]}
-                        </div>
+                          onBlur={updateAttributeName}
+                          contentEditable={classAttributeIndexesToEdit.contains(
+                            index
+                          )}
+                          dangerouslySetInnerHTML={{ __html: entry[0] }}
+                        />
                       </td>
                       <td>
-                        {classIndexesToEdit.contains(index) ? (
+                        {classAttributeIndexesToEdit.contains(index) ? (
                           <div className="select">
                             <select
                               value={entry[1]}
@@ -103,7 +107,7 @@ export default class ClassEditor extends React.Component {
                       <td className="is-narrow">
                         <a
                           className={`hover-button fa fa-pencil ${
-                            classIndexesToEdit.contains(index)
+                            classAttributeIndexesToEdit.contains(index)
                               ? 'is-invisible'
                               : ''
                           }`}
@@ -147,11 +151,9 @@ export default class ClassEditor extends React.Component {
                   <tr key={link.name}>
                     <td>
                       <div
-                        contentEditable={classLinkIndexesToEdit.contains(
-                          index
-                        )}>
-                        {link.name}
-                      </div>
+                        contentEditable={classLinkIndexesToEdit.contains(index)}
+                        dangerouslySetInnerHTML={{ __html: link.name }}
+                      />
                     </td>
                     <td>
                       {classLinkIndexesToEdit.contains(index) ? (

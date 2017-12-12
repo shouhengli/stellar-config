@@ -21,7 +21,7 @@ import {
 import {
   selectedClassSelector,
   relatedClassLinksSelector,
-  classIndexesToEditSelector,
+  classAttributeIndexesToEditSelector,
   classLinkIndexesToEditSelector,
   isEditingSelector,
   isEditingClassNameSelector
@@ -33,7 +33,7 @@ function mapStateToProps(state) {
     classes: classesSelector(state),
     classNames: classNamesSelector(state),
     relatedClassLinks: relatedClassLinksSelector(state),
-    classIndexesToEdit: classIndexesToEditSelector(state),
+    classAttributeIndexesToEdit: classAttributeIndexesToEditSelector(state),
     classLinkIndexesToEdit: classLinkIndexesToEditSelector(state),
     isEditing: isEditingSelector(state),
     isEditingClassName: isEditingClassNameSelector(state)

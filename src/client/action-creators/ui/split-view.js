@@ -1,5 +1,10 @@
 import actions from '../../actions';
 
+const createChainedEditAction = action => dispatch => {
+  dispatch(action);
+  dispatch({ type: actions.CLASS_EDITOR_CLASS_EDITED });
+};
+
 export function classSelected(selectedClass) {
   return {
     type: actions.SPLIT_VIEW_CLASS_SELECTED,
@@ -8,33 +13,30 @@ export function classSelected(selectedClass) {
 }
 
 export function addNewClass(cls) {
-  return {
+  return createChainedEditAction({
     type: actions.SPLIT_VIEW_ADD_NEW_CLASS,
     class: cls
-  };
+  });
 }
 
 export function editAttribute(classIndex) {
-  return dispatch => {
-    dispatch({
-      type: actions.SPLIT_VIEW_EDIT_CLASS,
-      classIndex
-    });
-    dispatch({ type: actions.GRAPH_SCHEMA_SET_GRAPH_SCHEMA });
-  };
+  return createChainedEditAction({
+    type: actions.SPLIT_VIEW_EDIT_CLASS,
+    classIndex
+  });
 }
 
 export function editClassLink(classLinkIndex) {
-  return {
+  return createChainedEditAction({
     type: actions.SPLIT_VIEW_EDIT_CLASS_LINK,
     classLinkIndex
-  };
+  });
 }
 
 export function editClassName() {
-  return {
+  return createChainedEditAction({
     type: actions.SPLIT_VIEW_EDIT_CLASS_NAME
-  };
+  });
 }
 
 export function saveEdit() {
@@ -56,13 +58,20 @@ export function closeEdit() {
 }
 
 export function addNewAttribute() {
-  return {
+  return createChainedEditAction({
     type: actions.SPLIT_VIEW_ADD_NEW_ATTRIBUTE
-  };
+  });
 }
 
 export function addNewLink() {
-  return {
+  return createChainedEditAction({
     type: actions.SPLIT_VIEW_ADD_NEW_LINK
+  });
+}
+
+export function updateClassName(name) {
+  return {
+    type: actions.CLASS_EDITOR_UPDATE_CLASS_NAME,
+    name
   };
 }

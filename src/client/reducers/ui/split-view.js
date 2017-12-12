@@ -3,52 +3,45 @@ import actions from '../../actions';
 
 const initialState = fromJS({
   selectedClass: null,
-  classIndexesToEdit: [],
+  classAttributeIndexesToEdit: [],
   classLinkIndexesToEdit: [],
   isEditing: false,
   isEditingClassName: false
 });
 
+const clearEditingStatus = state => {
+  return state
+    .set('classAttributeIndexesToEdit', fromJS([]))
+    .set('classLinkIndexesToEdit', fromJS([]))
+    .set('isEditing', false)
+    .set('isEditingClassName', false);
+};
+
 export default function reduce(state = initialState, action) {
   switch (action.type) {
     case actions.SPLIT_VIEW_CLASS_SELECTED:
-      return state
-        .set('selectedClass', action.selectedClass)
-        .set('classIndexesToEdit', fromJS([]))
-        .set('classLinkIndexesToEdit', fromJS([]))
-        .set('isEditing', false)
-        .set('isEditingClassName', false);
+      return clearEditingStatus(state).set(
+        'selectedClass',
+        action.selectedClass
+      );
     case actions.SPLIT_VIEW_EDIT_CLASS:
-      return state
-        .set(
-          'classIndexesToEdit',
-          state.get('classIndexesToEdit').push(action.classIndex)
-        )
-        .set('isEditing', true);
+      return state.set(
+        'classAttributeIndexesToEdit',
+        state.get('classAttributeIndexesToEdit').push(action.classIndex)
+      );
     case actions.SPLIT_VIEW_EDIT_CLASS_NAME:
-      return state.set('isEditingClassName', true).set('isEditing', true);
+      return state.set('isEditingClassName', true);
     case actions.SPLIT_VIEW_EDIT_CLASS_LINK:
-      return state
-        .set(
-          'classLinkIndexesToEdit',
-          state.get('classLinkIndexesToEdit').push(action.classLinkIndex)
-        )
-        .set('isEditing', true);
+      return state.set(
+        'classLinkIndexesToEdit',
+        state.get('classLinkIndexesToEdit').push(action.classLinkIndex)
+      );
     case actions.SPLIT_VIEW_SAVE_EDIT:
-      return state
-        .set('isEditing', false)
-        .set('isEditingClassName', false)
-        .set('classIndexesToEdit', fromJS([]))
-        .set('classLinkIndexesToEdit', fromJS([]));
+      return clearEditingStatus(state);
     case actions.SPLIT_VIEW_CANCEL_EDIT:
-      return state;
+      return clearEditingStatus(state);
     case actions.SPLIT_VIEW_CLOSE_EDIT:
-      return state
-        .set('isEditing', false)
-        .set('isEditingClassName', false)
-        .set('selectedClass', null)
-        .set('classIndexesToEdit', fromJS([]))
-        .set('classLinkIndexesToEdit', fromJS([]));
+      return clearEditingStatus(state).set('selectedClass', null);
     case actions.SPLIT_VIEW_ADD_NEW_ATTRIBUTE: {
       const newAttributeIdx = state.getIn(['selectedClass', 'props']).size + 1;
       return state
@@ -59,16 +52,18 @@ export default function reduce(state = initialState, action) {
             .set(`newAttribute${newAttributeIdx}`, 'string')
         )
         .set(
-          'classIndexesToEdit',
+          'classAttributeIndexesToEdit',
           state
-            .get('classIndexesToEdit')
+            .get('classAttributeIndexesToEdit')
             .push(state.getIn(['selectedClass', 'props']).size)
-        )
-        .set('isEditing', true);
+        );
     }
-
     case actions.SPLIT_VIEW_ADD_LINK:
       return state;
+    case actions.CLASS_EDITOR_CLASS_EDITED:
+      return state.set('isEditing', true);
+    case actions.CLASS_EDITOR_UPDATE_CLASS_NAME:
+      return state.setIn(['selectedClass', 'name'], action.name);
     default:
       return state;
   }

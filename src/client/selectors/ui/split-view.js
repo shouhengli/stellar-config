@@ -26,9 +26,9 @@ export const relatedClassLinksSelector = createSelector(
           )
 );
 
-export const classIndexesToEditSelector = createSelector(
+export const classAttributeIndexesToEditSelector = createSelector(
   splitViewSelector,
-  splitView => splitView.get('classIndexesToEdit')
+  splitView => splitView.get('classAttributeIndexesToEdit')
 );
 
 export const classLinkIndexesToEditSelector = createSelector(
