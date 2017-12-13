@@ -29,13 +29,9 @@ export const graphSchemaSelector = createSelector(
   ingestionProfile => ingestionProfile.get('graphSchema')
 );
 
-export const classesSelector = createSelector(
-  graphSchemaSelector,
-  graphSchema => graphSchema.get('classes', List()).valueSeq()
-);
 export const classNamesSelector = createSelector(
   graphSchemaSelector,
-  graphSchema => graphSchema.get('classes', List()).keySeq()
+  graphSchema => graphSchema.get('classes', Map()).keySeq()
 );
 
 export const classLinkKeysSelector = createSelector(

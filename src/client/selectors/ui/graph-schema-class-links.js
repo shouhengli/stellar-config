@@ -5,7 +5,7 @@ import { isNil, contains } from 'ramda';
 const allClassLinksSelector = state =>
   state.getIn(['ui', 'graphSchemaClassLinks']);
 
-export const classLinksSelector = createSelector(
+export const relatedClassLinksSelector = createSelector(
   selectedClassSelector,
   allClassLinksSelector,
   (selectedClass, classLinks) => {

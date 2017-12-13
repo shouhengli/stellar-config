@@ -19,10 +19,10 @@ export function addNewClass(cls) {
   });
 }
 
-export function editAttribute(classIndex) {
+export function editAttribute(index) {
   return createChainedEditAction({
-    type: actions.SPLIT_VIEW_EDIT_CLASS,
-    classIndex
+    type: actions.CLASS_EDITOR_EDIT_ATTRIBUTE,
+    index
   });
 }
 
@@ -73,5 +73,28 @@ export function updateClassName(name) {
   return {
     type: actions.CLASS_EDITOR_UPDATE_CLASS_NAME,
     name
+  };
+}
+
+export function updateAttributeType(attrName, attrType) {
+  return {
+    type: actions.CLASS_EDITOR_UPDATE_ATTRIBUTE_TYPE,
+    attrType,
+    attrName
+  };
+}
+
+export function updateAttributeName(attrName, newName) {
+  return {
+    type: actions.CLASS_EDITOR_UPDATE_ATTRIBUTE_NAME,
+    attrName,
+    newName
+  };
+}
+
+export function deleteAttribute(attrName) {
+  return {
+    type: actions.CLASS_EDITOR_DELETE_ATTRIBUTE,
+    attrName
   };
 }

@@ -3,6 +3,7 @@ import actions from '../../actions';
 
 const initialState = fromJS({
   selectedClass: null,
+  selectedClassBackUp: null,
   classAttributeIndexesToEdit: [],
   classLinkIndexesToEdit: [],
   isEditing: false,
@@ -20,14 +21,13 @@ const clearEditingStatus = state => {
 export default function reduce(state = initialState, action) {
   switch (action.type) {
     case actions.SPLIT_VIEW_CLASS_SELECTED:
-      return clearEditingStatus(state).set(
-        'selectedClass',
-        action.selectedClass
-      );
-    case actions.SPLIT_VIEW_EDIT_CLASS:
+      return clearEditingStatus(state)
+        .set('selectedClass', action.selectedClass)
+        .set('selectedClassBackUp', action.selectedClass);
+    case actions.CLASS_EDITOR_EDIT_ATTRIBUTE:
       return state.set(
         'classAttributeIndexesToEdit',
-        state.get('classAttributeIndexesToEdit').push(action.classIndex)
+        state.get('classAttributeIndexesToEdit').push(action.index)
       );
     case actions.SPLIT_VIEW_EDIT_CLASS_NAME:
       return state.set('isEditingClassName', true);
@@ -39,17 +39,19 @@ export default function reduce(state = initialState, action) {
     case actions.SPLIT_VIEW_SAVE_EDIT:
       return clearEditingStatus(state);
     case actions.SPLIT_VIEW_CANCEL_EDIT:
-      return clearEditingStatus(state);
+      return clearEditingStatus(state).set(
+        'selectedClass',
+        state.get('selectedClassBackUp')
+      );
     case actions.SPLIT_VIEW_CLOSE_EDIT:
-      return clearEditingStatus(state).set('selectedClass', null);
+      return clearEditingStatus(state)
+        .set('selectedClass', null)
+        .set('selectedClassBackUp', null);
     case actions.SPLIT_VIEW_ADD_NEW_ATTRIBUTE: {
-      const newAttributeIdx = state.getIn(['selectedClass', 'props']).size + 1;
       return state
         .setIn(
           ['selectedClass', 'props'],
-          state
-            .getIn(['selectedClass', 'props'])
-            .set(`newAttribute${newAttributeIdx}`, 'string')
+          state.getIn(['selectedClass', 'props']).set('', '')
         )
         .set(
           'classAttributeIndexesToEdit',
@@ -58,12 +60,24 @@ export default function reduce(state = initialState, action) {
             .push(state.getIn(['selectedClass', 'props']).size)
         );
     }
-    case actions.SPLIT_VIEW_ADD_LINK:
-      return state;
     case actions.CLASS_EDITOR_CLASS_EDITED:
       return state.set('isEditing', true);
     case actions.CLASS_EDITOR_UPDATE_CLASS_NAME:
       return state.setIn(['selectedClass', 'name'], action.name);
+    case actions.CLASS_EDITOR_UPDATE_ATTRIBUTE_NAME:
+      return state
+        .setIn(
+          ['selectedClass', 'props', action.newName],
+          state.getIn(['selectedClass', 'props', action.attrName])
+        )
+        .deleteIn(['selectedClass', 'props', action.attrName]);
+    case actions.CLASS_EDITOR_UPDATE_ATTRIBUTE_TYPE:
+      return state.setIn(
+        ['selectedClass', 'props', action.attrName],
+        action.attrType
+      );
+    case actions.CLASS_EDITOR_DELETE_ATTRIBUTE:
+      return state.deleteIn(['selectedClass', 'props', action.attrName]);
     default:
       return state;
   }

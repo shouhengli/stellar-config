@@ -27,9 +27,9 @@ import {
   dragSelector
 } from '../selectors/ui/graph-schema';
 
-import { classesSelector } from '../selectors/ui/graph-schema-classes';
+import { relatedClassesSelector } from '../selectors/ui/graph-schema-classes';
 import {
-  classLinksSelector
+  relatedClassLinksSelector
 } from '../selectors/ui/graph-schema-class-links';
 
 import {
@@ -51,8 +51,8 @@ import {
 
 function mapStateToProps(state) {
   return {
-    classes: classesSelector(state),
-    classLinks: classLinksSelector(state),
+    classes: relatedClassesSelector(state),
+    classLinks: relatedClassLinksSelector(state),
     graphSchema: graphSchemaSelector(state),
     shouldUpdateClassLinkLengths: shouldUpdateClassLinkLengthsSelector(state),
     dimensions: dimensionsSelector(state),

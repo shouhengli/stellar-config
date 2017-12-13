@@ -3,15 +3,29 @@ import React from 'react';
 const graphSchemaPrimitiveTypes = ['string', 'boolean', 'integer', 'float'];
 
 export default class ClassEditor extends React.Component {
+  updateClassName = e => this.props.updateClassName(e.target.textContent);
+
+  updateAttributeName = e =>
+    this.props.updateAttributeName(e.target.dataset.name, e.target.textContent);
+
+  updateAttributeType = e =>
+    this.props.updateAttributeType(e.target.dataset.name, e.target.value);
+
+  deleteAttribute = e => this.props.deleteAttribute(e.target.dataset.name);
+
+  editAttribute = e =>
+    this.props.editAttribute(parseInt(e.target.dataset.index));
+
+  editClassLink = e =>
+    this.props.editClassLink(parseInt(e.target.dataset.globalIndex));
+
   render() {
     const {
       selectedClass,
       relatedClassLinks,
-      editAttribute,
-      editClassLink,
       classAttributeIndexesToEdit,
       classLinkIndexesToEdit,
-      classNames,
+      classes,
       isEditing,
       isEditingClassName,
       saveEdit,
@@ -19,17 +33,14 @@ export default class ClassEditor extends React.Component {
       closeEdit,
       addNewAttribute,
       addNewLink,
-      editClassName,
-      updateAttributeName,
-      updateAttributeType,
-      updateClassName
+      editClassName
     } = this.props;
 
     return (
       <div className="panel schema-editor">
         <div className="panel-heading">
           <span
-            onBlur={updateClassName}
+            onBlur={this.updateClassName}
             contentEditable={isEditingClassName}
             dangerouslySetInnerHTML={{ __html: selectedClass.get('name') }}
           />
@@ -82,7 +93,8 @@ export default class ClassEditor extends React.Component {
                     <tr key={index}>
                       <td>
                         <div
-                          onBlur={updateAttributeName}
+                          data-name={entry[0]}
+                          onBlur={this.updateAttributeName}
                           contentEditable={classAttributeIndexesToEdit.contains(
                             index
                           )}
@@ -93,8 +105,9 @@ export default class ClassEditor extends React.Component {
                         {classAttributeIndexesToEdit.contains(index) ? (
                           <div className="select">
                             <select
+                              data-name={entry[0]}
                               value={entry[1]}
-                              onChange={updateAttributeType}>
+                              onChange={this.updateAttributeType}>
                               {graphSchemaPrimitiveTypes.map(t => (
                                 <option key={t}>{t}</option>
                               ))}
@@ -106,16 +119,21 @@ export default class ClassEditor extends React.Component {
                       </td>
                       <td className="is-narrow">
                         <a
+                          data-index={index}
                           className={`hover-button fa fa-pencil ${
                             classAttributeIndexesToEdit.contains(index)
                               ? 'is-invisible'
                               : ''
                           }`}
-                          onClick={() => editAttribute(index)}
+                          onClick={this.editAttribute}
                         />
                       </td>
                       <td className="is-narrow">
-                        <a className="fa fa-times hover-button" />
+                        <a
+                          data-name={entry[0]}
+                          className="fa fa-trash hover-button"
+                          onClick={this.deleteAttribute}
+                        />
                       </td>
                     </tr>
                   ))}
@@ -147,19 +165,25 @@ export default class ClassEditor extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {relatedClassLinks.toJS().map((link, index) => (
+                {relatedClassLinks.toJS().map(link => (
                   <tr key={link.name}>
                     <td>
                       <div
-                        contentEditable={classLinkIndexesToEdit.contains(index)}
+                        contentEditable={classLinkIndexesToEdit.contains(
+                          link.globalIndex
+                        )}
                         dangerouslySetInnerHTML={{ __html: link.name }}
                       />
                     </td>
                     <td>
-                      {classLinkIndexesToEdit.contains(index) ? (
+                      {classLinkIndexesToEdit.contains(link.globalIndex) ? (
                         <div className="select">
                           <select value={link.source}>
-                            {classNames.map(t => <option key={t}>{t}</option>)}
+                            {classes.map(cls => (
+                              <option key={cls.get('globalIndex')}>
+                                {cls.get('name')}
+                              </option>
+                            ))}
                           </select>
                         </div>
                       ) : (
@@ -167,10 +191,14 @@ export default class ClassEditor extends React.Component {
                       )}
                     </td>
                     <td>
-                      {classLinkIndexesToEdit.contains(index) ? (
+                      {classLinkIndexesToEdit.contains(link.globalIndex) ? (
                         <div className="select">
                           <select value={link.target}>
-                            {classNames.map(t => <option key={t}>{t}</option>)}
+                            {classes.map(cls => (
+                              <option key={cls.get('globalIndex')}>
+                                {cls.get('name')}
+                              </option>
+                            ))}
                           </select>
                         </div>
                       ) : (
@@ -180,15 +208,16 @@ export default class ClassEditor extends React.Component {
                     <td className="is-narrow">
                       <a
                         className={`hover-button fa fa-pencil ${
-                          classLinkIndexesToEdit.contains(index)
+                          classLinkIndexesToEdit.contains(link.globalIndex)
                             ? 'is-invisible'
                             : ''
                         }`}
-                        onClick={() => editClassLink(index)}
+                        data-global-index={link.globalIndex}
+                        onClick={this.editClassLink}
                       />
                     </td>
                     <td className="is-narrow">
-                      <a className="hover-button fa fa-times" />
+                      <a className="hover-button fa fa-trash" />
                     </td>
                   </tr>
                 ))}

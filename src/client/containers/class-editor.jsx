@@ -1,7 +1,8 @@
 import { compose } from 'ramda';
 import { connect } from 'react-redux';
 import ClassEditor from '../components/class-editor.jsx';
-import { classNamesSelector } from '../selectors/ingestion-profile';
+import { classListSelector } from '../selectors/ui/graph-schema-classes';
+import { relatedClassLinksSelector } from '../selectors/ui/graph-schema-class-links';
 import {
   editAttribute,
   editClassName,
@@ -11,11 +12,13 @@ import {
   closeEdit,
   addNewAttribute,
   addNewLink,
-  updateClassName
+  updateClassName,
+  updateAttributeType,
+  updateAttributeName,
+  deleteAttribute
 } from '../action-creators/ui/split-view';
 import {
   selectedClassSelector,
-  relatedClassLinksSelector,
   classAttributeIndexesToEditSelector,
   classLinkIndexesToEditSelector,
   isEditingSelector,
@@ -25,7 +28,7 @@ import {
 function mapStateToProps(state) {
   return {
     selectedClass: selectedClassSelector(state),
-    classNames: classNamesSelector(state),
+    classes: classListSelector(state),
     relatedClassLinks: relatedClassLinksSelector(state),
     classAttributeIndexesToEdit: classAttributeIndexesToEditSelector(state),
     classLinkIndexesToEdit: classLinkIndexesToEditSelector(state),
@@ -44,11 +47,10 @@ function mapDispatchToProps(dispatch, ownProps) {
     closeEdit: compose(dispatch, closeEdit),
     addNewAttribute: compose(dispatch, addNewAttribute),
     addNewLink: compose(dispatch, addNewLink),
-    updateClassName: compose(
-      dispatch,
-      updateClassName,
-      event => event.target.textContent
-    )
+    updateClassName: compose(dispatch, updateClassName),
+    updateAttributeType: compose(dispatch, updateAttributeType),
+    updateAttributeName: compose(dispatch, updateAttributeName),
+    deleteAttribute: compose(dispatch, deleteAttribute)
   };
 }
 

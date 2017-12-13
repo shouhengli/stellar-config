@@ -1,20 +1,28 @@
 import { createSelector } from 'reselect';
-import { classLinksSelector } from './graph-schema-class-links';
+import { relatedClassLinksSelector } from './graph-schema-class-links';
 import { selectedClassSelector } from './split-view';
 import { isNil } from 'ramda';
-import { Set } from 'immutable';
+import { Set, Map } from 'immutable';
 
 const allClassesSelector = state =>
-  state.getIn(['ui', 'graphSchemaClasses']);
+  state.getIn(['ui', 'graphSchemaClasses'], Map());
 
-export const classesSelector = createSelector(
-  selectedClassSelector, classLinksSelector, allClassesSelector,
+export const classListSelector = createSelector(allClassesSelector, classes =>
+  classes.valueSeq()
+);
+
+export const relatedClassesSelector = createSelector(
+  selectedClassSelector,
+  relatedClassLinksSelector,
+  allClassesSelector,
   (selectedClass, relatedClassLinks, classes) => {
     if (isNil(selectedClass)) {
       return classes;
     }
-    const relatedClassNames = relatedClassLinks.reduce((s, l) =>
-      s.add(l.get('source')).add(l.get('target')), Set());
+    const relatedClassNames = relatedClassLinks.reduce(
+      (s, l) => s.add(l.get('source')).add(l.get('target')),
+      Set()
+    );
     return classes.filter(c => relatedClassNames.includes(c.get('name')));
   }
 );

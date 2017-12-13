@@ -1,11 +1,18 @@
 import React from 'react';
 
 export default class ClassList extends React.Component {
+  handleClassClicked = e => {
+    const index = e.target.dataset.globalIndex;
+    const selectedCls = this.props.classes.find(
+      cls => cls.get('globalIndex') == index
+    );
+    this.props.handleClassClicked(selectedCls);
+  };
+
   render() {
     const {
       selectedClass,
       classes,
-      handleClassClicked,
       handleCreateNewClass,
       isEditing
     } = this.props;
@@ -28,8 +35,9 @@ export default class ClassList extends React.Component {
 
         {classes.map(cls => (
           <a
-            key={cls.get('name')}
-            onClick={() => handleClassClicked(cls)}
+            key={cls.get('globalIndex')}
+            data-global-index={cls.get('globalIndex')}
+            onClick={this.handleClassClicked}
             className={
               'panel-block' +
               (selectedClass && cls.get('name') === selectedClass.get('name')
