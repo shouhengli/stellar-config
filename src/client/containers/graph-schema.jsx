@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { defaultTo, values } from 'ramda';
+import { defaultTo, values, isNil } from 'ramda';
 import { Map } from 'immutable';
 
 import Arrow from '../components/graph-schema-arrow.jsx';
@@ -29,8 +29,10 @@ import {
 
 import { relatedClassesSelector } from '../selectors/ui/split-view/graph-schema-classes';
 import {
-  relatedClassLinksSelector
+  stagedClassLinksSelector,
+  classLinksSelector
 } from '../selectors/ui/split-view/graph-schema-class-links';
+import { selectedClassSelector } from '../selectors/ui/split-view';
 
 import {
   setLayoutDimensionsAndCoordinates,
@@ -45,14 +47,14 @@ import {
   zoom
 } from '../action-creators/ui/split-view/graph-schema';
 
-import {
-  loadGraphSchemaContent
-} from '../action-creators/ingestion-profile';
+import { loadGraphSchemaContent } from '../action-creators/ingestion-profile';
 
 function mapStateToProps(state) {
   return {
     classes: relatedClassesSelector(state),
-    classLinks: relatedClassLinksSelector(state),
+    classLinks: isNil(selectedClassSelector(state))
+      ? classLinksSelector(state)
+      : stagedClassLinksSelector(state),
     graphSchema: graphSchemaSelector(state),
     shouldUpdateClassLinkLengths: shouldUpdateClassLinkLengthsSelector(state),
     dimensions: dimensionsSelector(state),
@@ -75,28 +77,46 @@ function handleGraphSchemaChange(
     .then(({ classes, classLinks }) => {
       const [defaultX, defaultY] = layoutDimensions.map(d => d / 2);
 
-      const transformedClasses = classes.map(cls => cls
-        .set('x', defaultTo(defaultX, currentClasses.getIn([cls.get('name'), 'x'])))
-        .set('y', defaultTo(defaultY, currentClasses.getIn([cls.get('name'), 'y'])))
+      const transformedClasses = classes.map(cls =>
+        cls
+          .set(
+          'x',
+          defaultTo(defaultX, currentClasses.getIn([cls.get('name'), 'x']))
+          )
+          .set(
+          'y',
+          defaultTo(defaultY, currentClasses.getIn([cls.get('name'), 'y']))
+          )
       );
 
-      const transformedClassLinks = classLinks.map(l => l
-        .set('x', defaultTo(
-          defaultX,
-          currentClassLinks.getIn([getClassLinkKey(l), 'x'])
-        ))
-        .set('y', defaultTo(
-          defaultY,
-          currentClassLinks.getIn([getClassLinkKey(l), 'y'])
-        ))
+      const transformedClassLinks = classLinks.map(l =>
+        l
+          .set(
+          'x',
+          defaultTo(
+            defaultX,
+            currentClassLinks.getIn([getClassLinkKey(l), 'x'])
+          )
+          )
+          .set(
+          'y',
+          defaultTo(
+            defaultY,
+            currentClassLinks.getIn([getClassLinkKey(l), 'y'])
+          )
+          )
       );
 
-      dispatch(loadGraphSchemaContent(transformedClasses, transformedClassLinks));
+      dispatch(
+        loadGraphSchemaContent(transformedClasses, transformedClassLinks)
+      );
 
       return [transformedClasses, transformedClassLinks];
     })
     .then(([classes, classLinks]) =>
-      dispatch(startLayoutAsync(classes.toJS(), classLinks.toJS(), layoutDimensions))
+      dispatch(
+        startLayoutAsync(classes.toJS(), classLinks.toJS(), layoutDimensions)
+      )
     )
     .catch(GraphSchemaFormatError, error => {
       console.log(error.message);

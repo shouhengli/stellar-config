@@ -2,7 +2,7 @@ import { compose } from 'ramda';
 import { connect } from 'react-redux';
 import { fromJS } from 'immutable';
 import { classListSelector } from '../selectors/ui/split-view/graph-schema-classes';
-import { relatedClassLinksSelector } from '../selectors/ui/split-view/graph-schema-class-links';
+import { classLinksSelector } from '../selectors/ui/split-view/graph-schema-class-links';
 import SplitView from '../components/split-view.jsx';
 import {
   classSelected,
@@ -14,7 +14,8 @@ import {
   closeEdit,
   addNewAttribute,
   addNewLink,
-  addNewClass
+  addNewClass,
+  updateStagedClassLinks
 } from '../action-creators/ui/split-view';
 import {
   selectedClassSelector,
@@ -28,7 +29,7 @@ function mapStateToProps(state) {
   return {
     selectedClass: selectedClassSelector(state),
     classes: classListSelector(state),
-    relatedClassLinks: relatedClassLinksSelector(state),
+    classLinks: classLinksSelector(state),
     attributeIndexesToEdit: attributeIndexesToEditSelector(state),
     linkIndexesToEdit: linkIndexesToEditSelector(state),
     isEditing: isEditingSelector(state),
@@ -56,8 +57,21 @@ function mapDispatchToProps(dispatch, ownProps) {
     cancelEdit: compose(dispatch, cancelEdit),
     closeEdit: compose(dispatch, closeEdit),
     addNewAttribute: compose(dispatch, addNewAttribute),
-    addNewLink: compose(dispatch, addNewLink)
+    addNewLink: compose(dispatch, addNewLink),
+    updateStagedClassLinks: compose(dispatch, updateStagedClassLinks)
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SplitView);
+const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+  ...ownProps,
+  ...stateProps,
+  ...dispatchProps,
+  handleClassClicked(cls) {
+    dispatchProps.handleClassClicked(cls);
+    dispatchProps.updateStagedClassLinks(cls, stateProps.classLinks);
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+  SplitView
+);

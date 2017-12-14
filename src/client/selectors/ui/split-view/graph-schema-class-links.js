@@ -1,24 +1,5 @@
-import { selectedClassSelector } from '../split-view';
-import { createSelector } from 'reselect';
-import { isNil, contains } from 'ramda';
-
-const allClassLinksSelector = state =>
+export const classLinksSelector = state =>
   state.getIn(['ui', 'splitView', 'graphSchemaClassLinks']);
 
-export const relatedClassLinksSelector = createSelector(
-  selectedClassSelector,
-  allClassLinksSelector,
-  (selectedClass, classLinks) => {
-    if (isNil(selectedClass)) {
-      return classLinks;
-    }
-    return classLinks
-      .valueSeq()
-      .filter(link =>
-        contains(selectedClass.get('name'), [
-          link.get('source'),
-          link.get('target')
-        ])
-      );
-  }
-);
+export const stagedClassLinksSelector = state =>
+  state.getIn(['ui', 'splitView', 'stagedClassLinks']);

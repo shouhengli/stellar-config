@@ -40,10 +40,9 @@ export function saveEdit() {
   };
 }
 
-export function cancelEdit(classBackup) {
+export function cancelEdit() {
   return {
-    type: actions.CLASS_EDITOR_CANCEL_EDIT,
-    classBackup
+    type: actions.CLASS_EDITOR_CANCEL_EDIT
   };
 }
 
@@ -61,7 +60,7 @@ export function addNewAttribute() {
 
 export function addNewLink() {
   return {
-    type: actions.SPLIT_VIEW_ADD_NEW_LINK
+    type: actions.CLASS_EDITOR_ADD_NEW_LINK
   };
 }
 
@@ -92,5 +91,13 @@ export function deleteAttribute(attrName) {
   return {
     type: actions.CLASS_EDITOR_DELETE_ATTRIBUTE,
     attrName
+  };
+}
+
+export function updateStagedClassLinks(selectedClass, classLinks) {
+  return {
+    type: actions.CLASS_EDITOR_UPDATE_STAGED_CLASS_LINKS,
+    selectedClass,
+    classLinks
   };
 }

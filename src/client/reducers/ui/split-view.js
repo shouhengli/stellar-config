@@ -1,18 +1,22 @@
-import { List } from 'immutable';
+import { List, Map, fromJS } from 'immutable';
+import { isNil, contains } from 'ramda';
 import actions from '../../actions';
 import { combineReducers } from 'redux-immutable';
 import graphSchema from './split-view/graph-schema';
 import graphSchemaClasses from './split-view/graph-schema-classes';
 import graphSchemaClassLinks from './split-view/graph-schema-class-links';
 
+let selectedClassBackUp = null;
+
 const selectedClass = (state = null, action) => {
   switch (action.type) {
     case actions.CLASS_LIST_CLASS_SELECTED:
+      selectedClassBackUp = action.selectedClass;
       return action.selectedClass;
     case actions.CLASS_EDITOR_CANCEL_EDIT:
-      return action.classBackup;
+      return selectedClassBackUp;
     case actions.CLASS_EDITOR_CLOSE_EDIT:
-      return null;
+      return (selectedClassBackUp = null);
     case actions.CLASS_EDITOR_ADD_NEW_ATTRIBUTE:
       return state.setIn(['props', ''], '');
     case actions.CLASS_EDITOR_UPDATE_CLASS_NAME:
@@ -33,12 +37,32 @@ const selectedClass = (state = null, action) => {
   }
 };
 
-const selectedClassBackUp = (state = null, action) => {
+let stagedClassLinksBackUp = Map();
+
+const stagedClassLinks = (state = Map(), action) => {
   switch (action.type) {
-    case actions.CLASS_LIST_CLASS_SELECTED:
-      return action.selectedClass;
-    case actions.CLASS_EDITOR_CLOSE_EDIT:
-      return null;
+    case actions.CLASS_EDITOR_UPDATE_STAGED_CLASS_LINKS: {
+      const { selectedClass, classLinks } = action;
+      if (isNil(selectedClass)) {
+        return classLinks;
+      }
+      stagedClassLinksBackUp = classLinks
+        .valueSeq()
+        .filter(link =>
+          contains(selectedClass.get('name'), [
+            link.get('source'),
+            link.get('target')
+          ])
+        )
+        .toList();
+      return stagedClassLinksBackUp;
+    }
+    case actions.CLASS_EDITOR_CLOSE_EDIT: {
+      stagedClassLinksBackUp = Map();
+      return stagedClassLinksBackUp;
+    }
+    case actions.CLASS_EDITOR_ADD_NEW_LINK:
+      return state.push(fromJS({ name: '', source: '', target: '' }));
     default:
       return state;
   }
@@ -101,7 +125,7 @@ const isEditing = (state = false, action) => {
 
 export default combineReducers({
   selectedClass,
-  selectedClassBackUp,
+  stagedClassLinks,
   attributeIndexesToEdit,
   linkIndexesToEdit,
   isEditingClassName,

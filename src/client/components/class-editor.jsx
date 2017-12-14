@@ -19,12 +19,10 @@ export default class ClassEditor extends React.Component {
   editClassLink = e =>
     this.props.editClassLink(parseInt(e.target.dataset.globalIndex));
 
-  cancelEdit = e => this.props.cancelEdit(this.props.selectedClassBackUp);
-
   render() {
     const {
       selectedClass,
-      relatedClassLinks,
+      stagedClassLinks,
       attributeIndexesToEdit,
       linkIndexesToEdit,
       classes,
@@ -34,7 +32,8 @@ export default class ClassEditor extends React.Component {
       closeEdit,
       addNewAttribute,
       addNewLink,
-      editClassName
+      editClassName,
+      cancelEdit
     } = this.props;
 
     return (
@@ -54,21 +53,21 @@ export default class ClassEditor extends React.Component {
           <a
             className={`close-editor button is-pulled-right is-medium ${
               isEditing ? 'is-invisible' : ''
-            }`}
+              }`}
             onClick={closeEdit}>
             <span className="icon is-medium fa fa-times fa-lg" />
           </a>
           <div
             className={`field is-grouped is-pulled-right ${
               isEditing ? '' : 'is-invisible'
-            }`}>
+              }`}>
             <p className="control">
               <a className="button is-small is-primary" onClick={saveEdit}>
                 Save
               </a>
             </p>
             <p className="control">
-              <a className="button is-small" onClick={this.cancelEdit}>
+              <a className="button is-small" onClick={cancelEdit}>
                 Cancel
               </a>
             </p>
@@ -115,8 +114,8 @@ export default class ClassEditor extends React.Component {
                             </select>
                           </div>
                         ) : (
-                          entry[1]
-                        )}
+                            entry[1]
+                          )}
                       </td>
                       <td className="is-narrow">
                         <a
@@ -125,7 +124,7 @@ export default class ClassEditor extends React.Component {
                             attributeIndexesToEdit.contains(index)
                               ? 'is-invisible'
                               : ''
-                          }`}
+                            }`}
                           onClick={this.editAttribute}
                         />
                       </td>
@@ -166,7 +165,7 @@ export default class ClassEditor extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {relatedClassLinks.toJS().map(link => (
+                {stagedClassLinks.toJS().map(link => (
                   <tr key={link.name}>
                     <td>
                       <div
@@ -188,8 +187,8 @@ export default class ClassEditor extends React.Component {
                           </select>
                         </div>
                       ) : (
-                        link.source
-                      )}
+                          link.source
+                        )}
                     </td>
                     <td>
                       {linkIndexesToEdit.contains(link.globalIndex) ? (
@@ -203,8 +202,8 @@ export default class ClassEditor extends React.Component {
                           </select>
                         </div>
                       ) : (
-                        link.target
-                      )}
+                          link.target
+                        )}
                     </td>
                     <td className="is-narrow">
                       <a
@@ -212,7 +211,7 @@ export default class ClassEditor extends React.Component {
                           linkIndexesToEdit.contains(link.globalIndex)
                             ? 'is-invisible'
                             : ''
-                        }`}
+                          }`}
                         data-global-index={link.globalIndex}
                         onClick={this.editClassLink}
                       />
