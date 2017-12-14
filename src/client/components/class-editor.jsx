@@ -19,17 +19,18 @@ export default class ClassEditor extends React.Component {
   editClassLink = e =>
     this.props.editClassLink(parseInt(e.target.dataset.globalIndex));
 
+  cancelEdit = e => this.props.cancelEdit(this.props.selectedClassBackUp);
+
   render() {
     const {
       selectedClass,
       relatedClassLinks,
-      classAttributeIndexesToEdit,
-      classLinkIndexesToEdit,
+      attributeIndexesToEdit,
+      linkIndexesToEdit,
       classes,
       isEditing,
       isEditingClassName,
       saveEdit,
-      cancelEdit,
       closeEdit,
       addNewAttribute,
       addNewLink,
@@ -67,7 +68,7 @@ export default class ClassEditor extends React.Component {
               </a>
             </p>
             <p className="control">
-              <a className="button is-small" onClick={cancelEdit}>
+              <a className="button is-small" onClick={this.cancelEdit}>
                 Cancel
               </a>
             </p>
@@ -95,14 +96,14 @@ export default class ClassEditor extends React.Component {
                         <div
                           data-name={entry[0]}
                           onBlur={this.updateAttributeName}
-                          contentEditable={classAttributeIndexesToEdit.contains(
+                          contentEditable={attributeIndexesToEdit.contains(
                             index
                           )}
                           dangerouslySetInnerHTML={{ __html: entry[0] }}
                         />
                       </td>
                       <td>
-                        {classAttributeIndexesToEdit.contains(index) ? (
+                        {attributeIndexesToEdit.contains(index) ? (
                           <div className="select">
                             <select
                               data-name={entry[0]}
@@ -121,7 +122,7 @@ export default class ClassEditor extends React.Component {
                         <a
                           data-index={index}
                           className={`hover-button fa fa-pencil ${
-                            classAttributeIndexesToEdit.contains(index)
+                            attributeIndexesToEdit.contains(index)
                               ? 'is-invisible'
                               : ''
                           }`}
@@ -169,14 +170,14 @@ export default class ClassEditor extends React.Component {
                   <tr key={link.name}>
                     <td>
                       <div
-                        contentEditable={classLinkIndexesToEdit.contains(
+                        contentEditable={linkIndexesToEdit.contains(
                           link.globalIndex
                         )}
                         dangerouslySetInnerHTML={{ __html: link.name }}
                       />
                     </td>
                     <td>
-                      {classLinkIndexesToEdit.contains(link.globalIndex) ? (
+                      {linkIndexesToEdit.contains(link.globalIndex) ? (
                         <div className="select">
                           <select value={link.source}>
                             {classes.map(cls => (
@@ -191,7 +192,7 @@ export default class ClassEditor extends React.Component {
                       )}
                     </td>
                     <td>
-                      {classLinkIndexesToEdit.contains(link.globalIndex) ? (
+                      {linkIndexesToEdit.contains(link.globalIndex) ? (
                         <div className="select">
                           <select value={link.target}>
                             {classes.map(cls => (
@@ -208,7 +209,7 @@ export default class ClassEditor extends React.Component {
                     <td className="is-narrow">
                       <a
                         className={`hover-button fa fa-pencil ${
-                          classLinkIndexesToEdit.contains(link.globalIndex)
+                          linkIndexesToEdit.contains(link.globalIndex)
                             ? 'is-invisible'
                             : ''
                         }`}

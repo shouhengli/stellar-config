@@ -3,11 +3,11 @@ const { connect } = require('react-redux');
 const {
   startClassLinkDrag,
   stopLayoutAsync
-} = require('../action-creators/ui/graph-schema');
+} = require('../action-creators/ui/split-view/graph-schema');
 
 const ClassLinkLabel = require('../components/graph-schema-class-link-label.jsx');
 
-const { zoomSelector } = require('../selectors/ui/graph-schema');
+const { zoomSelector } = require('../selectors/ui/split-view/graph-schema');
 
 function mapStateToProps(state) {
   return { zoom: zoomSelector(state) };

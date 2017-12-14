@@ -3,7 +3,7 @@ const { connect } = require('react-redux');
 const {
   revealClassPropTooltip,
   hideClassPropTooltip
-} = require('../action-creators/ui/graph-schema');
+} = require('../action-creators/ui/split-view/graph-schema');
 
 const ClassArc = require('../components/graph-schema-class-arc.jsx');
 

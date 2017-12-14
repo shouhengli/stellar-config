@@ -1,17 +1,16 @@
 import R from 'ramda';
 import { Map } from 'immutable';
-import actions from '../../actions';
-import utils from '../../util';
+import actions from '../../../actions';
+import utils from '../../../util';
 
 const initialState = Map();
 
 export default function reduce(state = initialState, action) {
   switch (action.type) {
     case actions.GRAPH_SCHEMA_UPDATE_CONTENT:
-      return utils.defaultToEmptyList(action.classes).reduce(
-        (s, c) => s.set(c.get('name'), c),
-        Map()
-      );
+      return utils
+        .defaultToEmptyList(action.classes)
+        .reduce((s, c) => s.set(c.get('name'), c), Map());
 
     case actions.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS:
       if (R.any(c => state.has(c.name), action.classes)) {

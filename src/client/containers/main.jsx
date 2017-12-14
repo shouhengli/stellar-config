@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Main from '../components/main.jsx';
 import Nav from './ingestion-profile-nav.jsx';
 import View from './ingestion-profile-view.jsx';
-import { initLayoutAsync } from '../action-creators/ui/graph-schema';
+import { initLayoutAsync } from '../action-creators/ui/split-view/graph-schema';
 
 function mapDispatchToProps(dispatch) {
   return {

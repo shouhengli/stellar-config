@@ -177,7 +177,7 @@ export default function reduce(state = initialState, action) {
       return state
         .deleteIn(['mapping', 'links', action.index])
         .set('status', CONFIG_STATUS_CHANGED);
-    case actions.SPLIT_VIEW_ADD_NEW_CLASS:
+    case actions.CLASS_LIST_ADD_NEW_CLASS:
       return state.setIn(
         ['graphSchema', 'classes', action.class.get('name')],
         action.class

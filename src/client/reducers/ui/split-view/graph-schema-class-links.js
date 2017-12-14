@@ -1,7 +1,7 @@
 import R from 'ramda';
 import { fromJS, Map } from 'immutable';
-import actions from '../../actions';
-import { getClassLinkKey } from '../../ingestion-profile';
+import actions from '../../../actions';
+import { getClassLinkKey } from '../../../ingestion-profile';
 
 const initialState = Map();
 

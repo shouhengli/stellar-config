@@ -1,8 +1,8 @@
 import { compose } from 'ramda';
 import { connect } from 'react-redux';
 import { fromJS } from 'immutable';
-import { classListSelector } from '../selectors/ui/graph-schema-classes';
-import { relatedClassLinksSelector } from '../selectors/ui/graph-schema-class-links';
+import { classListSelector } from '../selectors/ui/split-view/graph-schema-classes';
+import { relatedClassLinksSelector } from '../selectors/ui/split-view/graph-schema-class-links';
 import SplitView from '../components/split-view.jsx';
 import {
   classSelected,
@@ -18,8 +18,8 @@ import {
 } from '../action-creators/ui/split-view';
 import {
   selectedClassSelector,
-  classAttributeIndexesToEditSelector,
-  classLinkIndexesToEditSelector,
+  attributeIndexesToEditSelector,
+  linkIndexesToEditSelector,
   isEditingSelector,
   isEditingClassNameSelector
 } from '../selectors/ui/split-view';
@@ -29,8 +29,8 @@ function mapStateToProps(state) {
     selectedClass: selectedClassSelector(state),
     classes: classListSelector(state),
     relatedClassLinks: relatedClassLinksSelector(state),
-    classAttributeIndexesToEdit: classAttributeIndexesToEditSelector(state),
-    classLinkIndexesToEdit: classLinkIndexesToEditSelector(state),
+    attributeIndexesToEdit: attributeIndexesToEditSelector(state),
+    linkIndexesToEdit: linkIndexesToEditSelector(state),
     isEditing: isEditingSelector(state),
     isEditingClassName: isEditingClassNameSelector(state)
   };

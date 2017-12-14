@@ -25,12 +25,12 @@ import {
   panSelector,
   zoomSelector,
   dragSelector
-} from '../selectors/ui/graph-schema';
+} from '../selectors/ui/split-view/graph-schema';
 
-import { relatedClassesSelector } from '../selectors/ui/graph-schema-classes';
+import { relatedClassesSelector } from '../selectors/ui/split-view/graph-schema-classes';
 import {
   relatedClassLinksSelector
-} from '../selectors/ui/graph-schema-class-links';
+} from '../selectors/ui/split-view/graph-schema-class-links';
 
 import {
   setLayoutDimensionsAndCoordinates,
@@ -43,7 +43,7 @@ import {
   updateClassPosition,
   updatePan,
   zoom
-} from '../action-creators/ui/graph-schema';
+} from '../action-creators/ui/split-view/graph-schema';
 
 import {
   loadGraphSchemaContent

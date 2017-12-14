@@ -7,14 +7,19 @@ export const selectedClassSelector = createSelector(
   splitView => splitView.get('selectedClass')
 );
 
-export const classAttributeIndexesToEditSelector = createSelector(
+export const selectedClassBackUpSelector = createSelector(
   splitViewSelector,
-  splitView => splitView.get('classAttributeIndexesToEdit')
+  splitView => splitView.get('selectedClassBackUp')
 );
 
-export const classLinkIndexesToEditSelector = createSelector(
+export const attributeIndexesToEditSelector = createSelector(
   splitViewSelector,
-  splitView => splitView.get('classLinkIndexesToEdit')
+  splitView => splitView.get('attributeIndexesToEdit')
+);
+
+export const linkIndexesToEditSelector = createSelector(
+  splitViewSelector,
+  splitView => splitView.get('linkIndexesToEdit')
 );
 
 export const isEditingSelector = createSelector(splitViewSelector, splitView =>

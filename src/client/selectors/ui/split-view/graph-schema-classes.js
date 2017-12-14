@@ -1,11 +1,11 @@
 import { createSelector } from 'reselect';
 import { relatedClassLinksSelector } from './graph-schema-class-links';
-import { selectedClassSelector } from './split-view';
+import { selectedClassSelector } from '../split-view';
 import { isNil } from 'ramda';
 import { Set, Map } from 'immutable';
 
 const allClassesSelector = state =>
-  state.getIn(['ui', 'graphSchemaClasses'], Map());
+  state.getIn(['ui', 'splitView', 'graphSchemaClasses'], Map());
 
 export const classListSelector = createSelector(allClassesSelector, classes =>
   classes.valueSeq()

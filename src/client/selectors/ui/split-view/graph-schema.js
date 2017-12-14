@@ -1,6 +1,6 @@
 const { createSelector } = require('reselect');
 
-const graphSchemaSelector = state => state.getIn(['ui', 'graphSchema']);
+const graphSchemaSelector = state => state.getIn(['ui', 'splitView', 'graphSchema']);
 
 export const shouldUpdateClassLinkLengthsSelector = createSelector(
   graphSchemaSelector,

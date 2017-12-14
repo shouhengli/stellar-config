@@ -1,8 +1,8 @@
 import { compose } from 'ramda';
 import { connect } from 'react-redux';
 import ClassEditor from '../components/class-editor.jsx';
-import { classListSelector } from '../selectors/ui/graph-schema-classes';
-import { relatedClassLinksSelector } from '../selectors/ui/graph-schema-class-links';
+import { classListSelector } from '../selectors/ui/split-view/graph-schema-classes';
+import { relatedClassLinksSelector } from '../selectors/ui/split-view/graph-schema-class-links';
 import {
   editAttribute,
   editClassName,
@@ -19,8 +19,9 @@ import {
 } from '../action-creators/ui/split-view';
 import {
   selectedClassSelector,
-  classAttributeIndexesToEditSelector,
-  classLinkIndexesToEditSelector,
+  selectedClassBackUpSelector,
+  attributeIndexesToEditSelector,
+  linkIndexesToEditSelector,
   isEditingSelector,
   isEditingClassNameSelector
 } from '../selectors/ui/split-view';
@@ -28,10 +29,11 @@ import {
 function mapStateToProps(state) {
   return {
     selectedClass: selectedClassSelector(state),
+    selectedClassBackUp: selectedClassBackUpSelector(state),
     classes: classListSelector(state),
     relatedClassLinks: relatedClassLinksSelector(state),
-    classAttributeIndexesToEdit: classAttributeIndexesToEditSelector(state),
-    classLinkIndexesToEdit: classLinkIndexesToEditSelector(state),
+    attributeIndexesToEdit: attributeIndexesToEditSelector(state),
+    linkIndexesToEdit: linkIndexesToEditSelector(state),
     isEditing: isEditingSelector(state),
     isEditingClassName: isEditingClassNameSelector(state)
   };
@@ -54,4 +56,16 @@ function mapDispatchToProps(dispatch, ownProps) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClassEditor);
+const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+  ...ownProps,
+  ...stateProps,
+  ...dispatchProps,
+  addNewAttribute() {
+    dispatchProps.addNewAttribute();
+    dispatchProps.editAttribute(stateProps.selectedClass.get('props').size);
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+  ClassEditor
+);

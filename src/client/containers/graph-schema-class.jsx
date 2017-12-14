@@ -4,7 +4,7 @@ const R = require('ramda');
 const anime = require('animejs');
 const {
   updateClassOuterRadius
-} = require('../action-creators/ui/graph-schema');
+} = require('../action-creators/ui/split-view/graph-schema');
 const {
   CLASS_OUTER_RADIUS,
   CLASS_INNER_RADIUS
