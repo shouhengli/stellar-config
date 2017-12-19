@@ -1,38 +1,142 @@
 import R from 'ramda';
-import { Map } from 'immutable';
+import { Map, fromJS } from 'immutable';
 import actions from '../../../actions';
-import utils from '../../../util';
+import {
+  generateClassGlobalIndex,
+  generateClassPropGlobalIndex
+} from '../../../ingestion-profile';
 
-const initialState = Map();
+let selectedClassBackUp = null,
+  selectedClassIndex = null;
 
-export default function reduce(state = initialState, action) {
+export const reduceClasses = (state = Map(), action) => {
   switch (action.type) {
     case actions.GRAPH_SCHEMA_UPDATE_CONTENT:
-      return utils
-        .defaultToEmptyList(action.classes)
-        .reduce((s, c) => s.set(c.get('name'), c), Map());
+      return action.classes;
 
+    case actions.CLASS_LIST_CLASS_SELECTED: {
+      selectedClassIndex = action.selectedClass.get('globalIndex');
+      const next = state
+        .map(c => c.set('selected', false))
+        .setIn([selectedClassIndex, 'selected'], true);
+      selectedClassBackUp = next.get(selectedClassIndex);
+      return next;
+    }
+
+    case actions.CLASS_EDITOR_CANCEL_EDIT:
+      return state.set(selectedClassIndex, selectedClassBackUp);
+
+    case actions.CLASS_EDITOR_CLOSE_EDIT: {
+      const next = state.setIn([selectedClassIndex, 'selected'], false);
+      selectedClassBackUp = null;
+      selectedClassIndex = null;
+      return next;
+    }
+
+    case actions.CLASS_LIST_ADD_NEW_CLASS: {
+      const globalIndex = generateClassGlobalIndex();
+      const next = state.map(c => c.set('selected', false)).set(
+        globalIndex,
+        fromJS({
+          name: 'NewClass',
+          props: {},
+          globalIndex,
+          isEditingName: true,
+          selected: true
+        })
+      );
+      selectedClassIndex = globalIndex;
+      selectedClassBackUp = next.get('globalIndex');
+      return next;
+    }
+
+    case actions.CLASS_EDITOR_SAVE_EDIT: {
+      const next = state
+        .updateIn([selectedClassIndex, 'props'], p => p.set('isEditing', false))
+        .setIn([selectedClassIndex, 'isEditingName'], false);
+      selectedClassBackUp = next.get(selectedClassIndex);
+      return next;
+    }
+
+    case actions.CLASS_EDITOR_EDIT_CLASS_NAME:
+      return state.setIn([selectedClassIndex, 'isEditingName'], true);
+
+    case actions.CLASS_EDITOR_EDIT_ATTRIBUTE:
+      return state.setIn(
+        [
+          selectedClassIndex,
+          'props',
+          action.attribute.get('globalIndex'),
+          'isEditing'
+        ],
+        true
+      );
+
+    case actions.CLASS_EDITOR_ADD_NEW_ATTRIBUTE: {
+      const globalIndex = generateClassPropGlobalIndex();
+      return state.setIn(
+        [selectedClassIndex, 'props', globalIndex],
+        fromJS({
+          name: '',
+          type: '',
+          globalIndex,
+          isEditing: true
+        })
+      );
+    }
+
+    case actions.CLASS_EDITOR_UPDATE_CLASS_NAME:
+      return state.setIn([selectedClassIndex, 'name'], action.name);
+
+    case actions.CLASS_EDITOR_UPDATE_ATTRIBUTE_NAME:
+      return state.setIn(
+        [
+          selectedClassIndex,
+          'props',
+          action.attribute.get('globalIndex'),
+          'name'
+        ],
+        action.newName
+      );
+
+    case actions.CLASS_EDITOR_UPDATE_ATTRIBUTE_TYPE:
+      return state.setIn(
+        [
+          selectedClassIndex,
+          'props',
+          action.attribute.get('globalIndex'),
+          'type'
+        ],
+        action.attrType
+      );
+
+    case actions.CLASS_EDITOR_DELETE_ATTRIBUTE:
+      return state.deleteIn([
+        selectedClassIndex,
+        'props',
+        action.attribute.get('globalIndex')
+      ]);
+
+    default:
+      return state;
+  }
+};
+
+export const reduceClassPositions = (state = Map(), action) => {
+  switch (action.type) {
     case actions.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS:
-      if (R.any(c => state.has(c.name), action.classes)) {
-        return R.reduce(
-          (s, c) => s.setIn([c.name, 'x'], c.x).setIn([c.name, 'y'], c.y),
-          state,
-          action.classes
-        );
-      } else {
-        return state;
-      }
+      return action.classes;
 
     case actions.GRAPH_SCHEMA_UPDATE_CLASS_POSITION:
-      if (state.has(action.name)) {
+      if (state.has(action.globalIndex)) {
         return state
           .setIn(
-          [action.name, 'x'],
-          state.getIn([action.name, 'x']) + action.dx
+            [action.globalIndex, 'x'],
+            state.getIn([action.globalIndex, 'x']) + action.dx
           )
           .setIn(
-          [action.name, 'y'],
-          state.getIn([action.name, 'y']) + action.dy
+            [action.globalIndex, 'y'],
+            state.getIn([action.globalIndex, 'y']) + action.dy
           );
       } else {
         return state;
@@ -40,21 +144,24 @@ export default function reduce(state = initialState, action) {
 
     case actions.GRAPH_SCHEMA_REVEAL_CLASS_PROP_TOOLTIP:
       return state.setIn(
-        [action.className, 'tooltipVisibleProp'],
+        [action.globalIndex, 'tooltipVisibleProp'],
         action.propName
       );
 
     case actions.GRAPH_SCHEMA_HIDE_CLASS_PROP_TOOLTIP:
       return R.identical(
-        state.getIn([action.className, 'tooltipVisibleProp']),
+        state.getIn([action.globalIndex, 'tooltipVisibleProp']),
         action.propName
       )
-        ? state.setIn([action.className, 'tooltipVisibleProp'], null)
+        ? state.setIn([action.globalIndex, 'tooltipVisibleProp'], null)
         : state;
 
     case actions.GRAPH_SCHEMA_UPDATE_CLASS_OUTER_RADIUS:
-      return state.setIn([action.className, 'outerRadius'], action.outerRadius);
+      return state.setIn(
+        [action.globalIndex, 'outerRadius'],
+        action.outerRadius
+      );
     default:
       return state;
   }
-}
+};

@@ -15,13 +15,13 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    handleMouseDown: (event, className, zoom) => {
+    handleMouseDown: (event, globalIndex, zoom) => {
       event.preventDefault();
       event.stopPropagation();
       const { pageX, pageY } = event;
 
       dispatch(stopLayoutAsync()).then(() =>
-        dispatch(startClassDrag(className, pageX / zoom, pageY / zoom))
+        dispatch(startClassDrag(globalIndex, pageX / zoom, pageY / zoom))
       );
     }
   };

@@ -13,7 +13,7 @@ const {
 } = require('../selectors/ui/ingestion-profile');
 
 const {
-  classLinkKeysSelector,
+  classLinksSelector,
   sourcesSelector,
   mappingLinkPropOptionsSelector
 } = require('../selectors/ingestion-profile');
@@ -39,7 +39,7 @@ function mapStateToProps(state) {
     link: mappingLinkSelector(state),
     index: editingLinkIndexSelector(state),
     activeLinkProp: mappingLinkActivePropSelector(state),
-    linkTypeOptions: classLinkKeysSelector(state),
+    linkTypeOptions: classLinksSelector(state),
     sourceOptions: sourcesSelector(state),
     columnOptions: mappingLinkColumnOptionsSelector(state),
     linkPropOptions: mappingLinkPropOptionsSelector(state),

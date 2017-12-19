@@ -1,4 +1,4 @@
-import { fromJS, List, Map } from 'immutable';
+import { fromJS, Map } from 'immutable';
 import actions from '../../../actions';
 import { ZOOM_STEP, MAX_ZOOM, MIN_ZOOM } from '../../../ingestion-profile';
 
@@ -36,7 +36,7 @@ export default function reduce(state = initialState, action) {
       return state.setIn(
         ['drag', 'class'],
         Map({
-          name: action.name,
+          globalIndex: action.globalIndex,
           fromX: action.fromX,
           fromY: action.fromY
         })
@@ -46,9 +46,10 @@ export default function reduce(state = initialState, action) {
       return state.setIn(
         ['drag', 'classLink'],
         Map({
-          source: action.classLink.source,
-          name: action.classLink.name,
-          target: action.classLink.target,
+          source: action.classLink.get('source'),
+          name: action.classLink.get('name'),
+          target: action.classLink.get('target'),
+          glboalIndex: action.classLink.get('globalIndex'),
           fromX: action.fromX,
           fromY: action.fromY
         })
@@ -111,8 +112,8 @@ export default function reduce(state = initialState, action) {
 
     case actions.GRAPH_SCHEMA_SET_DIMENSIONS_AND_COORDINATES:
       return state
-        .set('dimensions', List(action.dimensions))
-        .set('coordinates', List(action.coordinates));
+        .set('dimensions', action.dimensions)
+        .set('coordinates', action.coordinates);
 
     case actions.GRAPH_SCHEMA_ZOOM: {
       const panX = state.getIn(['pan', 'x']);

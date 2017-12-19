@@ -8,7 +8,7 @@ module.exports = props => {
     classPropNameArcPath,
     classPropNameVisibility,
     classPropNameRadius,
-    className,
+    globalIndex,
     classPropName,
     fontSize,
     handleMouseOver,
@@ -19,7 +19,8 @@ module.exports = props => {
     <g
       className="graph-schema-class-prop-name"
       transform={`rotate(${rotation})`}
-      clipPath={clipPath}>
+      clipPath={clipPath}
+    >
       <path
         id={`graph-schema-class-prop-name-path-${id}`}
         d={classPropNameArcPath}
@@ -29,8 +30,9 @@ module.exports = props => {
         dx={Math.PI * classPropNameRadius}
         dy={fontSize / 2}
         textAnchor="middle"
-        onMouseOver={() => handleMouseOver(className, classPropName)}
-        onMouseOut={() => handleMouseOut(className, classPropName)}>
+        onMouseOver={() => handleMouseOver(globalIndex, classPropName)}
+        onMouseOut={() => handleMouseOut(globalIndex, classPropName)}
+      >
         <textPath xlinkHref={`#graph-schema-class-prop-name-path-${id}`}>
           {classPropName}
         </textPath>

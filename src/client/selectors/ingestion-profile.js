@@ -29,19 +29,14 @@ export const graphSchemaSelector = createSelector(
   ingestionProfile => ingestionProfile.get('graphSchema')
 );
 
-export const classNamesSelector = createSelector(
+export const classesSelector = createSelector(
   graphSchemaSelector,
-  graphSchema => graphSchema.get('classes', Map()).keySeq()
-);
-
-export const classLinkKeysSelector = createSelector(
-  graphSchemaSelector,
-  graphSchema => graphSchema.get('classLinks', List()).keySeq()
+  graphSchema => graphSchema.get('classes', Map())
 );
 
 export const classLinksSelector = createSelector(
   graphSchemaSelector,
-  graphSchema => graphSchema.get('classLinks', List()).valueSeq()
+  graphSchema => graphSchema.get('classLinks', Map())
 );
 
 const mappingSelector = createSelector(
@@ -85,8 +80,8 @@ export const mappingNodePropOptionsSelector = createSelector(
   (graphSchema, mappingNode) =>
     graphSchema
       .getIn(
-      ['classes', mappingNode.get(MAPPING_NODE_TYPE_KEY), 'props'],
-      Map()
+        ['classes', mappingNode.get(MAPPING_NODE_TYPE_KEY), 'props'],
+        Map()
       )
       .keySeq()
       .toSet()
@@ -99,8 +94,8 @@ export const mappingLinkPropOptionsSelector = createSelector(
   (graphSchema, mappingLink) =>
     graphSchema
       .getIn(
-      ['classLinks', mappingLink.get(MAPPING_NODE_TYPE_KEY), 'props'],
-      Map()
+        ['classLinks', mappingLink.get(MAPPING_NODE_TYPE_KEY), 'props'],
+        Map()
       )
       .keySeq()
       .toSet()

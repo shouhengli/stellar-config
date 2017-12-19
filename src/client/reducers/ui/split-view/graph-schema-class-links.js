@@ -1,49 +1,113 @@
-import R from 'ramda';
-import { fromJS, Map } from 'immutable';
+import { Map, fromJS } from 'immutable';
+import { isNil, contains } from 'ramda';
 import actions from '../../../actions';
-import { getClassLinkKey } from '../../../ingestion-profile';
+import { generateClassLinkGlobalIndex } from '../../../ingestion-profile';
 
-const initialState = Map();
+let stagedClassLinksBackUp = null;
 
-export default function reduce(state = initialState, action) {
+export function reduceClassLinks(state = Map(), action) {
   switch (action.type) {
     case actions.GRAPH_SCHEMA_UPDATE_CONTENT: {
-      return R.reduce(
-        (s, l) => s.set(getClassLinkKey(l), fromJS(l)),
-        Map(),
-        action.classLinks
+      return action.classLinks;
+    }
+
+    case actions.CLASS_LIST_CLASS_SELECTED: {
+      const { selectedClass } = action;
+      if (isNil(selectedClass)) {
+        return state;
+      }
+      const next = state.map(l =>
+        l.set(
+          'staged',
+          contains(selectedClass.get('name'), [
+            l.get('source'),
+            l.get('target')
+          ])
+        )
+      );
+      stagedClassLinksBackUp = next.filter(l => l.get('staged'));
+      return next;
+    }
+
+    case actions.CLASS_EDITOR_SAVE_EDIT: {
+      const next = state.map(l => l.set('isEditing', false));
+      stagedClassLinksBackUp = next.filter(l => l.get('staged'));
+      return next;
+    }
+
+    case actions.CLASS_EDITOR_EDIT_CLASS_LINK:
+      return state.setIn(
+        [action.classLink.get('globalIndex'), 'isEditing'],
+        true
+      );
+
+    case actions.CLASS_LIST_ADD_NEW_CLASS:
+    case actions.CLASS_EDITOR_CLOSE_EDIT: {
+      stagedClassLinksBackUp = null;
+      return state.map(l => l.set('staged', false));
+    }
+
+    case actions.CLASS_EDITOR_CANCEL_EDIT:
+      return state.merge(stagedClassLinksBackUp);
+
+    case actions.CLASS_EDITOR_ADD_NEW_LINK: {
+      const globalIndex = generateClassLinkGlobalIndex(),
+        selectedClassName = action.selectedClass.get('name');
+
+      return state.set(
+        globalIndex,
+        fromJS({
+          name: '',
+          source: selectedClassName,
+          target: selectedClassName,
+          staged: true,
+          globalIndex,
+          isEditing: true
+        })
       );
     }
 
+    case actions.CLASS_EDITOR_DELETE_LINK:
+      return state.delete(action.classLink.get('globalIndex'));
+
+    case actions.CLASS_EDITOR_UPDATE_LINK_NAME:
+      return state.setIn(
+        [action.classLink.get('globalIndex'), 'name'],
+        action.name
+      );
+
+    case actions.CLASS_EDITOR_UPDATE_LINK_SOURCE:
+      return state.setIn(
+        [action.classLink.get('globalIndex'), 'source'],
+        action.source
+      );
+
+    case actions.CLASS_EDITOR_UPDATE_LINK_TARGET:
+      return state.setIn(
+        [action.classLink.get('globalIndex'), 'target'],
+        action.target
+      );
+
+    default:
+      return state;
+  }
+}
+
+export const reduceClassLinkPositions = (state = Map(), action) => {
+  switch (action.type) {
     case actions.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS:
-      if (R.any(l => state.has(getClassLinkKey(l)), action.classLinks)) {
-        return R.reduce(
-          (s, l) =>
-            s
-              .setIn([getClassLinkKey(l), 'x'], l.x)
-              .setIn([getClassLinkKey(l), 'y'], l.y),
-          state,
-          action.classLinks
-        );
-      } else {
-        return state;
-      }
+      return action.classLinks;
 
     case actions.GRAPH_SCHEMA_UPDATE_CLASS_LINK_POSITION: {
-      const classLinkKey = getClassLinkKey({
-        name: action.name,
-        source: action.source,
-        target: action.target
-      });
-      if (state.has(classLinkKey)) {
+      if (state.has(action.globalIndex)) {
         return state
           .setIn(
-            [classLinkKey, 'x'],
-            state.getIn([classLinkKey, 'x']) + action.dx
+            [action.globalIndex, 'x'],
+            state.getIn([action.globalIndex, 'x']) + action.dx
           )
           .setIn(
-            [classLinkKey, 'y'],
-            state.getIn([classLinkKey, 'y']) + action.dy
+            [action.globalIndex, 'y'],
+            state.getIn([action.globalIndex, 'y']) + action.dy
           );
       }
       return state;
@@ -51,10 +115,12 @@ export default function reduce(state = initialState, action) {
 
     case actions.GRAPH_SCHEMA_UPDATE_CLASS_LINK_LENGTHS:
       return state.withMutations(mutableState => {
-        action.classLinks.forEach(classLink => {
-          let classLinkKey = getClassLinkKey(classLink);
-          if (mutableState.has(classLinkKey)) {
-            mutableState.setIn([classLinkKey, 'length'], classLink.length);
+        action.classLinks.forEach(l => {
+          if (mutableState.has(l.get('globalIndex'))) {
+            mutableState.setIn(
+              [l.get('globalIndex'), 'length'],
+              l.get('length')
+            );
           }
         });
       });
@@ -62,4 +128,4 @@ export default function reduce(state = initialState, action) {
     default:
       return state;
   }
-}
+};

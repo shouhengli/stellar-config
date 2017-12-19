@@ -18,7 +18,10 @@ class Class extends React.Component {
     this.getClassPropAngles = createSelector(
       cls => cls.get('props'),
       classProps => {
-        const classPropNames = classProps.keySeq().toJS();
+        const classPropNames = classProps
+          .valueSeq()
+          .map(p => p.get('name'))
+          .toJS();
         const classPropNamesLengthSum = getLengthSum(classPropNames);
 
         const classPropAngles = R.reduce(
@@ -116,7 +119,6 @@ class Class extends React.Component {
       handleMouseLeave
     } = this.props;
 
-    const className = cls.get('name');
     const classGlobalIndex = cls.get('globalIndex');
     const tooltipVisibleProp = cls.get('tooltipVisibleProp');
     const classArcGenerator = this.getClassArcGenerator(cls);
@@ -133,7 +135,8 @@ class Class extends React.Component {
           .get('y')
           .toFixed()})`}
         onMouseEnter={() => handleMouseEnter(cls)}
-        onMouseLeave={() => handleMouseLeave(cls)}>
+        onMouseLeave={() => handleMouseLeave(cls)}
+      >
         <ClassName
           name={cls.get('name')}
           radius={CLASS_INNER_RADIUS}
@@ -150,7 +153,7 @@ class Class extends React.Component {
               <g key={classPropName} transform="rotate(180)">
                 <ClassArc
                   path={classArcPath}
-                  className={className}
+                  globalIndex={classGlobalIndex}
                   classPropName={classPropName}
                 />
                 <ClassPropName
@@ -160,7 +163,7 @@ class Class extends React.Component {
                   classPropNameArcPath={classPropNameArcPath}
                   classPropNameRadius={classPropNameRadius}
                   classPropNameVisibility={classPropNameVisibility}
-                  className={className}
+                  globalIndex={classGlobalIndex}
                   classPropName={classPropName}
                   fontSize={FONT_SIZE}
                 />

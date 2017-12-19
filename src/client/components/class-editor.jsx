@@ -6,28 +6,38 @@ export default class ClassEditor extends React.Component {
   updateClassName = e => this.props.updateClassName(e.target.textContent);
 
   updateAttributeName = e =>
-    this.props.updateAttributeName(e.target.dataset.name, e.target.textContent);
+    this.props.updateAttributeName(
+      this.props.selectedClass.getIn(['props', e.target.dataset.globalIndex]),
+      e.target.textContent
+    );
 
   updateAttributeType = e =>
-    this.props.updateAttributeType(e.target.dataset.name, e.target.value);
+    this.props.updateAttributeType(
+      this.props.selectedClass.getIn(['props', e.target.dataset.globalIndex]),
+      e.target.value
+    );
 
-  deleteAttribute = e => this.props.deleteAttribute(e.target.dataset.name);
+  deleteAttribute = e =>
+    this.props.deleteAttribute(
+      this.props.selectedClass.getIn(['props', e.target.dataset.globalIndex])
+    );
 
   editAttribute = e =>
-    this.props.editAttribute(parseInt(e.target.dataset.index));
+    this.props.editAttribute(
+      this.props.selectedClass.getIn(['props', e.target.dataset.globalIndex])
+    );
 
   editClassLink = e =>
-    this.props.editClassLink(parseInt(e.target.dataset.globalIndex));
+    this.props.editClassLink(
+      this.props.stagedClassLinks.get(e.target.dataset.globalIndex)
+    );
 
   render() {
     const {
       selectedClass,
       stagedClassLinks,
-      attributeIndexesToEdit,
-      linkIndexesToEdit,
       classes,
       isEditing,
-      isEditingClassName,
       saveEdit,
       closeEdit,
       addNewAttribute,
@@ -41,11 +51,13 @@ export default class ClassEditor extends React.Component {
         <div className="panel-heading">
           <span
             onBlur={this.updateClassName}
-            contentEditable={isEditingClassName}
+            contentEditable={selectedClass.get('isEditingName')}
             dangerouslySetInnerHTML={{ __html: selectedClass.get('name') }}
           />
           <a
-            className={`hover-button button is-small is-text fa fa-pencil ${(isEditingClassName &&
+            className={`hover-button button is-small is-text fa fa-pencil ${(selectedClass.get(
+              'isEditingName'
+            ) &&
               'is-invisible') ||
               ''}`}
             onClick={editClassName}
@@ -53,14 +65,16 @@ export default class ClassEditor extends React.Component {
           <a
             className={`close-editor button is-pulled-right is-medium ${
               isEditing ? 'is-invisible' : ''
-              }`}
-            onClick={closeEdit}>
+            }`}
+            onClick={closeEdit}
+          >
             <span className="icon is-medium fa fa-times fa-lg" />
           </a>
           <div
             className={`field is-grouped is-pulled-right ${
               isEditing ? '' : 'is-invisible'
-              }`}>
+            }`}
+          >
             <p className="control">
               <a className="button is-small is-primary" onClick={saveEdit}>
                 Save
@@ -88,49 +102,46 @@ export default class ClassEditor extends React.Component {
               <tbody>
                 {selectedClass
                   .get('props')
-                  .entrySeq()
-                  .map((entry, index) => (
-                    <tr key={index}>
+                  .valueSeq()
+                  .map(prop => (
+                    <tr key={prop.get('globalIndex')}>
                       <td>
                         <div
-                          data-name={entry[0]}
+                          data-global-index={prop.get('globalIndex')}
                           onBlur={this.updateAttributeName}
-                          contentEditable={attributeIndexesToEdit.contains(
-                            index
-                          )}
-                          dangerouslySetInnerHTML={{ __html: entry[0] }}
+                          contentEditable={prop.get('isEditing')}
+                          dangerouslySetInnerHTML={{ __html: prop.get('name') }}
                         />
                       </td>
                       <td>
-                        {attributeIndexesToEdit.contains(index) ? (
+                        {prop.get('isEditing') ? (
                           <div className="select">
                             <select
-                              data-name={entry[0]}
-                              value={entry[1]}
-                              onChange={this.updateAttributeType}>
+                              data-global-index={prop.get('name')}
+                              value={prop.get('type')}
+                              onChange={this.updateAttributeType}
+                            >
                               {graphSchemaPrimitiveTypes.map(t => (
                                 <option key={t}>{t}</option>
                               ))}
                             </select>
                           </div>
                         ) : (
-                            entry[1]
-                          )}
+                          prop.get('name')
+                        )}
                       </td>
                       <td className="is-narrow">
                         <a
-                          data-index={index}
+                          data-global-index={prop.get('globalIndex')}
                           className={`hover-button fa fa-pencil ${
-                            attributeIndexesToEdit.contains(index)
-                              ? 'is-invisible'
-                              : ''
-                            }`}
+                            prop.get('isEditing') ? 'is-invisible' : ''
+                          }`}
                           onClick={this.editAttribute}
                         />
                       </td>
                       <td className="is-narrow">
                         <a
-                          data-name={entry[0]}
+                          data-global-index={prop.get('globalIndex')}
                           className="fa fa-trash hover-button"
                           onClick={this.deleteAttribute}
                         />
@@ -141,7 +152,8 @@ export default class ClassEditor extends React.Component {
                   <td colSpan="4">
                     <a
                       onClick={addNewAttribute}
-                      className="button is-link is-outlined is-fullwidth">
+                      className="button is-link is-outlined is-fullwidth"
+                    >
                       <span className="panel-icon">
                         <i className="fa fa-plus" />
                       </span>
@@ -165,54 +177,54 @@ export default class ClassEditor extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {stagedClassLinks.toJS().map(link => (
-                  <tr key={link.name}>
+                {stagedClassLinks.valueSeq().map(link => (
+                  <tr key={link.get('name')}>
                     <td>
                       <div
-                        contentEditable={linkIndexesToEdit.contains(
-                          link.globalIndex
-                        )}
-                        dangerouslySetInnerHTML={{ __html: link.name }}
+                        contentEditable={link.get('isEditing')}
+                        dangerouslySetInnerHTML={{ __html: link.get('name') }}
                       />
                     </td>
                     <td>
-                      {linkIndexesToEdit.contains(link.globalIndex) ? (
+                      {link.get('isEditing') ? (
                         <div className="select">
-                          <select value={link.source}>
-                            {classes.map(cls => (
-                              <option key={cls.get('globalIndex')}>
-                                {cls.get('name')}
-                              </option>
-                            ))}
+                          <select value={link.get('source')}>
+                            {classes
+                              .valueSeq()
+                              .map(cls => (
+                                <option key={cls.get('globalIndex')}>
+                                  {cls.get('name')}
+                                </option>
+                              ))}
                           </select>
                         </div>
                       ) : (
-                          link.source
-                        )}
+                        link.get('source')
+                      )}
                     </td>
                     <td>
-                      {linkIndexesToEdit.contains(link.globalIndex) ? (
+                      {link.get('isEditing') ? (
                         <div className="select">
-                          <select value={link.target}>
-                            {classes.map(cls => (
-                              <option key={cls.get('globalIndex')}>
-                                {cls.get('name')}
-                              </option>
-                            ))}
+                          <select value={link.get('target')}>
+                            {classes
+                              .valueSeq()
+                              .map(cls => (
+                                <option key={cls.get('globalIndex')}>
+                                  {cls.get('name')}
+                                </option>
+                              ))}
                           </select>
                         </div>
                       ) : (
-                          link.target
-                        )}
+                        link.get('target')
+                      )}
                     </td>
                     <td className="is-narrow">
                       <a
                         className={`hover-button fa fa-pencil ${
-                          linkIndexesToEdit.contains(link.globalIndex)
-                            ? 'is-invisible'
-                            : ''
-                          }`}
-                        data-global-index={link.globalIndex}
+                          link.get('isEditing') ? 'is-invisible' : ''
+                        }`}
+                        data-global-index={link.get('globalIndex')}
                         onClick={this.editClassLink}
                       />
                     </td>
@@ -225,7 +237,8 @@ export default class ClassEditor extends React.Component {
                   <td colSpan="5">
                     <a
                       onClick={addNewLink}
-                      className="button is-link is-outlined is-fullwidth">
+                      className="button is-link is-outlined is-fullwidth"
+                    >
                       <span className="panel-icon">
                         <i className="fa fa-plus" />
                       </span>

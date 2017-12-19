@@ -3,7 +3,7 @@ const React = require('react');
 module.exports = props => {
   const {
     path,
-    className,
+    globalIndex,
     classPropName,
     handleMouseOver,
     handleMouseOut
@@ -13,8 +13,8 @@ module.exports = props => {
     <g className="graph-schema-class-arc">
       <path
         d={path}
-        onMouseOver={() => handleMouseOver(className, classPropName)}
-        onMouseOut={() => handleMouseOut(className, classPropName)}
+        onMouseOver={() => handleMouseOver(globalIndex, classPropName)}
+        onMouseOut={() => handleMouseOut(globalIndex, classPropName)}
       />
     </g>
   );

@@ -16,11 +16,12 @@ export const GRAPH_SCHEMA_CONFIG_TYPE = 'graph schema';
 
 const createGlobalIndexGenerator = () => {
   let id = 0;
-  return () => id++;
+  return () => `${id++}`;
 };
 
-const generateClassGlobalIndex = createGlobalIndexGenerator();
-const generateClassLinkGlobalIndex = createGlobalIndexGenerator();
+export const generateClassGlobalIndex = createGlobalIndexGenerator();
+export const generateClassLinkGlobalIndex = createGlobalIndexGenerator();
+export const generateClassPropGlobalIndex = createGlobalIndexGenerator();
 
 /**
  * Creates a class.
@@ -153,18 +154,6 @@ export class GraphSchemaFormatError extends ClientError {
   constructor(cause) {
     super(cause);
   }
-}
-
-export function createUIClassesAndLinksFromGraphSchema(graphSchema) {
-  const classes = graphSchema.get('classes')
-    .valueSeq().map(cls => createClass(cls.get('name'), cls.get('props')));
-  const classLinks = graphSchema.get('classLinks')
-    .valueSeq().map(l => createClassLink(l.get('name'), l.get('source'), l.get('target')));
-
-  return {
-    classes,
-    classLinks
-  };
 }
 
 export const INGESTION_PROFILE_CONFIG_TYPE = 'ingestion profile';

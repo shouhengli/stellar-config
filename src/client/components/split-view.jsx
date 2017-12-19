@@ -1,29 +1,17 @@
 import React from 'react';
-import ClassList from './class-list.jsx';
+import ClassList from '../containers/class-list.jsx';
 import ClassEditor from '../containers/class-editor.jsx';
 import GraphSchema from '../containers/graph-schema.jsx';
 import R from 'ramda';
 
 export default class SplitView extends React.Component {
   render() {
-    const {
-      classes,
-      selectedClass,
-      handleClassClicked,
-      handleCreateNewClass,
-      isEditing
-    } = this.props;
+    const { selectedClass } = this.props;
 
     return (
       <div className="split-view columns">
         <div key="leftChild" className="view column is-one-fifth">
-          <ClassList
-            classes={classes}
-            handleClassClicked={handleClassClicked}
-            handleCreateNewClass={handleCreateNewClass}
-            isEditing={isEditing}
-            selectedClass={selectedClass}
-          />
+          <ClassList />
         </div>
         {R.isNil(selectedClass) ? (
           ''
@@ -37,5 +25,9 @@ export default class SplitView extends React.Component {
         </div>
       </div>
     );
+  }
+
+  componentWillMount() {
+    this.props.init(this.props.classes, this.props.classLinks);
   }
 }

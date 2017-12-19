@@ -2,11 +2,12 @@ const P = require('bluebird');
 import actions from '../../../actions';
 const layout = require('../../../force-layout');
 const layoutWorker = new Worker('/force-layout-worker.js');
+import { fromJS, Map } from 'immutable';
 
-function startClassDrag(name, fromX, fromY) {
+function startClassDrag(globalIndex, fromX, fromY) {
   return {
     type: actions.GRAPH_SCHEMA_START_CLASS_DRAG,
-    name,
+    globalIndex,
     fromX,
     fromY
   };
@@ -33,7 +34,7 @@ function stopDrag() {
   return { type: actions.GRAPH_SCHEMA_STOP_DRAG };
 }
 
-function updateGraphSchemaElementPositions(classes, classLinks) {
+function loadGraphSchemaElementPositions(classes, classLinks) {
   return {
     type: actions.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS,
     classes,
@@ -41,17 +42,17 @@ function updateGraphSchemaElementPositions(classes, classLinks) {
   };
 }
 
-function updateClassPosition(className, dx, dy) {
+function updateClassPosition(globalIndex, dx, dy) {
   return {
     type: actions.GRAPH_SCHEMA_UPDATE_CLASS_POSITION,
-    name: className,
+    globalIndex: globalIndex,
     dx,
     dy
   };
 }
 
 function updateClassLinkPosition(
-  classLinkName,
+  globalIndex,
   classLinkSource,
   classLinkTarget,
   dx,
@@ -59,7 +60,7 @@ function updateClassLinkPosition(
 ) {
   return {
     type: actions.GRAPH_SCHEMA_UPDATE_CLASS_LINK_POSITION,
-    name: classLinkName,
+    globalIndex: globalIndex,
     source: classLinkSource,
     target: classLinkTarget,
     dx,
@@ -92,9 +93,15 @@ function initLayoutAsync() {
             event.data.type === layout.GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS
           ) {
             dispatch(
-              updateGraphSchemaElementPositions(
-                event.data.classes,
-                event.data.classLinks
+              loadGraphSchemaElementPositions(
+                fromJS(event.data.classes).reduce(
+                  (s, c) => s.set(c.get('globalIndex'), c),
+                  Map()
+                ),
+                fromJS(event.data.classLinks).reduce(
+                  (s, l) => s.set(l.get('globalIndex'), l),
+                  Map()
+                )
               )
             );
           }
@@ -107,9 +114,9 @@ function startLayoutAsync(classes, classLinks, dimensions) {
     P.resolve().then(() =>
       layoutWorker.postMessage({
         type: layout.START_GRAPH_SCHEMA_SIMULATION,
-        classes,
-        classLinks,
-        dimensions
+        classes: classes.valueSeq().toJS(),
+        classLinks: classLinks.valueSeq().toJS(),
+        dimensions: dimensions.toJS()
       })
     );
 }
@@ -123,26 +130,26 @@ function stopLayoutAsync() {
     );
 }
 
-function revealClassPropTooltip(className, propName) {
+function revealClassPropTooltip(globalIndex, propName) {
   return {
     type: actions.GRAPH_SCHEMA_REVEAL_CLASS_PROP_TOOLTIP,
-    className,
+    globalIndex,
     propName
   };
 }
 
-function hideClassPropTooltip(className, propName) {
+function hideClassPropTooltip(globalIndex, propName) {
   return {
     type: actions.GRAPH_SCHEMA_HIDE_CLASS_PROP_TOOLTIP,
-    className,
+    globalIndex,
     propName
   };
 }
 
-function updateClassOuterRadius(className, outerRadius) {
+function updateClassOuterRadius(globalIndex, outerRadius) {
   return {
     type: actions.GRAPH_SCHEMA_UPDATE_CLASS_OUTER_RADIUS,
-    className,
+    globalIndex,
     outerRadius
   };
 }
@@ -183,6 +190,7 @@ module.exports = {
   updateClassLinkLengthsAsync,
   updateClassPosition,
   updateClassLinkPosition,
+  loadGraphSchemaElementPositions,
   updatePan,
   zoom
 };

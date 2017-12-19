@@ -1,7 +1,7 @@
 import { compose } from 'ramda';
 import { connect } from 'react-redux';
 import ClassEditor from '../components/class-editor.jsx';
-import { classListSelector } from '../selectors/ui/split-view/graph-schema-classes';
+import { classesSelector } from '../selectors/ui/split-view/graph-schema-classes';
 import { stagedClassLinksSelector } from '../selectors/ui/split-view/graph-schema-class-links';
 import {
   editAttribute,
@@ -19,21 +19,15 @@ import {
 } from '../action-creators/ui/split-view';
 import {
   selectedClassSelector,
-  attributeIndexesToEditSelector,
-  linkIndexesToEditSelector,
-  isEditingSelector,
-  isEditingClassNameSelector
-} from '../selectors/ui/split-view';
+  isEditingSelector
+} from '../selectors/ui/split-view/graph-schema-classes';
 
 function mapStateToProps(state) {
   return {
     selectedClass: selectedClassSelector(state),
-    classes: classListSelector(state),
+    classes: classesSelector(state),
     stagedClassLinks: stagedClassLinksSelector(state),
-    attributeIndexesToEdit: attributeIndexesToEditSelector(state),
-    linkIndexesToEdit: linkIndexesToEditSelector(state),
-    isEditing: isEditingSelector(state),
-    isEditingClassName: isEditingClassNameSelector(state)
+    isEditing: isEditingSelector(state)
   };
 }
 
@@ -54,20 +48,4 @@ function mapDispatchToProps(dispatch, ownProps) {
   };
 }
 
-const mergeProps = (stateProps, dispatchProps, ownProps) => ({
-  ...ownProps,
-  ...stateProps,
-  ...dispatchProps,
-  addNewAttribute() {
-    dispatchProps.addNewAttribute();
-    dispatchProps.editAttribute(stateProps.selectedClass.get('props').size);
-  },
-  addNewLink() {
-    dispatchProps.addNewLink();
-    dispatchProps.editClassLink(stateProps.stagedClassLinks.size);
-  }
-});
-
-export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(
-  ClassEditor
-);
+export default connect(mapStateToProps, mapDispatchToProps)(ClassEditor);

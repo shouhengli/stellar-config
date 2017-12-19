@@ -1,7 +1,6 @@
 import React from 'react';
 import R from 'ramda';
-import { is } from 'immutable';
-import { getClassLinkKey } from '../ingestion-profile';
+import { is, fromJS } from 'immutable';
 
 class GraphSchema extends React.Component {
   constructor(props) {
@@ -14,6 +13,9 @@ class GraphSchema extends React.Component {
     return 'Graph Schema';
   }
 
+  findClassIndexByName = name =>
+    this.props.classes.find(c => c.get('name') === name).get('globalIndex');
+
   render() {
     const {
       Arrow,
@@ -21,8 +23,8 @@ class GraphSchema extends React.Component {
       ClassLinkPath,
       ClassLinkLabel,
       Class,
-      classLinks,
-      classes,
+      positionedClassLinks,
+      positionedClasses,
       drag,
       handleMouseMove,
       handleMouseUp,
@@ -40,18 +42,20 @@ class GraphSchema extends React.Component {
           onMouseMove={event => handleMouseMove(event, drag, zoom)}
           onMouseUp={() => handleMouseUp()}
           onMouseDown={event => handleMouseDown(event, zoom)}
-          onWheel={event => handleWheel(event, coordinates, drag)}>
+          onWheel={event => handleWheel(event, coordinates, drag)}
+        >
           <g
             transform={`scale(${zoom}) translate(${pan.get('x')}, ${pan.get(
               'y'
-            )})`}>
+            )})`}
+          >
             <defs>
               <Arrow id="graph-schema-arrow" />
             </defs>
             <g className="graph-schema-class-links">
-              {classLinks.toList().map(l => {
+              {positionedClassLinks.valueSeq().map(l => {
                 return (
-                  <ClassLink key={getClassLinkKey(l)}>
+                  <ClassLink key={l.get('globalIndex')}>
                     <ClassLinkPath
                       ref={p => {
                         if (R.isNil(p)) {
@@ -61,12 +65,24 @@ class GraphSchema extends React.Component {
                         }
                       }}
                       id={l.get('globalIndex')}
-                      x0={classes.getIn([l.get('source'), 'x'])}
-                      y0={classes.getIn([l.get('source'), 'y'])}
+                      x0={positionedClasses.getIn([
+                        this.findClassIndexByName(l.get('source')),
+                        'x'
+                      ])}
+                      y0={positionedClasses.getIn([
+                        this.findClassIndexByName(l.get('source')),
+                        'y'
+                      ])}
                       x1={l.get('x')}
                       y1={l.get('y')}
-                      x2={classes.getIn([l.get('target'), 'x'])}
-                      y2={classes.getIn([l.get('target'), 'y'])}
+                      x2={positionedClasses.getIn([
+                        this.findClassIndexByName(l.get('target')),
+                        'x'
+                      ])}
+                      y2={positionedClasses.getIn([
+                        this.findClassIndexByName(l.get('target')),
+                        'y'
+                      ])}
                       markerId="graph-schema-arrow"
                     />
                     <ClassLinkLabel id={l.get('globalIndex')} classLink={l} />
@@ -75,8 +91,8 @@ class GraphSchema extends React.Component {
               })}
             </g>
             <g className="graph-schema-classes">
-              {classes.toList().map(c => {
-                return <Class key={c.get('name')} cls={c} />;
+              {positionedClasses.valueSeq().map(c => {
+                return <Class key={c.get('globalIndex')} cls={c} />;
               })}
             </g>
           </g>
@@ -86,24 +102,29 @@ class GraphSchema extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!is(prevProps.graphSchema, this.props.graphSchema)) {
-      this.props.handleGraphSchemaChange(
-        this.props.graphSchema,
-        this.props.dimensions.toJS(),
-        this.props.classes,
-        this.props.classLinks
-      );
-    } else if (this.props.shouldUpdateClassLinkLengths) {
-      this.props.updateClassLinkLengths(this.classLinkPaths);
+    const dimensions = fromJS([this.svg.clientWidth, this.svg.clientHeight]);
+    if (
+      is(prevProps.classes, this.props.classes) &&
+      is(prevProps.classLinks, this.props.classLinks) &&
+      is(prevProps.dimensions, dimensions)
+    ) {
+      if (this.props.shouldUpdateClassLinkLengths) {
+        this.props.updateClassLinkLengths(this.classLinkPaths);
+      }
+      return;
     }
+    const { left, top } = this.svg.getBoundingClientRect();
+    this.props.init(
+      fromJS([this.svg.clientWidth, this.svg.clientHeight]),
+      fromJS([left, top])
+    );
   }
 
   componentDidMount() {
     const { left, top } = this.svg.getBoundingClientRect();
     this.props.init(
-      [this.svg.clientWidth, this.svg.clientHeight],
-      [left, top],
-      this.props.graphSchema
+      fromJS([this.svg.clientWidth, this.svg.clientHeight]),
+      fromJS([left, top])
     );
   }
 

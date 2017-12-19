@@ -14,80 +14,65 @@ const LINK_FORCE_DISTANCE = 175;
 
 const graphSchemaSimulation = d3.forceSimulation().stop();
 
-const createCenteringForce = (width, height) =>
-  d3.forceCenter(width / 2, height / 2);
-
-const createBoundaryForce = (simulation, width, height) => () =>
-  simulation.nodes().forEach(node => {
-    node.x = Math.max(node.r, Math.min(width - node.r, node.x));
-    node.y = Math.max(node.r, Math.min(height - node.r, node.y));
-  });
-
-const createCollideForce = radiusMultiplier =>
-  d3.forceCollide(node => node.r * radiusMultiplier);
-
-const createLinkForce = (links, distance) =>
-  d3.forceLink(links).distance(distance);
-
-const updateGraphSchemaElementPositions = (classNodes, classLinkNodes) => {
-  postMessage({
-    type: GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS,
-    classes: classNodes,
-    classLinks: classLinkNodes
-  });
-};
-
 const startGraphSchemaSimulation = (classes, classLinks, dimensions) => {
-  const classNodes = classes.map(c => {
-    return {
-      x: c.x,
-      y: c.y,
-      r: CLASS_FORCE_RADIUS,
-      name: c.name
-    };
-  });
+  const classNodes = classes.map(c => ({
+    x: c.x,
+    y: c.y,
+    r: CLASS_FORCE_RADIUS,
+    name: c.name,
+    outerRadius: c.outerRadius,
+    globalIndex: c.globalIndex
+  }));
 
-  const classNodeIndex = R.zipObj(classNodes.map(n => n.name), classNodes);
+  const findClassNodeByName = name => classNodes.find(c => c.name === name);
 
-  const classLinkNodes = classLinks.map(l => {
-    return {
-      x: l.x,
-      y: l.y,
-      r: CLASS_LINK_FORCE_RADIUS,
-      name: l.name,
-      source: l.source,
-      target: l.target
-    };
-  });
-
-  const nodes = R.concat(classNodes, classLinkNodes);
+  const classLinkNodes = classLinks.map(l => ({
+    x: l.x,
+    y: l.y,
+    r: CLASS_LINK_FORCE_RADIUS,
+    length: l.length,
+    name: l.name,
+    source: l.source,
+    target: l.target,
+    globalIndex: l.globalIndex
+  }));
 
   const links = R.flatten(
     classLinkNodes.map(n => {
       return [
         {
-          source: classNodeIndex[n.source],
+          source: findClassNodeByName(n.source),
           target: n
         },
         {
           source: n,
-          target: classNodeIndex[n.target]
+          target: findClassNodeByName(n.target)
         }
       ];
     })
   );
 
   graphSchemaSimulation
-    .nodes(nodes)
-    .force('center', createCenteringForce(...dimensions))
-    .force('collide', createCollideForce(COLLIDE_FORCE_RADIUS_MULTIPLIER))
+    .nodes(R.concat(classNodes, classLinkNodes))
+    .force('center', d3.forceCenter(...dimensions.map(d => d / 2)))
     .force(
-      'boundary',
-      createBoundaryForce(graphSchemaSimulation, ...dimensions)
+      'collide',
+      d3.forceCollide(node => node.r * COLLIDE_FORCE_RADIUS_MULTIPLIER)
     )
-    .force('link', createLinkForce(links, LINK_FORCE_DISTANCE))
+    .force('boundary', () =>
+      graphSchemaSimulation.nodes().forEach(node => {
+        const [width, height] = dimensions;
+        node.x = Math.max(node.r, Math.min(width - node.r, node.x));
+        node.y = Math.max(node.r, Math.min(height - node.r, node.y));
+      })
+    )
+    .force('link', d3.forceLink(links).distance(LINK_FORCE_DISTANCE))
     .on('tick', () =>
-      updateGraphSchemaElementPositions(classNodes, classLinkNodes)
+      postMessage({
+        type: GRAPH_SCHEMA_UPDATE_ELEMENT_POSITIONS,
+        classes: classNodes,
+        classLinks: classLinkNodes
+      })
     )
     .alpha(1)
     .restart();

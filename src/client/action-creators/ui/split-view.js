@@ -7,24 +7,23 @@ export function classSelected(selectedClass) {
   };
 }
 
-export function addNewClass(cls) {
+export function addNewClass() {
   return {
-    type: actions.CLASS_LIST_ADD_NEW_CLASS,
-    class: cls
+    type: actions.CLASS_LIST_ADD_NEW_CLASS
   };
 }
 
-export function editAttribute(index) {
+export function editAttribute(attribute) {
   return {
     type: actions.CLASS_EDITOR_EDIT_ATTRIBUTE,
-    index
+    attribute
   };
 }
 
-export function editClassLink(classLinkIndex) {
+export function editClassLink(classLink) {
   return {
     type: actions.CLASS_EDITOR_EDIT_CLASS_LINK,
-    classLinkIndex
+    classLink
   };
 }
 
@@ -58,9 +57,10 @@ export function addNewAttribute() {
   };
 }
 
-export function addNewLink() {
+export function addNewLink(selectedClass) {
   return {
-    type: actions.CLASS_EDITOR_ADD_NEW_LINK
+    type: actions.CLASS_EDITOR_ADD_NEW_LINK,
+    selectedClass
   };
 }
 
@@ -71,33 +71,25 @@ export function updateClassName(name) {
   };
 }
 
-export function updateAttributeType(attrName, attrType) {
+export function updateAttributeType(attribute, attrType) {
   return {
     type: actions.CLASS_EDITOR_UPDATE_ATTRIBUTE_TYPE,
-    attrType,
-    attrName
+    attribute,
+    attrType
   };
 }
 
-export function updateAttributeName(attrName, newName) {
+export function updateAttributeName(attribute, newName) {
   return {
     type: actions.CLASS_EDITOR_UPDATE_ATTRIBUTE_NAME,
-    attrName,
+    attribute,
     newName
   };
 }
 
-export function deleteAttribute(attrName) {
+export function deleteAttribute(attribute) {
   return {
     type: actions.CLASS_EDITOR_DELETE_ATTRIBUTE,
-    attrName
-  };
-}
-
-export function updateStagedClassLinks(selectedClass, classLinks) {
-  return {
-    type: actions.CLASS_EDITOR_UPDATE_STAGED_CLASS_LINKS,
-    selectedClass,
-    classLinks
+    attribute
   };
 }

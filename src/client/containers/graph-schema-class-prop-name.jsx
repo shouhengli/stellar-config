@@ -9,10 +9,10 @@ const {
 
 function mapDispatchToProps(dispatch) {
   return {
-    handleMouseOver: (className, classPropName) =>
-      dispatch(revealClassPropTooltip(className, classPropName)),
-    handleMouseOut: (className, classPropName) =>
-      dispatch(hideClassPropTooltip(className, classPropName))
+    handleMouseOver: (globalIndex, classPropName) =>
+      dispatch(revealClassPropTooltip(globalIndex, classPropName)),
+    handleMouseOut: (globalIndex, classPropName) =>
+      dispatch(hideClassPropTooltip(globalIndex, classPropName))
   };
 }
 

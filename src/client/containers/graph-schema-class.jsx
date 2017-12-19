@@ -18,24 +18,24 @@ const Class = require('../components/graph-schema-class.jsx');
 
 const classOuterRadiusAnimationIndex = {};
 
-const stopClassOuterRadiusAnimation = className => {
-  if (classOuterRadiusAnimationIndex[className]) {
-    classOuterRadiusAnimationIndex[className].pause();
-    delete classOuterRadiusAnimationIndex[className];
+const stopClassOuterRadiusAnimation = globalIndex => {
+  if (classOuterRadiusAnimationIndex[globalIndex]) {
+    classOuterRadiusAnimationIndex[globalIndex].pause();
+    delete classOuterRadiusAnimationIndex[globalIndex];
   }
 };
 
 const playClassOuterRadiusAnimation = (
-  className,
+  globalIndex,
   classOuterRadius,
   targetRadius,
   handleUpdate
 ) => {
-  stopClassOuterRadiusAnimation(className);
+  stopClassOuterRadiusAnimation(globalIndex);
 
   const target = { r: classOuterRadius };
 
-  classOuterRadiusAnimationIndex[className] = anime({
+  classOuterRadiusAnimationIndex[globalIndex] = anime({
     targets: target,
     r: targetRadius,
     update: () => handleUpdate(Number(target.r))
@@ -58,18 +58,20 @@ function mapDispatchToProps(dispatch) {
   return {
     handleMouseEnter: cls =>
       startClassOuterRadiusAnimation(
-        cls.get('name'),
+        cls.get('globalIndex'),
         cls.get('outerRadius'),
-        radius => dispatch(updateClassOuterRadius(cls.get('name'), radius))
+        radius =>
+          dispatch(updateClassOuterRadius(cls.get('globalIndex'), radius))
       ),
     handleMouseLeave: cls =>
       reverseClassOuterRadiusAnimation(
-        cls.get('name'),
+        cls.get('globalIndex'),
         cls.get('outerRadius'),
-        radius => dispatch(updateClassOuterRadius(cls.get('name'), radius))
+        radius =>
+          dispatch(updateClassOuterRadius(cls.get('globalIndex'), radius))
       ),
     handleComponentWillUnmount: cls => {
-      stopClassOuterRadiusAnimation(cls.name);
+      stopClassOuterRadiusAnimation(cls.get('globalindex'));
     }
   };
 }

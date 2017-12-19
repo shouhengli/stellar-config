@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { defaultTo, values, isNil } from 'ramda';
-import { Map } from 'immutable';
+import { values, compose } from 'ramda';
+import { fromJS } from 'immutable';
 
 import Arrow from '../components/graph-schema-arrow.jsx';
 import ClassLink from '../components/graph-schema-class-link.jsx';
@@ -10,13 +10,7 @@ import ClassLinkLabel from './graph-schema-class-link-label.jsx';
 import Class from './graph-schema-class.jsx';
 import GraphSchema from '../components/graph-schema.jsx';
 
-import {
-  GraphSchemaFormatError,
-  getClassLinkKey,
-  createUIClassesAndLinksFromGraphSchema
-} from '../ingestion-profile';
-
-import { graphSchemaSelector } from '../selectors/ingestion-profile';
+import { GraphSchemaFormatError } from '../ingestion-profile';
 
 import {
   shouldUpdateClassLinkLengthsSelector,
@@ -27,12 +21,14 @@ import {
   dragSelector
 } from '../selectors/ui/split-view/graph-schema';
 
-import { relatedClassesSelector } from '../selectors/ui/split-view/graph-schema-classes';
 import {
-  stagedClassLinksSelector,
-  classLinksSelector
+  positionedStagedClassSelector,
+  stagedClassesSelector
+} from '../selectors/ui/split-view/graph-schema-classes';
+import {
+  positionedStagedClassLinksSelector,
+  stagedClassLinksSelector
 } from '../selectors/ui/split-view/graph-schema-class-links';
-import { selectedClassSelector } from '../selectors/ui/split-view';
 
 import {
   setLayoutDimensionsAndCoordinates,
@@ -44,18 +40,16 @@ import {
   updateClassLinkPosition,
   updateClassPosition,
   updatePan,
-  zoom
+  zoom,
+  loadGraphSchemaElementPositions
 } from '../action-creators/ui/split-view/graph-schema';
-
-import { loadGraphSchemaContent } from '../action-creators/ingestion-profile';
 
 function mapStateToProps(state) {
   return {
-    classes: relatedClassesSelector(state),
-    classLinks: isNil(selectedClassSelector(state))
-      ? classLinksSelector(state)
-      : stagedClassLinksSelector(state),
-    graphSchema: graphSchemaSelector(state),
+    positionedClasses: positionedStagedClassSelector(state),
+    positionedClassLinks: positionedStagedClassLinksSelector(state),
+    classes: stagedClassesSelector(state),
+    classLinks: stagedClassLinksSelector(state),
     shouldUpdateClassLinkLengths: shouldUpdateClassLinkLengthsSelector(state),
     dimensions: dimensionsSelector(state),
     coordinates: coordinatesSelector(state),
@@ -65,74 +59,14 @@ function mapStateToProps(state) {
   };
 }
 
-function handleGraphSchemaChange(
-  dispatch,
-  graphSchema,
-  layoutDimensions,
-  currentClasses = Map(),
-  currentClassLinks = Map()
-) {
-  dispatch(stopLayoutAsync())
-    .then(() => createUIClassesAndLinksFromGraphSchema(graphSchema))
-    .then(({ classes, classLinks }) => {
-      const [defaultX, defaultY] = layoutDimensions.map(d => d / 2);
-
-      const transformedClasses = classes.map(cls =>
-        cls
-          .set(
-          'x',
-          defaultTo(defaultX, currentClasses.getIn([cls.get('name'), 'x']))
-          )
-          .set(
-          'y',
-          defaultTo(defaultY, currentClasses.getIn([cls.get('name'), 'y']))
-          )
-      );
-
-      const transformedClassLinks = classLinks.map(l =>
-        l
-          .set(
-          'x',
-          defaultTo(
-            defaultX,
-            currentClassLinks.getIn([getClassLinkKey(l), 'x'])
-          )
-          )
-          .set(
-          'y',
-          defaultTo(
-            defaultY,
-            currentClassLinks.getIn([getClassLinkKey(l), 'y'])
-          )
-          )
-      );
-
-      dispatch(
-        loadGraphSchemaContent(transformedClasses, transformedClassLinks)
-      );
-
-      return [transformedClasses, transformedClassLinks];
-    })
-    .then(([classes, classLinks]) =>
-      dispatch(
-        startLayoutAsync(classes.toJS(), classLinks.toJS(), layoutDimensions)
-      )
-    )
-    .catch(GraphSchemaFormatError, error => {
-      console.log(error.message);
-    });
-}
-
 function mapDispatchToProps(dispatch) {
   return {
     updateClassLinkLengths: classLinkPaths =>
       dispatch(
         updateClassLinkLengthsAsync(
-          values(classLinkPaths).map(({ l, p }) => {
-            const classLink = l.toJS();
-            classLink.length = p.getLength();
-            return classLink;
-          })
+          values(classLinkPaths).map(({ l, p }) =>
+            l.set('length', p.getLength())
+          )
         )
       ),
 
@@ -187,26 +121,58 @@ function mapDispatchToProps(dispatch) {
       dispatch(startPan(event.pageX / zoom, event.pageY / zoom));
     },
 
-    init: (dimensions, coordinates, graphSchema) => {
-      dispatch(setLayoutDimensionsAndCoordinates(dimensions, coordinates));
-      handleGraphSchemaChange(dispatch, graphSchema, dimensions);
-    },
+    setLayoutDimensionsAndCoordinates: compose(
+      dispatch,
+      setLayoutDimensionsAndCoordinates
+    ),
 
     stopLayout: () => dispatch(stopLayoutAsync()),
 
-    handleGraphSchemaChange: (
-      graphSchema,
-      layoutDimensions,
-      currentClasses,
-      currentClassLinks
-    ) =>
-      handleGraphSchemaChange(
-        dispatch,
-        graphSchema,
-        layoutDimensions,
-        currentClasses,
-        currentClassLinks
-      ),
+    loadGraphSchemaElementPositions: (
+      positionedClasses,
+      positionedClassLinks,
+      layoutDimensions
+    ) => {
+      dispatch(stopLayoutAsync())
+        .then(() => {
+          const [defaultX, defaultY] = layoutDimensions.map(d => d / 2).toJS();
+          dispatch(
+            loadGraphSchemaElementPositions(
+              positionedClasses.map(cls =>
+                fromJS({
+                  x: defaultX,
+                  y: defaultY,
+                  tooltipVisibleProp: cls.get('tooltipVisibleProp'),
+                  outerRadius: cls.get('outerRadius'),
+                  globalIndex: cls.get('globalIndex')
+                })
+              ),
+              positionedClassLinks.map(l =>
+                fromJS({
+                  x: defaultX,
+                  y: defaultY,
+                  length: l.get('length'),
+                  globalIndex: l.get('globalIndex')
+                })
+              )
+            )
+          );
+
+          return [positionedClasses, positionedClassLinks];
+        })
+        .then(([positionedClasses, positionedClassLinks]) =>
+          dispatch(
+            startLayoutAsync(
+              positionedClasses,
+              positionedClassLinks,
+              layoutDimensions
+            )
+          )
+        )
+        .catch(GraphSchemaFormatError, error => {
+          console.log(error.message);
+        });
+    },
     handleWheel: (event, coordinates, drag) => {
       event.preventDefault();
       event.stopPropagation();
@@ -225,13 +191,29 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(props => (
-  <GraphSchema
-    Arrow={Arrow}
-    ClassLink={ClassLink}
-    ClassLinkPath={ClassLinkPath}
-    ClassLinkLabel={ClassLinkLabel}
-    Class={Class}
-    {...props}
-  />
-));
+const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+  ...ownProps,
+  ...stateProps,
+  ...dispatchProps,
+  init(dimensions, coordinates) {
+    dispatchProps.setLayoutDimensionsAndCoordinates(dimensions, coordinates);
+    dispatchProps.loadGraphSchemaElementPositions(
+      stateProps.positionedClasses,
+      stateProps.positionedClassLinks,
+      dimensions
+    );
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+  props => (
+    <GraphSchema
+      Arrow={Arrow}
+      ClassLink={ClassLink}
+      ClassLinkPath={ClassLinkPath}
+      ClassLinkLabel={ClassLinkLabel}
+      Class={Class}
+      {...props}
+    />
+  )
+);

@@ -2,20 +2,13 @@ import React from 'react';
 
 export default class ClassList extends React.Component {
   handleClassClicked = e => {
-    const index = e.target.dataset.globalIndex;
-    const selectedCls = this.props.classes.find(
-      cls => cls.get('globalIndex') == index
-    );
+    const globalIndex = e.target.dataset.globalIndex;
+    const selectedCls = this.props.classes.get(globalIndex);
     this.props.handleClassClicked(selectedCls);
   };
 
   render() {
-    const {
-      selectedClass,
-      classes,
-      handleCreateNewClass,
-      isEditing
-    } = this.props;
+    const { classes, handleCreateNewClass, isEditing } = this.props;
 
     return (
       <nav className="panel">
@@ -33,17 +26,15 @@ export default class ClassList extends React.Component {
           </p>
         </div>
 
-        {classes.map(cls => (
+        {classes.valueSeq().map(cls => (
           <a
             key={cls.get('globalIndex')}
             data-global-index={cls.get('globalIndex')}
             onClick={this.handleClassClicked}
             className={
-              'panel-block' +
-              (selectedClass && cls.get('name') === selectedClass.get('name')
-                ? ' is-active'
-                : '')
-            }>
+              'panel-block' + (cls.get('selected') ? ' is-active' : '')
+            }
+          >
             {cls.get('name')}
           </a>
         ))}
@@ -51,7 +42,8 @@ export default class ClassList extends React.Component {
         <div className={'panel-block' + (isEditing ? ' is-invisible' : '')}>
           <button
             onClick={handleCreateNewClass}
-            className="button is-link is-outlined is-fullwidth">
+            className="button is-link is-outlined is-fullwidth"
+          >
             <span className="panel-icon">
               <i className="fa fa-plus" />
             </span>

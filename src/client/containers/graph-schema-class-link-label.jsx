@@ -22,9 +22,7 @@ function mapDispatchToProps(dispatch) {
       const { pageX, pageY } = event;
 
       dispatch(stopLayoutAsync()).then(() =>
-        dispatch(
-          startClassLinkDrag(classLink.toJS(), pageX / zoom, pageY / zoom)
-        )
+        dispatch(startClassLinkDrag(classLink, pageX / zoom, pageY / zoom))
       );
     }
   };
