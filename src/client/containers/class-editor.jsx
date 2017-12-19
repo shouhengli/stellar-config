@@ -1,8 +1,11 @@
 import { compose } from 'ramda';
 import { connect } from 'react-redux';
 import ClassEditor from '../components/class-editor.jsx';
-import { classesSelector } from '../selectors/ui/split-view/graph-schema-classes';
-import { stagedClassLinksSelector } from '../selectors/ui/split-view/graph-schema-class-links';
+import {
+  classesSelector,
+  selectedClassSelector
+} from '../selectors/ui/split-view/graph-schema-classes';
+import { stagedClassLinksSelector } from '../selectors/ui/split-view/graph-schema-staged-class-links';
 import {
   editAttribute,
   editClassName,
@@ -17,10 +20,7 @@ import {
   updateAttributeName,
   deleteAttribute
 } from '../action-creators/ui/split-view';
-import {
-  selectedClassSelector,
-  isEditingSelector
-} from '../selectors/ui/split-view/graph-schema-classes';
+import { isEditingSelector } from '../selectors/ui/split-view/graph-schema-staged-classes';
 
 function mapStateToProps(state) {
   return {

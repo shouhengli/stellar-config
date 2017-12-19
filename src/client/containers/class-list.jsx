@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { classesSelector } from '../selectors/ui/split-view/graph-schema-classes';
 import ClassList from '../components/class-list.jsx';
 import { classSelected, addNewClass } from '../action-creators/ui/split-view';
-import { isEditingSelector } from '../selectors/ui/split-view/graph-schema-classes';
+import { isEditingSelector } from '../selectors/ui/split-view/graph-schema-staged-classes';
 
 function mapStateToProps(state) {
   return {

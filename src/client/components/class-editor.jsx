@@ -178,7 +178,7 @@ export default class ClassEditor extends React.Component {
               </thead>
               <tbody>
                 {stagedClassLinks.valueSeq().map(link => (
-                  <tr key={link.get('name')}>
+                  <tr key={link.get('globalIndex')}>
                     <td>
                       <div
                         contentEditable={link.get('isEditing')}

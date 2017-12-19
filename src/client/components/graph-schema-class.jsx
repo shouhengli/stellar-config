@@ -1,15 +1,12 @@
-const React = require('react');
-const { createSelector } = require('reselect');
-const R = require('ramda');
-const d3 = require('d3-shape');
-
-const {
+import React from 'react';
+import { createSelector } from 'reselect';
+import { last } from 'ramda';
+import { arc as d3arc } from 'd3-shape';
+import {
   CLASS_INNER_RADIUS,
   CLASS_PAD_ANGLE,
   FONT_SIZE
-} = require('../ingestion-profile');
-
-const getLengthSum = R.compose(R.sum, R.map(x => x.length));
+} from '../ingestion-profile';
 
 class Class extends React.Component {
   constructor(props) {
@@ -18,28 +15,22 @@ class Class extends React.Component {
     this.getClassPropAngles = createSelector(
       cls => cls.get('props'),
       classProps => {
-        const classPropNames = classProps
-          .valueSeq()
-          .map(p => p.get('name'))
-          .toJS();
-        const classPropNamesLengthSum = getLengthSum(classPropNames);
-
-        const classPropAngles = R.reduce(
-          (angles, classPropName) => {
-            const start = (R.last(angles) || { end: 0 }).end;
-
-            const end = Math.min(
-              start +
-                2 * Math.PI * (classPropName.length / classPropNamesLengthSum),
-              2 * Math.PI
-            );
-
-            angles.push({ classPropName, start, end });
-            return angles;
-          },
-          [],
-          classPropNames
+        const classPropNamesLengthSum = classProps.reduce(
+          (sum, prop) => sum + prop.get('name').length,
+          0
         );
+        const classPropAngles = classProps.reduce((angles, classProp) => {
+          const { name, globalIndex } = classProp.toJS();
+          const start = (last(angles) || { end: 0 }).end;
+          const end = Math.min(
+            start +
+              2 * Math.PI * (name.length / (classPropNamesLengthSum || 1)),
+            2 * Math.PI
+          );
+
+          angles.push({ name, start, end, globalIndex });
+          return angles;
+        }, []);
 
         return classPropAngles;
       }
@@ -50,8 +41,7 @@ class Class extends React.Component {
     this.getClassArcGenerator = createSelector(
       this.getClassOuterRadius,
       classOuterRadius =>
-        d3
-          .arc()
+        d3arc()
           .innerRadius(CLASS_INNER_RADIUS)
           .outerRadius(classOuterRadius)
           .padAngle(CLASS_PAD_ANGLE)
@@ -67,8 +57,7 @@ class Class extends React.Component {
     this.getClassPropNameArcPath = createSelector(
       this.getClassPropNameRadius,
       classPropNameRadius => {
-        const arc = d3
-          .arc()
+        const arc = d3arc()
           .innerRadius(0)
           .outerRadius(classPropNameRadius)
           .startAngle(0)
@@ -92,8 +81,7 @@ class Class extends React.Component {
     this.getClassPropTooltipArcPath = createSelector(
       this.getClassPropTooltipRadius,
       classPropTooltipRadius => {
-        const arc = d3
-          .arc()
+        const arc = d3arc()
           .innerRadius(0)
           .outerRadius(classPropTooltipRadius)
           .startAngle(0)
@@ -144,36 +132,35 @@ class Class extends React.Component {
         />
 
         {this.getClassPropAngles(cls).map(
-          ({ classPropName, start, end }, i) => {
+          ({ name, start, end, globalIndex }, i) => {
             const classArcPath = classArcGenerator({ start, end });
             const rotation = 180 * ((start + end) * 0.5 / Math.PI - 1);
-            const classPropId = `${classGlobalIndex}-${i}`;
 
             return (
-              <g key={classPropName} transform="rotate(180)">
+              <g key={globalIndex} transform="rotate(180)">
                 <ClassArc
                   path={classArcPath}
                   globalIndex={classGlobalIndex}
-                  classPropName={classPropName}
+                  classPropName={name}
                 />
                 <ClassPropName
-                  id={classPropId}
+                  id={globalIndex}
                   rotation={rotation}
                   clipPath={classArcPath}
                   classPropNameArcPath={classPropNameArcPath}
                   classPropNameRadius={classPropNameRadius}
                   classPropNameVisibility={classPropNameVisibility}
                   globalIndex={classGlobalIndex}
-                  classPropName={classPropName}
+                  classPropName={name}
                   fontSize={FONT_SIZE}
                 />
                 <ClassPropTooltip
-                  id={classPropId}
+                  id={globalIndex}
                   rotation={rotation}
                   classPropTooltipArcPath={classPropTooltipArcPath}
                   classPropTooltipRadius={classPropTooltipRadius}
-                  visible={tooltipVisibleProp === classPropName}
-                  classPropName={classPropName}
+                  visible={tooltipVisibleProp === name}
+                  classPropName={name}
                 />
               </g>
             );

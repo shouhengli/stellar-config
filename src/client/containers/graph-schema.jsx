@@ -24,11 +24,11 @@ import {
 import {
   positionedStagedClassSelector,
   stagedClassesSelector
-} from '../selectors/ui/split-view/graph-schema-classes';
+} from '../selectors/ui/split-view/graph-schema-staged-classes';
 import {
   positionedStagedClassLinksSelector,
   stagedClassLinksSelector
-} from '../selectors/ui/split-view/graph-schema-class-links';
+} from '../selectors/ui/split-view/graph-schema-staged-class-links';
 
 import {
   setLayoutDimensionsAndCoordinates,
