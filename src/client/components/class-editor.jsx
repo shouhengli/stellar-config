@@ -43,13 +43,13 @@ export default class ClassEditor extends React.Component {
   updateLinkSource = e =>
     this.props.updateLinkSource(
       this.props.stagedClassLinks.get(e.target.dataset.globalIndex),
-      e.target.value
+      this.props.classes.get(e.target.value)
     );
 
   updateLinkTarget = e =>
     this.props.updateLinkTarget(
       this.props.stagedClassLinks.get(e.target.dataset.globalIndex),
-      e.target.value
+      this.props.classes.get(e.target.value)
     );
 
   deleteLink = e =>
@@ -219,13 +219,14 @@ export default class ClassEditor extends React.Component {
                             data-global-index={link.get('globalIndex')}
                             onChange={this.updateLinkSource}
                           >
-                            {classes
-                              .valueSeq()
-                              .map(cls => (
-                                <option key={cls.get('globalIndex')}>
-                                  {cls.get('name')}
-                                </option>
-                              ))}
+                            {classes.valueSeq().map(cls => (
+                              <option
+                                key={cls.get('globalIndex')}
+                                value={cls.get('globalIndex')}
+                              >
+                                {cls.get('name')}
+                              </option>
+                            ))}
                           </select>
                         </div>
                       ) : (
@@ -240,13 +241,14 @@ export default class ClassEditor extends React.Component {
                             data-global-index={link.get('globalIndex')}
                             onChange={this.updateLinkTarget}
                           >
-                            {classes
-                              .valueSeq()
-                              .map(cls => (
-                                <option key={cls.get('globalIndex')}>
-                                  {cls.get('name')}
-                                </option>
-                              ))}
+                            {classes.valueSeq().map(cls => (
+                              <option
+                                key={cls.get('globalIndex')}
+                                value={cls.get('globalIndex')}
+                              >
+                                {cls.get('name')}
+                              </option>
+                            ))}
                           </select>
                         </div>
                       ) : (

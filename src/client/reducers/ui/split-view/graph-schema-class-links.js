@@ -52,14 +52,17 @@ export function reduceClassLinks(state = Map(), action) {
 
     case actions.CLASS_EDITOR_ADD_NEW_LINK: {
       const globalIndex = generateClassLinkGlobalIndex(),
-        selectedClassName = action.selectedClass.get('name');
+        selectedClassName = action.selectedClass.get('name'),
+        selectedClassIndex = action.selectedClass.get('globalIndex');
 
       return state.set(
         globalIndex,
         fromJS({
           name: '',
           source: selectedClassName,
+          sourceIndex: selectedClassIndex,
           target: selectedClassName,
+          targetIndex: selectedClassIndex,
           staged: true,
           globalIndex,
           isEditing: true
@@ -77,16 +80,26 @@ export function reduceClassLinks(state = Map(), action) {
       );
 
     case actions.CLASS_EDITOR_UPDATE_LINK_SOURCE:
-      return state.setIn(
-        [action.link.get('globalIndex'), 'source'],
-        action.newSource
-      );
+      return state
+        .setIn(
+          [action.link.get('globalIndex'), 'source'],
+          action.newSource.get('name')
+        )
+        .setIn(
+          [action.link.get('globalIndex'), 'sourceIndex'],
+          action.newSource.get('globalIndex')
+        );
 
     case actions.CLASS_EDITOR_UPDATE_LINK_TARGET:
-      return state.setIn(
-        [action.link.get('globalIndex'), 'target'],
-        action.newTarget
-      );
+      return state
+        .setIn(
+          [action.link.get('globalIndex'), 'target'],
+          action.newSource.get('name')
+        )
+        .setIn(
+          [action.link.get('globalIndex'), 'targetIndex'],
+          action.newSource.get('globalIndex')
+        );
 
     default:
       return state;

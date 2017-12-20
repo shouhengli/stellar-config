@@ -37,21 +37,16 @@ const startGraphSchemaSimulation = (classes, classLinks, dimensions) => {
     classLinks
   );
 
-  const findClassNodeByName = name => {
-    const cls = find(propEq('name', name))(values(classes));
-    return cls && classNodes[cls.globalIndex];
-  };
-
   const links = flatten(
     map(
       l => [
         {
-          source: findClassNodeByName(classLinks[l.globalIndex].source),
+          source: classNodes[classLinks[l.globalIndex].sourceIndex],
           target: l
         },
         {
           source: l,
-          target: findClassNodeByName(classLinks[l.globalIndex].target)
+          target: classNodes[classLinks[l.globalIndex].targetIndex]
         }
       ],
       values(classLinkNodes)

@@ -13,9 +13,6 @@ class GraphSchema extends React.Component {
     return 'Graph Schema';
   }
 
-  findClassIndexByName = name =>
-    this.props.classes.find(c => c.get('name') === name).get('globalIndex');
-
   render() {
     const {
       Arrow,
@@ -65,24 +62,12 @@ class GraphSchema extends React.Component {
                         }
                       }}
                       id={l.get('globalIndex')}
-                      x0={positionedClasses.getIn([
-                        this.findClassIndexByName(l.get('source')),
-                        'x'
-                      ])}
-                      y0={positionedClasses.getIn([
-                        this.findClassIndexByName(l.get('source')),
-                        'y'
-                      ])}
+                      x0={positionedClasses.getIn([l.get('sourceIndex'), 'x'])}
+                      y0={positionedClasses.getIn([l.get('sourceIndex'), 'y'])}
                       x1={l.get('x')}
                       y1={l.get('y')}
-                      x2={positionedClasses.getIn([
-                        this.findClassIndexByName(l.get('target')),
-                        'x'
-                      ])}
-                      y2={positionedClasses.getIn([
-                        this.findClassIndexByName(l.get('target')),
-                        'y'
-                      ])}
+                      x2={positionedClasses.getIn([l.get('targetIndex'), 'x'])}
+                      y2={positionedClasses.getIn([l.get('targetIndex'), 'y'])}
                       markerId="graph-schema-arrow"
                     />
                     <ClassLinkLabel id={l.get('globalIndex')} classLink={l} />
