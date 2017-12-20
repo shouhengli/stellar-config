@@ -18,7 +18,11 @@ import {
   updateClassName,
   updateAttributeType,
   updateAttributeName,
-  deleteAttribute
+  deleteAttribute,
+  updateLinkSource,
+  updateLinkTarget,
+  updateLinkName,
+  deleteLink
 } from '../action-creators/ui/split-view';
 import { isEditingSelector } from '../selectors/ui/split-view/graph-schema-staged-classes';
 
@@ -44,7 +48,11 @@ function mapDispatchToProps(dispatch, ownProps) {
     updateClassName: compose(dispatch, updateClassName),
     updateAttributeType: compose(dispatch, updateAttributeType),
     updateAttributeName: compose(dispatch, updateAttributeName),
-    deleteAttribute: compose(dispatch, deleteAttribute)
+    deleteAttribute: compose(dispatch, deleteAttribute),
+    updateLinkSource: compose(dispatch, updateLinkSource),
+    updateLinkTarget: compose(dispatch, updateLinkTarget),
+    updateLinkName: compose(dispatch, updateLinkName),
+    deleteLink: compose(dispatch, deleteLink)
   };
 }
 

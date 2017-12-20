@@ -94,14 +94,8 @@ function initLayoutAsync() {
           ) {
             dispatch(
               loadGraphSchemaElementPositions(
-                fromJS(event.data.classes).reduce(
-                  (s, c) => s.set(c.get('globalIndex'), c),
-                  Map()
-                ),
-                fromJS(event.data.classLinks).reduce(
-                  (s, l) => s.set(l.get('globalIndex'), l),
-                  Map()
-                )
+                fromJS(event.data.classes),
+                fromJS(event.data.classLinks)
               )
             );
           }
@@ -114,8 +108,8 @@ function startLayoutAsync(classes, classLinks, dimensions) {
     P.resolve().then(() =>
       layoutWorker.postMessage({
         type: layout.START_GRAPH_SCHEMA_SIMULATION,
-        classes: classes.valueSeq().toJS(),
-        classLinks: classLinks.valueSeq().toJS(),
+        classes: classes.toJS(),
+        classLinks: classLinks.toJS(),
         dimensions: dimensions.toJS()
       })
     );

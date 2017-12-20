@@ -32,6 +32,31 @@ export default class ClassEditor extends React.Component {
       this.props.stagedClassLinks.get(e.target.dataset.globalIndex)
     );
 
+  addNewLink = () => this.props.addNewLink(this.props.selectedClass);
+
+  updateLinkName = e =>
+    this.props.updateLinkName(
+      this.props.stagedClassLinks.get(e.target.dataset.globalIndex),
+      e.target.textContent
+    );
+
+  updateLinkSource = e =>
+    this.props.updateLinkSource(
+      this.props.stagedClassLinks.get(e.target.dataset.globalIndex),
+      e.target.value
+    );
+
+  updateLinkTarget = e =>
+    this.props.updateLinkTarget(
+      this.props.stagedClassLinks.get(e.target.dataset.globalIndex),
+      e.target.value
+    );
+
+  deleteLink = e =>
+    this.props.deleteLink(
+      this.props.stagedClassLinks.get(e.target.dataset.globalIndex)
+    );
+
   render() {
     const {
       selectedClass,
@@ -41,7 +66,6 @@ export default class ClassEditor extends React.Component {
       saveEdit,
       closeEdit,
       addNewAttribute,
-      addNewLink,
       editClassName,
       cancelEdit
     } = this.props;
@@ -117,7 +141,7 @@ export default class ClassEditor extends React.Component {
                         {prop.get('isEditing') ? (
                           <div className="select">
                             <select
-                              data-global-index={prop.get('name')}
+                              data-global-index={prop.get('globalIndex')}
                               value={prop.get('type')}
                               onChange={this.updateAttributeType}
                             >
@@ -181,6 +205,8 @@ export default class ClassEditor extends React.Component {
                   <tr key={link.get('globalIndex')}>
                     <td>
                       <div
+                        data-global-index={link.get('globalIndex')}
+                        onBlur={this.updateLinkName}
                         contentEditable={link.get('isEditing')}
                         dangerouslySetInnerHTML={{ __html: link.get('name') }}
                       />
@@ -188,7 +214,11 @@ export default class ClassEditor extends React.Component {
                     <td>
                       {link.get('isEditing') ? (
                         <div className="select">
-                          <select value={link.get('source')}>
+                          <select
+                            value={link.get('source')}
+                            data-global-index={link.get('globalIndex')}
+                            onChange={this.updateLinkSource}
+                          >
                             {classes
                               .valueSeq()
                               .map(cls => (
@@ -205,7 +235,11 @@ export default class ClassEditor extends React.Component {
                     <td>
                       {link.get('isEditing') ? (
                         <div className="select">
-                          <select value={link.get('target')}>
+                          <select
+                            value={link.get('target')}
+                            data-global-index={link.get('globalIndex')}
+                            onChange={this.updateLinkTarget}
+                          >
                             {classes
                               .valueSeq()
                               .map(cls => (
@@ -229,14 +263,18 @@ export default class ClassEditor extends React.Component {
                       />
                     </td>
                     <td className="is-narrow">
-                      <a className="hover-button fa fa-trash" />
+                      <a
+                        className="hover-button fa fa-trash"
+                        data-global-index={link.get('globalIndex')}
+                        onClick={this.deleteLink}
+                      />
                     </td>
                   </tr>
                 ))}
                 <tr>
                   <td colSpan="5">
                     <a
-                      onClick={addNewLink}
+                      onClick={this.addNewLink}
                       className="button is-link is-outlined is-fullwidth"
                     >
                       <span className="panel-icon">

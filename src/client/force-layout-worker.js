@@ -1,4 +1,4 @@
-const R = require('ramda');
+import { flatten, concat, map, values, propEq, find } from 'ramda';
 const d3 = require('d3-force');
 
 const {
@@ -15,46 +15,52 @@ const LINK_FORCE_DISTANCE = 175;
 const graphSchemaSimulation = d3.forceSimulation().stop();
 
 const startGraphSchemaSimulation = (classes, classLinks, dimensions) => {
-  const classNodes = classes.map(c => ({
-    x: c.x,
-    y: c.y,
-    r: CLASS_FORCE_RADIUS,
-    name: c.name,
-    outerRadius: c.outerRadius,
-    globalIndex: c.globalIndex
-  }));
+  const classNodes = map(
+    c => ({
+      x: c.x,
+      y: c.y,
+      r: CLASS_FORCE_RADIUS,
+      outerRadius: c.outerRadius,
+      globalIndex: c.globalIndex
+    }),
+    classes
+  );
 
-  const findClassNodeByName = name => classNodes.find(c => c.name === name);
+  const classLinkNodes = map(
+    l => ({
+      x: l.x,
+      y: l.y,
+      r: CLASS_LINK_FORCE_RADIUS,
+      length: l.length,
+      globalIndex: l.globalIndex
+    }),
+    classLinks
+  );
 
-  const classLinkNodes = classLinks.map(l => ({
-    x: l.x,
-    y: l.y,
-    r: CLASS_LINK_FORCE_RADIUS,
-    length: l.length,
-    name: l.name,
-    source: l.source,
-    target: l.target,
-    globalIndex: l.globalIndex
-  }));
+  const findClassNodeByName = name => {
+    const cls = find(propEq('name', name))(values(classes));
+    return cls && classNodes[cls.globalIndex];
+  };
 
-  const links = R.flatten(
-    classLinkNodes.map(n => {
-      return [
+  const links = flatten(
+    map(
+      l => [
         {
-          source: findClassNodeByName(n.source),
-          target: n
+          source: findClassNodeByName(classLinks[l.globalIndex].source),
+          target: l
         },
         {
-          source: n,
-          target: findClassNodeByName(n.target)
+          source: l,
+          target: findClassNodeByName(classLinks[l.globalIndex].target)
         }
-      ];
-    })
+      ],
+      values(classLinkNodes)
+    )
   );
 
   graphSchemaSimulation
-    .nodes(R.concat(classNodes, classLinkNodes))
-    .force('center', d3.forceCenter(...dimensions.map(d => d / 2)))
+    .nodes(concat(values(classNodes), values(classLinkNodes)))
+    .force('center', d3.forceCenter(...map(d => d / 2, dimensions)))
     .force(
       'collide',
       d3.forceCollide(node => node.r * COLLIDE_FORCE_RADIUS_MULTIPLIER)

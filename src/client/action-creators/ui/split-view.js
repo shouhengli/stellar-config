@@ -57,13 +57,6 @@ export function addNewAttribute() {
   };
 }
 
-export function addNewLink(selectedClass) {
-  return {
-    type: actions.CLASS_EDITOR_ADD_NEW_LINK,
-    selectedClass
-  };
-}
-
 export function updateClassName(name) {
   return {
     type: actions.CLASS_EDITOR_UPDATE_CLASS_NAME,
@@ -91,5 +84,43 @@ export function deleteAttribute(attribute) {
   return {
     type: actions.CLASS_EDITOR_DELETE_ATTRIBUTE,
     attribute
+  };
+}
+
+export function addNewLink(selectedClass) {
+  return {
+    type: actions.CLASS_EDITOR_ADD_NEW_LINK,
+    selectedClass
+  };
+}
+
+export function updateLinkName(link, newName) {
+  return {
+    type: actions.CLASS_EDITOR_UPDATE_LINK_NAME,
+    link,
+    newName
+  };
+}
+
+export function updateLinkSource(link, newSource) {
+  return {
+    type: actions.CLASS_EDITOR_UPDATE_LINK_SOURCE,
+    link,
+    newSource
+  };
+}
+
+export function updateLinkTarget(link, newTarget) {
+  return {
+    type: actions.CLASS_EDITOR_UPDATE_LINK_Target,
+    link,
+    newTarget
+  };
+}
+
+export function deleteLink(link) {
+  return {
+    type: actions.CLASS_EDITOR_DELETE_LINK,
+    link
   };
 }

@@ -68,24 +68,24 @@ export function reduceClassLinks(state = Map(), action) {
     }
 
     case actions.CLASS_EDITOR_DELETE_LINK:
-      return state.delete(action.classLink.get('globalIndex'));
+      return state.delete(action.link.get('globalIndex'));
 
     case actions.CLASS_EDITOR_UPDATE_LINK_NAME:
       return state.setIn(
-        [action.classLink.get('globalIndex'), 'name'],
-        action.name
+        [action.link.get('globalIndex'), 'name'],
+        action.newName
       );
 
     case actions.CLASS_EDITOR_UPDATE_LINK_SOURCE:
       return state.setIn(
-        [action.classLink.get('globalIndex'), 'source'],
-        action.source
+        [action.link.get('globalIndex'), 'source'],
+        action.newSource
       );
 
     case actions.CLASS_EDITOR_UPDATE_LINK_TARGET:
       return state.setIn(
-        [action.classLink.get('globalIndex'), 'target'],
-        action.target
+        [action.link.get('globalIndex'), 'target'],
+        action.newTarget
       );
 
     default:
