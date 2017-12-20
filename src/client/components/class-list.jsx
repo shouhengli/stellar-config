@@ -7,11 +7,17 @@ export default class ClassList extends React.Component {
     this.props.handleClassClicked(selectedCls);
   };
 
+  handleDeleteClass = e => {
+    const globalIndex = e.target.dataset.globalIndex;
+    const selectedCls = this.props.classes.get(globalIndex);
+    this.props.handleDeleteClass(selectedCls);
+  };
+
   render() {
     const { classes, handleCreateNewClass, isEditing } = this.props;
 
     return (
-      <nav className="panel">
+      <nav className="panel class-list">
         <p className="panel-heading">Classes</p>
         <div className="panel-block">
           <p className="control has-icons-left">
@@ -29,13 +35,22 @@ export default class ClassList extends React.Component {
         {classes.valueSeq().map(cls => (
           <a
             key={cls.get('globalIndex')}
-            data-global-index={cls.get('globalIndex')}
-            onClick={this.handleClassClicked}
             className={
               'panel-block' + (cls.get('selected') ? ' is-active' : '')
             }
           >
-            {cls.get('name')}
+            <span
+              className="class-name"
+              data-global-index={cls.get('globalIndex')}
+              onClick={this.handleClassClicked}
+            >
+              {cls.get('name')}
+            </span>
+            <span
+              data-global-index={cls.get('globalIndex')}
+              className="fa fa-trash hover-button"
+              onClick={this.handleDeleteClass}
+            />
           </a>
         ))}
 

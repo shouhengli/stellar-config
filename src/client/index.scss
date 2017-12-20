@@ -307,6 +307,22 @@ div.view {
       border-color: $input-hover-border-color;
     }
   }
+  .class-list {
+    .panel-block {
+      .class-name {
+        width: calc(100% - 14px);
+      }
+      .hover-button {
+        visibility: hidden;
+        color: #3273dc;
+      }
+      &:hover {
+        .hover-button {
+          visibility: visible;
+        }
+      }
+    }
+  }
   .schema-editor {
     .panel-heading {
       .button.hover-button {

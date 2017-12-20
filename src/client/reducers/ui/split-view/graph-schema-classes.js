@@ -60,6 +60,9 @@ export const reduceClasses = (state = Map(), action) => {
       return next;
     }
 
+    case actions.CLASS_LIST_DELETE_CLASS:
+      return state.delete(action.cls.get('globalIndex'));
+
     case actions.CLASS_EDITOR_SAVE_EDIT: {
       const next = state
         .updateIn([selectedClassIndex, 'props'], p => p.set('isEditing', false))
