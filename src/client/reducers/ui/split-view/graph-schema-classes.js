@@ -23,8 +23,17 @@ export const reduceClasses = (state = Map(), action) => {
       return next;
     }
 
-    case actions.CLASS_EDITOR_CANCEL_EDIT:
-      return state.set(selectedClassIndex, selectedClassBackUp);
+    case actions.CLASS_EDITOR_CANCEL_EDIT: {
+      const selectedClass = state.get(selectedClassIndex);
+      if (selectedClass.get('isNew')) {
+        const next = state.delete(selectedClassIndex);
+        selectedClassBackUp = null;
+        selectedClassIndex = null;
+        return next;
+      } else {
+        return state.set(selectedClassIndex, selectedClassBackUp);
+      }
+    }
 
     case actions.CLASS_EDITOR_CLOSE_EDIT: {
       const next = state.setIn([selectedClassIndex, 'selected'], false);
@@ -42,7 +51,8 @@ export const reduceClasses = (state = Map(), action) => {
           props: {},
           globalIndex,
           isEditingName: true,
-          selected: true
+          selected: true,
+          isNew: true
         })
       );
       selectedClassIndex = globalIndex;

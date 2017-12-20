@@ -3,7 +3,7 @@ import { isNil, contains } from 'ramda';
 import actions from '../../../actions';
 import { generateClassLinkGlobalIndex } from '../../../ingestion-profile';
 
-let stagedClassLinksBackUp = null;
+let stagedClassLinksBackUp = Map();
 
 export function reduceClassLinks(state = Map(), action) {
   switch (action.type) {
@@ -43,12 +43,12 @@ export function reduceClassLinks(state = Map(), action) {
 
     case actions.CLASS_LIST_ADD_NEW_CLASS:
     case actions.CLASS_EDITOR_CLOSE_EDIT: {
-      stagedClassLinksBackUp = null;
+      stagedClassLinksBackUp = Map();
       return state.map(l => l.set('staged', false));
     }
 
     case actions.CLASS_EDITOR_CANCEL_EDIT:
-      return state.merge(stagedClassLinksBackUp);
+      return state.merge(stagedClassLinksBackUp).filterNot(l => l.get('isNew'));
 
     case actions.CLASS_EDITOR_ADD_NEW_LINK: {
       const globalIndex = generateClassLinkGlobalIndex(),
@@ -65,7 +65,8 @@ export function reduceClassLinks(state = Map(), action) {
           targetIndex: selectedClassIndex,
           staged: true,
           globalIndex,
-          isEditing: true
+          isEditing: true,
+          isNew: true
         })
       );
     }
