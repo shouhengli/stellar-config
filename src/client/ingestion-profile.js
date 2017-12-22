@@ -69,6 +69,7 @@ export const createPersistentClass = cls => ({
   props: cls
     .get('props')
     .valueSeq()
+    .filterNot(p => p.get('isDeleted'))
     .map(p => ({
       name: p.get('name'),
       type: p.get('type')

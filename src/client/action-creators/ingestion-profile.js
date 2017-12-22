@@ -31,18 +31,23 @@ export function saveAsync(name, content) {
 }
 
 export function saveGraphSchema(profileName, classes, classLinks) {
+  const classesToSave = classes.map(c =>
+    c.update('props', props => props.filterNot(p => p.get('isDeleted')))
+  );
+  const classLinksToSave = classLinks.filterNot(l => l.get('isDeleted'));
+
   return dispatch =>
     postGraphSchema(INGESTION_PROFILE_CONFIG_TYPE, profileName, {
-      classes: classes
+      classes: classesToSave
         .valueSeq()
         .map(c => createPersistentClass(c))
         .toJS(),
-      classLinks: classLinks
+      classLinks: classLinksToSave
         .valueSeq()
         .map(l => createPersistentClassLink(l))
         .toJS()
     }).then(() => {
-      dispatch(loadGraphSchemaContent(classes, classLinks));
+      dispatch(loadGraphSchemaContent(classesToSave, classLinksToSave));
       dispatch(saveEdit());
     });
 }

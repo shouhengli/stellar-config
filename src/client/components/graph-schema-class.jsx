@@ -2,6 +2,7 @@ import React from 'react';
 import { createSelector } from 'reselect';
 import { last } from 'ramda';
 import { arc as d3arc } from 'd3-shape';
+import { Map } from 'immutable';
 import {
   CLASS_INNER_RADIUS,
   CLASS_PAD_ANGLE,
@@ -13,7 +14,7 @@ class Class extends React.Component {
     super(props);
 
     this.getClassPropAngles = createSelector(
-      cls => cls.get('props'),
+      cls => cls.get('props', Map()).filterNot(p => p.get('isDeleted')),
       classProps => {
         const classPropNamesLengthSum = classProps.reduce(
           (sum, prop) => sum + prop.get('name').length,

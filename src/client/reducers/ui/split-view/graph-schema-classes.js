@@ -60,17 +60,17 @@ export const reduceClasses = (state = Map(), action) => {
       return next;
     }
 
-    case actions.CLASS_LIST_DELETE_CLASS:
-      return state.delete(action.cls.get('globalIndex'));
-
     case actions.CLASS_EDITOR_SAVE_EDIT: {
-      const next = state
-        .updateIn([selectedClassIndex, 'props'], props =>
-          props.map(p => p.set('isEditing', false))
-        )
-        .setIn([selectedClassIndex, 'isEditingName'], false);
-      selectedClassBackUp = next.get(selectedClassIndex);
-      return next;
+      if (selectedClassIndex) {
+        const next = state
+          .updateIn([selectedClassIndex, 'props'], props =>
+            props.map(p => p.set('isEditing', false))
+          )
+          .setIn([selectedClassIndex, 'isEditingName'], false);
+        selectedClassBackUp = next.get(selectedClassIndex);
+        return next;
+      }
+      return state;
     }
 
     case actions.CLASS_EDITOR_EDIT_CLASS_NAME:
@@ -126,11 +126,15 @@ export const reduceClasses = (state = Map(), action) => {
       );
 
     case actions.CLASS_EDITOR_DELETE_ATTRIBUTE:
-      return state.deleteIn([
-        selectedClassIndex,
-        'props',
-        action.attribute.get('globalIndex')
-      ]);
+      return state.setIn(
+        [
+          selectedClassIndex,
+          'props',
+          action.attribute.get('globalIndex'),
+          'isDeleted'
+        ],
+        true
+      );
 
     default:
       return state;

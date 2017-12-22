@@ -13,13 +13,6 @@ export function addNewClass() {
   };
 }
 
-export function deleteClass(cls) {
-  return {
-    type: actions.CLASS_LIST_DELETE_CLASS,
-    cls
-  };
-}
-
 export function editAttribute(attribute) {
   return {
     type: actions.CLASS_EDITOR_EDIT_ATTRIBUTE,

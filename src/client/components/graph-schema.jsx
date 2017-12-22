@@ -50,30 +50,48 @@ class GraphSchema extends React.Component {
               <Arrow id="graph-schema-arrow" />
             </defs>
             <g className="graph-schema-class-links">
-              {positionedClassLinks.valueSeq().map(l => {
-                return (
-                  <ClassLink key={l.get('globalIndex')}>
-                    <ClassLinkPath
-                      ref={p => {
-                        if (R.isNil(p)) {
-                          delete this.classLinkPaths[l.get('globalIndex')];
-                        } else {
-                          this.classLinkPaths[l.get('globalIndex')] = { l, p };
-                        }
-                      }}
-                      id={l.get('globalIndex')}
-                      x0={positionedClasses.getIn([l.get('sourceIndex'), 'x'])}
-                      y0={positionedClasses.getIn([l.get('sourceIndex'), 'y'])}
-                      x1={l.get('x')}
-                      y1={l.get('y')}
-                      x2={positionedClasses.getIn([l.get('targetIndex'), 'x'])}
-                      y2={positionedClasses.getIn([l.get('targetIndex'), 'y'])}
-                      markerId="graph-schema-arrow"
-                    />
-                    <ClassLinkLabel id={l.get('globalIndex')} classLink={l} />
-                  </ClassLink>
-                );
-              })}
+              {positionedClassLinks
+                .filterNot(l => l.get('isDeleted'))
+                .valueSeq()
+                .map(l => {
+                  return (
+                    <ClassLink key={l.get('globalIndex')}>
+                      <ClassLinkPath
+                        ref={p => {
+                          if (R.isNil(p)) {
+                            delete this.classLinkPaths[l.get('globalIndex')];
+                          } else {
+                            this.classLinkPaths[l.get('globalIndex')] = {
+                              l,
+                              p
+                            };
+                          }
+                        }}
+                        id={l.get('globalIndex')}
+                        x0={positionedClasses.getIn([
+                          l.get('sourceIndex'),
+                          'x'
+                        ])}
+                        y0={positionedClasses.getIn([
+                          l.get('sourceIndex'),
+                          'y'
+                        ])}
+                        x1={l.get('x')}
+                        y1={l.get('y')}
+                        x2={positionedClasses.getIn([
+                          l.get('targetIndex'),
+                          'x'
+                        ])}
+                        y2={positionedClasses.getIn([
+                          l.get('targetIndex'),
+                          'y'
+                        ])}
+                        markerId="graph-schema-arrow"
+                      />
+                      <ClassLinkLabel id={l.get('globalIndex')} classLink={l} />
+                    </ClassLink>
+                  );
+                })}
             </g>
             <g className="graph-schema-classes">
               {positionedClasses.valueSeq().map(c => {

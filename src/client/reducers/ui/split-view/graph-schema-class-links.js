@@ -72,7 +72,7 @@ export function reduceClassLinks(state = Map(), action) {
     }
 
     case actions.CLASS_EDITOR_DELETE_LINK:
-      return state.delete(action.link.get('globalIndex'));
+      return state.setIn([action.link.get('globalIndex'), 'isDeleted'], true);
 
     case actions.CLASS_EDITOR_UPDATE_LINK_NAME:
       return state.setIn(

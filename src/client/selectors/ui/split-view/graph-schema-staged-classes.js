@@ -53,6 +53,8 @@ export const isEditingSelector = createSelector(
       selectedClass
         .get('props')
         .valueSeq()
-        .find(p => p.get('isEditing')) ||
-      stagedClassLinks.valueSeq().find(l => l.get('isEditing')))
+        .find(p => p.get('isEditing') || p.get('isDeleted')) ||
+      stagedClassLinks
+        .valueSeq()
+        .find(l => l.get('isEditing') || l.get('isDeleted')))
 );

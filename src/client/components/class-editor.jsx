@@ -130,6 +130,7 @@ export default class ClassEditor extends React.Component {
                 {selectedClass
                   .get('props')
                   .valueSeq()
+                  .filterNot(p => p.get('isDeleted'))
                   .map(prop => (
                     <tr key={prop.get('globalIndex')}>
                       <td>
@@ -204,78 +205,81 @@ export default class ClassEditor extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {stagedClassLinks.valueSeq().map(link => (
-                  <tr key={link.get('globalIndex')}>
-                    <td>
-                      <div
-                        data-global-index={link.get('globalIndex')}
-                        onBlur={this.updateLinkName}
-                        contentEditable={link.get('isEditing')}
-                        dangerouslySetInnerHTML={{ __html: link.get('name') }}
-                      />
-                    </td>
-                    <td>
-                      {link.get('isEditing') ? (
-                        <div className="select">
-                          <select
-                            value={link.get('sourceIndex')}
-                            data-global-index={link.get('globalIndex')}
-                            onChange={this.updateLinkSource}
-                          >
-                            {classes.valueSeq().map(cls => (
-                              <option
-                                key={cls.get('globalIndex')}
-                                value={cls.get('globalIndex')}
-                              >
-                                {cls.get('name')}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      ) : (
-                        link.get('source')
-                      )}
-                    </td>
-                    <td>
-                      {link.get('isEditing') ? (
-                        <div className="select">
-                          <select
-                            value={link.get('targetIndex')}
-                            data-global-index={link.get('globalIndex')}
-                            onChange={this.updateLinkTarget}
-                          >
-                            {classes.valueSeq().map(cls => (
-                              <option
-                                key={cls.get('globalIndex')}
-                                value={cls.get('globalIndex')}
-                              >
-                                {cls.get('name')}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      ) : (
-                        link.get('target')
-                      )}
-                    </td>
-                    <td className="is-narrow">
-                      <a
-                        className={`hover-button fa fa-pencil ${
-                          link.get('isEditing') ? 'is-invisible' : ''
-                        }`}
-                        data-global-index={link.get('globalIndex')}
-                        onClick={this.editClassLink}
-                      />
-                    </td>
-                    <td className="is-narrow">
-                      <a
-                        className="hover-button fa fa-trash"
-                        data-global-index={link.get('globalIndex')}
-                        onClick={this.deleteLink}
-                      />
-                    </td>
-                  </tr>
-                ))}
+                {stagedClassLinks
+                  .valueSeq()
+                  .filterNot(l => l.get('isDeleted'))
+                  .map(link => (
+                    <tr key={link.get('globalIndex')}>
+                      <td>
+                        <div
+                          data-global-index={link.get('globalIndex')}
+                          onBlur={this.updateLinkName}
+                          contentEditable={link.get('isEditing')}
+                          dangerouslySetInnerHTML={{ __html: link.get('name') }}
+                        />
+                      </td>
+                      <td>
+                        {link.get('isEditing') ? (
+                          <div className="select">
+                            <select
+                              value={link.get('sourceIndex')}
+                              data-global-index={link.get('globalIndex')}
+                              onChange={this.updateLinkSource}
+                            >
+                              {classes.valueSeq().map(cls => (
+                                <option
+                                  key={cls.get('globalIndex')}
+                                  value={cls.get('globalIndex')}
+                                >
+                                  {cls.get('name')}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        ) : (
+                          link.get('source')
+                        )}
+                      </td>
+                      <td>
+                        {link.get('isEditing') ? (
+                          <div className="select">
+                            <select
+                              value={link.get('targetIndex')}
+                              data-global-index={link.get('globalIndex')}
+                              onChange={this.updateLinkTarget}
+                            >
+                              {classes.valueSeq().map(cls => (
+                                <option
+                                  key={cls.get('globalIndex')}
+                                  value={cls.get('globalIndex')}
+                                >
+                                  {cls.get('name')}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        ) : (
+                          link.get('target')
+                        )}
+                      </td>
+                      <td className="is-narrow">
+                        <a
+                          className={`hover-button fa fa-pencil ${
+                            link.get('isEditing') ? 'is-invisible' : ''
+                          }`}
+                          data-global-index={link.get('globalIndex')}
+                          onClick={this.editClassLink}
+                        />
+                      </td>
+                      <td className="is-narrow">
+                        <a
+                          className="hover-button fa fa-trash"
+                          data-global-index={link.get('globalIndex')}
+                          onClick={this.deleteLink}
+                        />
+                      </td>
+                    </tr>
+                  ))}
                 <tr>
                   <td colSpan="5">
                     <a
