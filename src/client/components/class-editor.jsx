@@ -8,13 +8,13 @@ export default class ClassEditor extends React.Component {
   updateAttributeName = e =>
     this.props.updateAttributeName(
       this.props.selectedClass.getIn(['props', e.target.dataset.globalIndex]),
-      e.target.textContent
+      e.target.textContent.trim()
     );
 
   updateAttributeType = e =>
     this.props.updateAttributeType(
       this.props.selectedClass.getIn(['props', e.target.dataset.globalIndex]),
-      e.target.value
+      e.target.value.trim()
     );
 
   deleteAttribute = e =>
@@ -37,7 +37,7 @@ export default class ClassEditor extends React.Component {
   updateLinkName = e =>
     this.props.updateLinkName(
       this.props.stagedClassLinks.get(e.target.dataset.globalIndex),
-      e.target.textContent
+      e.target.textContent.trim()
     );
 
   updateLinkSource = e =>
@@ -63,7 +63,7 @@ export default class ClassEditor extends React.Component {
       stagedClassLinks,
       classes,
       isEditing,
-      saveEdit,
+      saveGraphSchema,
       closeEdit,
       addNewAttribute,
       editClassName,
@@ -100,7 +100,10 @@ export default class ClassEditor extends React.Component {
             }`}
           >
             <p className="control">
-              <a className="button is-small is-primary" onClick={saveEdit}>
+              <a
+                className="button is-small is-primary"
+                onClick={saveGraphSchema}
+              >
                 Save
               </a>
             </p>
@@ -151,7 +154,7 @@ export default class ClassEditor extends React.Component {
                             </select>
                           </div>
                         ) : (
-                          prop.get('name')
+                          prop.get('type')
                         )}
                       </td>
                       <td className="is-narrow">
@@ -215,7 +218,7 @@ export default class ClassEditor extends React.Component {
                       {link.get('isEditing') ? (
                         <div className="select">
                           <select
-                            value={link.get('source')}
+                            value={link.get('sourceIndex')}
                             data-global-index={link.get('globalIndex')}
                             onChange={this.updateLinkSource}
                           >
@@ -237,7 +240,7 @@ export default class ClassEditor extends React.Component {
                       {link.get('isEditing') ? (
                         <div className="select">
                           <select
-                            value={link.get('target')}
+                            value={link.get('targetIndex')}
                             data-global-index={link.get('globalIndex')}
                             onChange={this.updateLinkTarget}
                           >

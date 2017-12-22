@@ -1,18 +1,16 @@
-const React = require('react');
-
-const Nav = require('./nav.jsx');
-const NavItem = require('./nav-item.jsx');
-const NavMenuStart = require('./nav-menu-start.jsx');
-const NavMenuEnd = require('./nav-menu-end.jsx');
-const NavDropDown = require('./nav-drop-down.jsx');
-const Header = require('./ingestion-profile-header.jsx');
-const Save = require('./config-save.jsx');
-const SearchToggle = require('./config-search-toggle.jsx');
-const NewToggle = require('./config-new-toggle.jsx');
-const DeleteToggle = require('./config-delete-toggle.jsx');
-const ModalPopUp = require('./modal-pop-up.jsx');
-
-const { isNotEmpty } = require('../util');
+import React from 'react';
+import Nav from './nav.jsx';
+import NavItem from './nav-item.jsx';
+import NavMenuStart from './nav-menu-start.jsx';
+import NavMenuEnd from './nav-menu-end.jsx';
+import NavDropDown from './nav-drop-down.jsx';
+import Header from './ingestion-profile-header.jsx';
+import Save from './config-save.jsx';
+import SearchToggle from './config-search-toggle.jsx';
+import NewToggle from './config-new-toggle.jsx';
+import DeleteToggle from './config-delete-toggle.jsx';
+import ModalPopUp from './modal-pop-up.jsx';
+import { isNotEmpty } from '../util';
 
 module.exports = ({
   name,

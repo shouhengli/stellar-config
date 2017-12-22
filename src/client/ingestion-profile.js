@@ -64,12 +64,17 @@ export function createClass(
  * @param {object} cls
  * @return {object}
  */
-export function createPersistentClass(cls) {
-  return {
-    name: cls.get('name'),
-    props: cls.get('props')
-  };
-}
+export const createPersistentClass = cls => ({
+  name: cls.get('name'),
+  props: cls
+    .get('props')
+    .valueSeq()
+    .map(p => ({
+      name: p.get('name'),
+      type: p.get('type')
+    }))
+    .toJS()
+});
 
 /**
  * Creates a class link.
@@ -115,14 +120,11 @@ export function createClassLink(
  * @param {object} classLink
  * @return {object}
  */
-export function createPersistentClassLink(classLink) {
-  return {
-    name: classLink.get('name'),
-    source: classLink.get('source'),
-    target: classLink.get('target')
-  };
-}
-
+export const createPersistentClassLink = classLink => ({
+  name: classLink.get('name'),
+  source: classLink.get('source'),
+  target: classLink.get('target')
+});
 /**
  * Extracts name, source and target from a class link to form an ID.
  * @param {object | Map} classLink

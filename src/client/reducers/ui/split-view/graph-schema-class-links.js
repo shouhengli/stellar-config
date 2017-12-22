@@ -95,11 +95,11 @@ export function reduceClassLinks(state = Map(), action) {
       return state
         .setIn(
           [action.link.get('globalIndex'), 'target'],
-          action.newSource.get('name')
+          action.newTarget.get('name')
         )
         .setIn(
           [action.link.get('globalIndex'), 'targetIndex'],
-          action.newSource.get('globalIndex')
+          action.newTarget.get('globalIndex')
         );
 
     default:

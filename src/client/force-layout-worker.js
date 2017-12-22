@@ -1,4 +1,4 @@
-import { flatten, concat, map, values, propEq, find } from 'ramda';
+import { flatten, concat, map, values } from 'ramda';
 const d3 = require('d3-force');
 
 const {

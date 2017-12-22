@@ -1,36 +1,28 @@
-const React = require('react');
-const R = require('ramda');
-const { connect } = require('react-redux');
-const Nav = require('../components/ingestion-profile-nav.jsx');
-const Search = require('./config-search.jsx');
-const New = require('./config-new.jsx');
-const Delete = require('./config-delete.jsx');
-
-const { saveAsync } = require('../action-creators/ingestion-profile');
-
-const {
+import React from 'react';
+import R from 'ramda';
+import { connect } from 'react-redux';
+import Nav from '../components/ingestion-profile-nav.jsx';
+import Search from './config-search.jsx';
+import New from './config-new.jsx';
+import Delete from './config-delete.jsx';
+import { saveAsync } from '../action-creators/ingestion-profile';
+import {
   revealNew,
   revealDelete,
   setActiveTab
-} = require('../action-creators/ui/ingestion-profile');
-
-const { revealSearch } = require('../action-creators/ui/search');
-
-const {
+} from '../action-creators/ui/ingestion-profile';
+import { revealSearch } from '../action-creators/ui/search';
+import {
   nameSelector,
   statusSelector,
   persistentIngestionProfileSelector
-} = require('../selectors/ingestion-profile');
-
-const {
-  visibleSelector: searchVisibleSelector
-} = require('../selectors/ui/search');
-
-const {
+} from '../selectors/ingestion-profile';
+import { visibleSelector as searchVisibleSelector } from '../selectors/ui/search';
+import {
   newVisibleSelector,
   deleteVisibleSelector,
   activeTabSelector
-} = require('../selectors/ui/ingestion-profile');
+} from '../selectors/ui/ingestion-profile';
 
 function mapStateToProps(state) {
   return {

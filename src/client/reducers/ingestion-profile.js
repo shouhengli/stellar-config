@@ -11,17 +11,11 @@ import {
   generateClassLinkGlobalIndex,
   generateClassPropGlobalIndex
 } from '../ingestion-profile';
-
-const {
+import {
   defaultToEmptyList,
   defaultToEmptyArray,
   defaultToEmptyObject
-} = require('../util');
-
-// const {
-//   createPersistentClass,
-//   createPersistentClassLink
-// } = require('../ingestion-profile');
+} from '../util';
 
 const initialState = fromJS({
   name: '',
@@ -37,64 +31,59 @@ const initialState = fromJS({
   }
 });
 
-function loadGraphSchema(graphSchema) {
-  return Map(
-    R.evolve(
-      {
-        classes: R.pipe(
-          defaultToEmptyArray,
-          R.map(cls => ({
-            ...cls,
-            props: R.reduce(
-              (a, e) => {
-                const globalIndex = generateClassPropGlobalIndex();
-                a[globalIndex] = { globalIndex, name: e[0], type: e[1] };
-                return a;
-              },
-              {},
-              Object.entries(cls.props)
-            )
-          })),
-          R.map(cls => ({ ...cls, globalIndex: generateClassGlobalIndex() })),
-          R.map(cls => [cls.globalIndex, cls]),
-          R.fromPairs,
-          fromJS
-        ),
-        classLinks: R.pipe(
-          defaultToEmptyArray,
-          R.map(l => ({ ...l, globalIndex: generateClassLinkGlobalIndex() })),
-          R.reduce((s, l) => s.set(l.globalIndex, fromJS(l)), Map())
+const findClassIndexByName = (name, classes) =>
+  classes.find(c => c.get('name') === name).get('globalIndex', null);
+
+const insertSourceAndTargetIndex = graphSchema =>
+  graphSchema.update('classLinks', Map(), links =>
+    links.map(l =>
+      l
+        .set(
+          'sourceIndex',
+          findClassIndexByName(l.get('source'), graphSchema.get('classes'))
         )
-      },
-      defaultToEmptyObject(graphSchema)
+        .set(
+          'targetIndex',
+          findClassIndexByName(l.get('target'), graphSchema.get('classes'))
+        )
+    )
+  );
+
+function loadGraphSchema(graphSchema) {
+  return insertSourceAndTargetIndex(
+    Map(
+      R.evolve(
+        {
+          classes: R.pipe(
+            defaultToEmptyArray,
+            R.map(cls => ({
+              ...cls,
+              props: R.reduce(
+                (a, e) => {
+                  const globalIndex = generateClassPropGlobalIndex();
+                  a[globalIndex] = { globalIndex, ...e };
+                  return a;
+                },
+                {},
+                cls.props
+              )
+            })),
+            R.map(cls => ({ ...cls, globalIndex: generateClassGlobalIndex() })),
+            R.map(cls => [cls.globalIndex, cls]),
+            R.fromPairs,
+            fromJS
+          ),
+          classLinks: R.pipe(
+            defaultToEmptyArray,
+            R.map(l => ({ ...l, globalIndex: generateClassLinkGlobalIndex() })),
+            R.reduce((s, l) => s.set(l.globalIndex, fromJS(l)), Map())
+          )
+        },
+        defaultToEmptyObject(graphSchema)
+      )
     )
   );
 }
-
-// function updateGraphSchema(graphSchema) {
-//   return Map(
-//     R.evolve(
-//       {
-//         classes: R.pipe(
-//           defaultToEmptyList,
-//           R.map(cls => [cls.get('globalIndex'), createPersistentClass(cls)]),
-//           pairs => pairs.toJS(),
-//           R.fromPairs,
-//           fromJS
-//         ),
-//         classLinks: R.pipe(
-//           defaultToEmptyList,
-//           R.reduce(
-//             (s, l) =>
-//               s.set(l.get('globalIndex'), fromJS(createPersistentClassLink(l))),
-//             Map()
-//           )
-//         )
-//       },
-//       graphSchema
-//     )
-//   );
-// }
 
 function loadMapping(mapping) {
   return Map(
@@ -155,9 +144,6 @@ export default function reduce(state = initialState, action) {
           state.get('sources').filterNot(R.curry(is)(action.source))
         )
         .set('status', CONFIG_STATUS_CHANGED);
-
-    case actions.GRAPH_SCHEMA_SET_EDITOR_CONTENT:
-      return state.set('status', CONFIG_STATUS_CHANGED);
 
     case actions.INGESTION_PROFILE_ADD_MAPPING_NODE:
       return state

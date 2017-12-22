@@ -119,7 +119,7 @@ export function updateLinkSource(link, newSource) {
 
 export function updateLinkTarget(link, newTarget) {
   return {
-    type: actions.CLASS_EDITOR_UPDATE_LINK_Target,
+    type: actions.CLASS_EDITOR_UPDATE_LINK_TARGET,
     link,
     newTarget
   };

@@ -1,9 +1,14 @@
-const P = require('bluebird');
+import P from 'bluebird';
 import actions from '../actions';
-const api = require('../api');
-const { INGESTION_PROFILE_CONFIG_TYPE } = require('../ingestion-profile');
+import { getConfig, postConfig, postGraphSchema, deleteConfig } from '../api';
+import { INGESTION_PROFILE_CONFIG_TYPE } from '../ingestion-profile';
+import {
+  createPersistentClass,
+  createPersistentClassLink
+} from '../ingestion-profile';
+import { saveEdit } from './ui/split-view';
 
-function load(name, content) {
+export function load(name, content) {
   return {
     type: actions.INGESTION_PROFILE_LOAD,
     name,
@@ -11,46 +16,63 @@ function load(name, content) {
   };
 }
 
-function loadAsync(name) {
+export function loadAsync(name) {
   return dispatch =>
-    api
-      .getConfig(INGESTION_PROFILE_CONFIG_TYPE, name)
-      .then(content => dispatch(load(name, content)));
+    getConfig(INGESTION_PROFILE_CONFIG_TYPE, name).then(content =>
+      dispatch(load(name, content))
+    );
 }
 
-function saveAsync(name, content) {
+export function saveAsync(name, content) {
   return dispatch =>
     P.try(() => dispatch({ type: actions.INGESTION_PROFILE_SAVE }))
-      .then(() => api.postConfig(INGESTION_PROFILE_CONFIG_TYPE, name, content))
+      .then(() => postConfig(INGESTION_PROFILE_CONFIG_TYPE, name, content))
       .then(() => dispatch({ type: actions.INGESTION_PROFILE_SAVE_SUCCESS }));
 }
 
-function reset() {
+export function saveGraphSchema(profileName, classes, classLinks) {
+  return dispatch =>
+    postGraphSchema(INGESTION_PROFILE_CONFIG_TYPE, profileName, {
+      classes: classes
+        .valueSeq()
+        .map(c => createPersistentClass(c))
+        .toJS(),
+      classLinks: classLinks
+        .valueSeq()
+        .map(l => createPersistentClassLink(l))
+        .toJS()
+    }).then(() => {
+      dispatch(loadGraphSchemaContent(classes, classLinks));
+      dispatch(saveEdit());
+    });
+}
+
+export function reset() {
   return { type: actions.INGESTION_PROFILE_RESET };
 }
 
-function deleteAsync(name) {
+export function deleteAsync(name) {
   return dispatch =>
-    api
-      .deleteConfig(INGESTION_PROFILE_CONFIG_TYPE, name)
-      .then(() => dispatch(reset()));
+    deleteConfig(INGESTION_PROFILE_CONFIG_TYPE, name).then(() =>
+      dispatch(reset())
+    );
 }
 
-function addSource(source) {
+export function addSource(source) {
   return {
     type: actions.INGESTION_PROFILE_ADD_SOURCE,
     source
   };
 }
 
-function deleteSource(source) {
+export function deleteSource(source) {
   return {
     type: actions.INGESTION_PROFILE_DELETE_SOURCE,
     source
   };
 }
 
-function loadGraphSchemaContent(classes, classLinks) {
+export function loadGraphSchemaContent(classes, classLinks) {
   return {
     type: actions.GRAPH_SCHEMA_UPDATE_CONTENT,
     classes,
@@ -58,14 +80,14 @@ function loadGraphSchemaContent(classes, classLinks) {
   };
 }
 
-function addMappingNode(node) {
+export function addMappingNode(node) {
   return {
     type: actions.INGESTION_PROFILE_ADD_MAPPING_NODE,
     node
   };
 }
 
-function updateMappingNode(node, index) {
+export function updateMappingNode(node, index) {
   return {
     type: actions.INGESTION_PROFILE_UPDATE_MAPPING_NODE,
     node,
@@ -73,21 +95,21 @@ function updateMappingNode(node, index) {
   };
 }
 
-function deleteMappingNode(index) {
+export function deleteMappingNode(index) {
   return {
     type: actions.INGESTION_PROFILE_DELETE_MAPPING_NODE,
     index
   };
 }
 
-function addMappingLink(link) {
+export function addMappingLink(link) {
   return {
     type: actions.INGESTION_PROFILE_ADD_MAPPING_LINK,
     link
   };
 }
 
-function updateMappingLink(link, index) {
+export function updateMappingLink(link, index) {
   return {
     type: actions.INGESTION_PROFILE_UPDATE_MAPPING_LINK,
     link,
@@ -95,24 +117,9 @@ function updateMappingLink(link, index) {
   };
 }
 
-function deleteMappingLink(index) {
+export function deleteMappingLink(index) {
   return {
     type: actions.INGESTION_PROFILE_DELETE_MAPPING_LINK,
     index
   };
 }
-
-module.exports = {
-  loadAsync,
-  saveAsync,
-  deleteAsync,
-  addSource,
-  deleteSource,
-  loadGraphSchemaContent,
-  addMappingNode,
-  updateMappingNode,
-  deleteMappingNode,
-  addMappingLink,
-  updateMappingLink,
-  deleteMappingLink
-};

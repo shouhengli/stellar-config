@@ -6,11 +6,13 @@ import {
   selectedClassSelector
 } from '../selectors/ui/split-view/graph-schema-classes';
 import { stagedClassLinksSelector } from '../selectors/ui/split-view/graph-schema-staged-class-links';
+import { classLinksSelector } from '../selectors/ui/split-view/graph-schema-class-links';
+import { isEditingSelector } from '../selectors/ui/split-view/graph-schema-staged-classes';
+import { nameSelector } from '../selectors/ingestion-profile';
 import {
   editAttribute,
   editClassName,
   editClassLink,
-  saveEdit,
   cancelEdit,
   closeEdit,
   addNewAttribute,
@@ -24,14 +26,16 @@ import {
   updateLinkName,
   deleteLink
 } from '../action-creators/ui/split-view';
-import { isEditingSelector } from '../selectors/ui/split-view/graph-schema-staged-classes';
+import { saveGraphSchema } from '../action-creators/ingestion-profile';
 
 function mapStateToProps(state) {
   return {
     selectedClass: selectedClassSelector(state),
     classes: classesSelector(state),
+    classLinks: classLinksSelector(state),
     stagedClassLinks: stagedClassLinksSelector(state),
-    isEditing: isEditingSelector(state)
+    isEditing: isEditingSelector(state),
+    profileName: nameSelector(state)
   };
 }
 
@@ -40,7 +44,7 @@ function mapDispatchToProps(dispatch, ownProps) {
     editAttribute: compose(dispatch, editAttribute),
     editClassLink: compose(dispatch, editClassLink),
     editClassName: compose(dispatch, editClassName),
-    saveEdit: compose(dispatch, saveEdit),
+    saveGraphSchema: compose(dispatch, saveGraphSchema),
     cancelEdit: compose(dispatch, cancelEdit),
     closeEdit: compose(dispatch, closeEdit),
     addNewAttribute: compose(dispatch, addNewAttribute),
@@ -56,4 +60,16 @@ function mapDispatchToProps(dispatch, ownProps) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClassEditor);
+const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+  ...ownProps,
+  ...stateProps,
+  ...dispatchProps,
+  saveGraphSchema() {
+    const { profileName, classes, classLinks } = stateProps;
+    dispatchProps.saveGraphSchema(profileName, classes, classLinks);
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+  ClassEditor
+);

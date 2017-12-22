@@ -29,6 +29,22 @@ router.post('/:type/:name', (req, res) =>
     .catch(() => sendServerError(res))
 );
 
+router.post('/:type/:name/graphSchema', (req, res) =>
+  store
+    .getConfig(req.params.type, req.params.name)
+    .then(content => JSON.parse(content))
+    .then(content => (content.graphSchema = req.body) && content)
+    .then(content =>
+      store.defineConfig(
+        req.params.type,
+        req.params.name,
+        JSON.stringify(content)
+      )
+    )
+    .then(() => res.json(req.body))
+    .catch(() => sendServerError(res))
+);
+
 router.delete('/:type/:name', (req, res) =>
   store
     .deleteConfig(req.params.type, req.params.name)

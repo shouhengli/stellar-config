@@ -1,11 +1,14 @@
-const { createSelector } = require('reselect');
-const { List, Map } = require('immutable');
-const { MAPPING_NODE_TYPE_KEY } = require('../ingestion-profile');
-
-const {
+import { createSelector } from 'reselect';
+import { List, Map } from 'immutable';
+import { MAPPING_NODE_TYPE_KEY } from '../ingestion-profile';
+import {
   mappingNodeSelector,
   mappingLinkSelector
-} = require('./ui/ingestion-profile');
+} from './ui/ingestion-profile';
+import {
+  createPersistentClass,
+  createPersistentClassLink
+} from '../ingestion-profile';
 
 const ingestionProfileSelector = state => state.get('ingestionProfile');
 
@@ -53,12 +56,14 @@ export const persistentIngestionProfileSelector = createSelector(
       sources: sources.toJS(),
       graphSchema: {
         classes: graphSchema
-          .get('classes', List())
+          .get('classes', Map())
           .valueSeq()
+          .map(createPersistentClass)
           .toJS(),
         classLinks: graphSchema
-          .get('classLinks', List())
+          .get('classLinks', Map())
           .valueSeq()
+          .map(createPersistentClassLink)
           .toJS()
       },
       mapping: mapping.toJS()

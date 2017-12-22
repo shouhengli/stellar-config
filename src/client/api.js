@@ -1,10 +1,10 @@
-const R = require('ramda');
-const P = require('bluebird');
-const request = require('superagent');
+import R from 'ramda';
+import P from 'bluebird';
+import request from 'superagent';
 
 const getBody = R.prop('body');
 
-function getConfig(configType, configName) {
+export function getConfig(configType, configName) {
   return P.fromCallback(callback =>
     request
       .get(`/config/${configType}/${configName}`)
@@ -13,7 +13,7 @@ function getConfig(configType, configName) {
   ).then(getBody);
 }
 
-function postConfig(configType, configName, configContent) {
+export function postConfig(configType, configName, configContent) {
   return P.fromCallback(callback =>
     request
       .post(`/config/${configType}/${configName}`)
@@ -22,13 +22,22 @@ function postConfig(configType, configName, configContent) {
   );
 }
 
-function deleteConfig(configType, configName) {
+export function postGraphSchema(configType, configName, graphSchemaContent) {
+  return P.fromCallback(callback =>
+    request
+      .post(`/config/${configType}/${configName}/graphSchema`)
+      .send(graphSchemaContent)
+      .end(callback)
+  ).then(getBody);
+}
+
+export function deleteConfig(configType, configName) {
   return P.fromCallback(callback =>
     request.delete(`/config/${configType}/${configName}`).end(callback)
   );
 }
 
-function getConfigTypes() {
+export function getConfigTypes() {
   return P.fromCallback(callback =>
     request
       .get('/config')
@@ -37,7 +46,7 @@ function getConfigTypes() {
   ).then(getBody);
 }
 
-function getConfigNames(configType) {
+export function getConfigNames(configType) {
   return P.fromCallback(callback =>
     request
       .get(`/config/${configType}`)
@@ -46,7 +55,7 @@ function getConfigNames(configType) {
   ).then(getBody);
 }
 
-function getIngestionSample(source) {
+export function getIngestionSample(source) {
   return P.fromCallback(callback =>
     request
       .get('/ingestion/sample')
@@ -55,12 +64,3 @@ function getIngestionSample(source) {
       .end(callback)
   ).then(getBody);
 }
-
-module.exports = {
-  getConfig,
-  postConfig,
-  deleteConfig,
-  getConfigTypes,
-  getConfigNames,
-  getIngestionSample
-};

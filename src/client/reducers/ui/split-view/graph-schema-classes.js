@@ -65,7 +65,9 @@ export const reduceClasses = (state = Map(), action) => {
 
     case actions.CLASS_EDITOR_SAVE_EDIT: {
       const next = state
-        .updateIn([selectedClassIndex, 'props'], p => p.set('isEditing', false))
+        .updateIn([selectedClassIndex, 'props'], props =>
+          props.map(p => p.set('isEditing', false))
+        )
         .setIn([selectedClassIndex, 'isEditingName'], false);
       selectedClassBackUp = next.get(selectedClassIndex);
       return next;
@@ -91,7 +93,7 @@ export const reduceClasses = (state = Map(), action) => {
         [selectedClassIndex, 'props', globalIndex],
         fromJS({
           name: '',
-          type: '',
+          type: 'string',
           globalIndex,
           isEditing: true
         })

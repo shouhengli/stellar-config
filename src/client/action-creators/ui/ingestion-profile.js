@@ -1,6 +1,6 @@
 const P = require('bluebird');
 const R = require('ramda');
-const api = require('../../api');
+import { getIngestionSample } from '../../api';
 import actions from '../../actions';
 
 function revealNew() {
@@ -88,9 +88,9 @@ function addSample(source, sample) {
 
 function addSampleAsync(source) {
   return dispatch =>
-    api
-      .getIngestionSample(source)
-      .then(R.partial(R.compose(dispatch, addSample), [source]));
+    getIngestionSample(source).then(
+      R.partial(R.compose(dispatch, addSample), [source])
+    );
 }
 
 function loadSamples(samples) {
@@ -102,7 +102,7 @@ function loadSamples(samples) {
 
 function loadSamplesAsync(sources) {
   return dispatch =>
-    P.all(sources.toJS().map(api.getIngestionSample))
+    P.all(sources.toJS().map(getIngestionSample))
       .then(samples => R.pipe(R.zip, R.fromPairs)(sources.toJS(), samples))
       .then(R.compose(dispatch, loadSamples));
 }
