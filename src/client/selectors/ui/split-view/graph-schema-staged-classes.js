@@ -17,10 +17,15 @@ export const stagedClassesSelector = createSelector(
     if (isNil(selectedClass)) {
       return classes;
     }
-    const stagedClassNames = stagedClassLinks
-      .reduce((s, l) => s.add(l.get('source')).add(l.get('target')), Set())
+    const stagedClassIndexes = stagedClassLinks
+      .reduce(
+        (s, l) => s.add(l.get('sourceIndex')).add(l.get('targetIndex')),
+        Set()
+      )
       .add(selectedClass.get('name'));
-    return classes.filter(c => stagedClassNames.includes(c.get('name')));
+    return classes.filter(c =>
+      stagedClassIndexes.includes(c.get('globalIndex'))
+    );
   }
 );
 

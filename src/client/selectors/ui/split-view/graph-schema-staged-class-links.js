@@ -11,7 +11,7 @@ export const stagedClassLinksSelector = createSelector(
   classLinksSelector,
   (selectedClass, classLinks) => {
     if (!selectedClass) return classLinks;
-    return classLinks.filter(c => c.get('staged'));
+    return classLinks.filter(c => c.get('isStaged'));
   }
 );
 

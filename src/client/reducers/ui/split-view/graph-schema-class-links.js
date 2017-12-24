@@ -16,13 +16,27 @@ export function reduceClassLinks(state = Map(), action) {
       }
       return state.map(l =>
         l.set(
-          'staged',
-          contains(selectedClass.get('name'), [
-            l.get('source'),
-            l.get('target')
+          'isStaged',
+          contains(selectedClass.get('globalIndex'), [
+            l.get('sourceIndex'),
+            l.get('targetIndex')
           ])
         )
       );
+    }
+
+    case actions.CLASS_EDITOR_UPDATE_CLASS_NAME: {
+      const selectedClassIndex = action.selectedClass.get('globalIndex');
+      return state.map(l => {
+        let newL = l;
+        if (l.get('sourceIndex') === selectedClassIndex) {
+          newL = newL.set('source', action.name);
+        }
+        if (l.get('targetIndex') === selectedClassIndex) {
+          newL = newL.set('target', action.name);
+        }
+        return newL;
+      });
     }
 
     case actions.CLASS_EDITOR_SAVE_EDIT: {
@@ -37,7 +51,7 @@ export function reduceClassLinks(state = Map(), action) {
 
     case actions.CLASS_LIST_ADD_NEW_CLASS:
     case actions.CLASS_EDITOR_CLOSE_EDIT:
-      return state.map(l => l.set('staged', false));
+      return state.map(l => l.set('isStaged', false));
 
     case actions.CLASS_EDITOR_ADD_NEW_LINK: {
       const globalIndex = generateClassLinkGlobalIndex(),
@@ -52,8 +66,8 @@ export function reduceClassLinks(state = Map(), action) {
           sourceIndex: selectedClassIndex,
           target: selectedClassName,
           targetIndex: selectedClassIndex,
-          staged: true,
           globalIndex,
+          isStaged: true,
           isEditing: true
         })
       );
