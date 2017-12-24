@@ -1,85 +1,35 @@
 import R from 'ramda';
 import { Map, fromJS } from 'immutable';
 import actions from '../../../actions';
-import {
-  generateClassGlobalIndex,
-  generateClassPropGlobalIndex
-} from '../../../ingestion-profile';
-
-let selectedClassBackUp = null,
-  selectedClassIndex = null;
+import { generateClassPropGlobalIndex } from '../../../ingestion-profile';
 
 export const reduceClasses = (state = Map(), action) => {
   switch (action.type) {
     case actions.GRAPH_SCHEMA_UPDATE_CONTENT:
       return action.classes;
 
-    case actions.CLASS_LIST_CLASS_SELECTED: {
-      selectedClassIndex = action.selectedClass.get('globalIndex');
-      const next = state
-        .map(c => c.set('selected', false))
-        .setIn([selectedClassIndex, 'selected'], true);
-      selectedClassBackUp = next.get(selectedClassIndex);
-      return next;
-    }
-
-    case actions.CLASS_EDITOR_CANCEL_EDIT: {
-      const selectedClass = state.get(selectedClassIndex);
-      if (selectedClass.get('isNew')) {
-        const next = state.delete(selectedClassIndex);
-        selectedClassBackUp = null;
-        selectedClassIndex = null;
-        return next;
-      } else {
-        return state.set(selectedClassIndex, selectedClassBackUp);
-      }
-    }
-
-    case actions.CLASS_EDITOR_CLOSE_EDIT: {
-      const next = state.setIn([selectedClassIndex, 'selected'], false);
-      selectedClassBackUp = null;
-      selectedClassIndex = null;
-      return next;
-    }
-
     case actions.CLASS_LIST_ADD_NEW_CLASS: {
-      const globalIndex = generateClassGlobalIndex();
-      const next = state.map(c => c.set('selected', false)).set(
-        globalIndex,
-        fromJS({
-          name: 'NewClass',
-          props: {},
-          globalIndex,
-          isEditingName: true,
-          selected: true,
-          isNew: true
-        })
-      );
-      selectedClassIndex = globalIndex;
-      selectedClassBackUp = next.get('globalIndex');
-      return next;
+      return state.set(action.newClass.get('globalIndex'), action.newClass);
     }
 
     case actions.CLASS_EDITOR_SAVE_EDIT: {
-      if (selectedClassIndex) {
-        const next = state
-          .updateIn([selectedClassIndex, 'props'], props =>
-            props.map(p => p.set('isEditing', false))
-          )
-          .setIn([selectedClassIndex, 'isEditingName'], false);
-        selectedClassBackUp = next.get(selectedClassIndex);
-        return next;
-      }
-      return state;
+      return state.map(cls =>
+        cls
+          .update('props', props => props.map(p => p.set('isEditing', false)))
+          .set('isEditingName', false)
+      );
     }
 
     case actions.CLASS_EDITOR_EDIT_CLASS_NAME:
-      return state.setIn([selectedClassIndex, 'isEditingName'], true);
+      return state.setIn(
+        [action.selectedClass.get('globalIndex'), 'isEditingName'],
+        true
+      );
 
     case actions.CLASS_EDITOR_EDIT_ATTRIBUTE:
       return state.setIn(
         [
-          selectedClassIndex,
+          action.selectedClass.get('globalIndex'),
           'props',
           action.attribute.get('globalIndex'),
           'isEditing'
@@ -90,7 +40,7 @@ export const reduceClasses = (state = Map(), action) => {
     case actions.CLASS_EDITOR_ADD_NEW_ATTRIBUTE: {
       const globalIndex = generateClassPropGlobalIndex();
       return state.setIn(
-        [selectedClassIndex, 'props', globalIndex],
+        [action.selectedClass.get('globalIndex'), 'props', globalIndex],
         fromJS({
           name: '',
           type: 'string',
@@ -101,12 +51,15 @@ export const reduceClasses = (state = Map(), action) => {
     }
 
     case actions.CLASS_EDITOR_UPDATE_CLASS_NAME:
-      return state.setIn([selectedClassIndex, 'name'], action.name);
+      return state.setIn(
+        [action.selectedClass.get('globalIndex'), 'name'],
+        action.name
+      );
 
     case actions.CLASS_EDITOR_UPDATE_ATTRIBUTE_NAME:
       return state.setIn(
         [
-          selectedClassIndex,
+          action.selectedClass.get('globalIndex'),
           'props',
           action.attribute.get('globalIndex'),
           'name'
@@ -117,7 +70,7 @@ export const reduceClasses = (state = Map(), action) => {
     case actions.CLASS_EDITOR_UPDATE_ATTRIBUTE_TYPE:
       return state.setIn(
         [
-          selectedClassIndex,
+          action.selectedClass.get('globalIndex'),
           'props',
           action.attribute.get('globalIndex'),
           'type'
@@ -128,7 +81,7 @@ export const reduceClasses = (state = Map(), action) => {
     case actions.CLASS_EDITOR_DELETE_ATTRIBUTE:
       return state.setIn(
         [
-          selectedClassIndex,
+          action.selectedClass.get('globalIndex'),
           'props',
           action.attribute.get('globalIndex'),
           'isDeleted'
@@ -180,6 +133,19 @@ export const reduceClassPositions = (state = Map(), action) => {
         [action.globalIndex, 'outerRadius'],
         action.outerRadius
       );
+    default:
+      return state;
+  }
+};
+
+export const reduceSelectedClassIndex = (state = null, action) => {
+  switch (action.type) {
+    case actions.CLASS_LIST_CLASS_SELECTED:
+      return action.selectedClass.get('globalIndex');
+
+    case actions.CLASS_EDITOR_CLOSE_EDIT:
+      return null;
+
     default:
       return state;
   }

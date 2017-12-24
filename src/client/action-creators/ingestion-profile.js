@@ -32,9 +32,15 @@ export function saveAsync(name, content) {
 
 export function saveGraphSchema(profileName, classes, classLinks) {
   const classesToSave = classes.map(c =>
-    c.update('props', props => props.filterNot(p => p.get('isDeleted')))
+    c
+      .update('props', props =>
+        props.filterNot(p => p.get('isDeleted')).map(p => p.delete('isEditing'))
+      )
+      .delete('isEditingName')
   );
-  const classLinksToSave = classLinks.filterNot(l => l.get('isDeleted'));
+  const classLinksToSave = classLinks
+    .filterNot(l => l.get('isDeleted'))
+    .map(l => l.delete('isEditing'));
 
   return dispatch =>
     postGraphSchema(INGESTION_PROFILE_CONFIG_TYPE, profileName, {

@@ -6,7 +6,7 @@ import R from 'ramda';
 
 export default class SplitView extends React.Component {
   render() {
-    const { selectedClass } = this.props;
+    const { selectedClass, loadGraphSchemaContent } = this.props;
 
     return (
       <div className="split-view columns">
@@ -17,7 +17,7 @@ export default class SplitView extends React.Component {
           ''
         ) : (
           <div key="midChild" className="view column is-two-fifths">
-            <ClassEditor />
+            <ClassEditor loadGraphSchemaContent={loadGraphSchemaContent} />
           </div>
         )}
         <div key="rightChild" className="view column">
@@ -28,6 +28,6 @@ export default class SplitView extends React.Component {
   }
 
   componentWillMount() {
-    this.props.init(this.props.classes, this.props.classLinks);
+    this.props.loadGraphSchemaContent();
   }
 }

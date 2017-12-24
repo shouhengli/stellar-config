@@ -18,8 +18,20 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    init: compose(dispatch, loadGraphSchemaContent)
+    loadGraphSchemaContent: compose(dispatch, loadGraphSchemaContent)
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SplitView);
+const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+  ...ownProps,
+  ...stateProps,
+  ...dispatchProps,
+  loadGraphSchemaContent() {
+    const { classes, classLinks } = stateProps;
+    dispatchProps.loadGraphSchemaContent(classes, classLinks);
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(
+  SplitView
+);

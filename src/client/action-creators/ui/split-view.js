@@ -1,4 +1,5 @@
 import actions from '../../actions';
+import P from 'bluebird';
 
 export function classSelected(selectedClass) {
   return {
@@ -7,16 +8,21 @@ export function classSelected(selectedClass) {
   };
 }
 
-export function addNewClass() {
-  return {
-    type: actions.CLASS_LIST_ADD_NEW_CLASS
-  };
+export function addNewClass(newClass) {
+  return dispatch =>
+    P.try(() =>
+      dispatch({
+        type: actions.CLASS_LIST_ADD_NEW_CLASS,
+        newClass
+      })
+    ).then(() => dispatch(classSelected(newClass)));
 }
 
-export function editAttribute(attribute) {
+export function editAttribute(attribute, selectedClass) {
   return {
     type: actions.CLASS_EDITOR_EDIT_ATTRIBUTE,
-    attribute
+    attribute,
+    selectedClass
   };
 }
 
@@ -27,9 +33,10 @@ export function editClassLink(classLink) {
   };
 }
 
-export function editClassName() {
+export function editClassName(selectedClass) {
   return {
-    type: actions.CLASS_EDITOR_EDIT_CLASS_NAME
+    type: actions.CLASS_EDITOR_EDIT_CLASS_NAME,
+    selectedClass
   };
 }
 
@@ -39,51 +46,50 @@ export function saveEdit() {
   };
 }
 
-export function cancelEdit() {
-  return {
-    type: actions.CLASS_EDITOR_CANCEL_EDIT
-  };
-}
-
 export function closeEdit() {
   return {
     type: actions.CLASS_EDITOR_CLOSE_EDIT
   };
 }
 
-export function addNewAttribute() {
+export function addNewAttribute(selectedClass) {
   return {
-    type: actions.CLASS_EDITOR_ADD_NEW_ATTRIBUTE
+    type: actions.CLASS_EDITOR_ADD_NEW_ATTRIBUTE,
+    selectedClass
   };
 }
 
-export function updateClassName(name) {
+export function updateClassName(name, selectedClass) {
   return {
     type: actions.CLASS_EDITOR_UPDATE_CLASS_NAME,
-    name
+    name,
+    selectedClass
   };
 }
 
-export function updateAttributeType(attribute, attrType) {
+export function updateAttributeType(attribute, attrType, selectedClass) {
   return {
     type: actions.CLASS_EDITOR_UPDATE_ATTRIBUTE_TYPE,
     attribute,
-    attrType
+    attrType,
+    selectedClass
   };
 }
 
-export function updateAttributeName(attribute, newName) {
+export function updateAttributeName(attribute, newName, selectedClass) {
   return {
     type: actions.CLASS_EDITOR_UPDATE_ATTRIBUTE_NAME,
     attribute,
-    newName
+    newName,
+    selectedClass
   };
 }
 
-export function deleteAttribute(attribute) {
+export function deleteAttribute(attribute, selectedClass) {
   return {
     type: actions.CLASS_EDITOR_DELETE_ATTRIBUTE,
-    attribute
+    attribute,
+    selectedClass
   };
 }
 

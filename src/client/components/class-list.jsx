@@ -14,7 +14,12 @@ export default class ClassList extends React.Component {
   };
 
   render() {
-    const { classes, handleCreateNewClass, isEditing } = this.props;
+    const {
+      classes,
+      handleCreateNewClass,
+      isEditing,
+      selectedClassIndex
+    } = this.props;
 
     return (
       <nav className="panel class-list">
@@ -36,7 +41,10 @@ export default class ClassList extends React.Component {
           <a
             key={cls.get('globalIndex')}
             className={
-              'panel-block' + (cls.get('selected') ? ' is-active' : '')
+              'panel-block' +
+              (cls.get('globalIndex') === selectedClassIndex
+                ? ' is-active'
+                : '')
             }
           >
             <span

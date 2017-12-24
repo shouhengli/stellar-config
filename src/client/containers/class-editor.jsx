@@ -13,7 +13,6 @@ import {
   editAttribute,
   editClassName,
   editClassLink,
-  cancelEdit,
   closeEdit,
   addNewAttribute,
   addNewLink,
@@ -45,7 +44,6 @@ function mapDispatchToProps(dispatch, ownProps) {
     editClassLink: compose(dispatch, editClassLink),
     editClassName: compose(dispatch, editClassName),
     saveGraphSchema: compose(dispatch, saveGraphSchema),
-    cancelEdit: compose(dispatch, cancelEdit),
     closeEdit: compose(dispatch, closeEdit),
     addNewAttribute: compose(dispatch, addNewAttribute),
     addNewLink: compose(dispatch, addNewLink),
@@ -67,6 +65,9 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   saveGraphSchema() {
     const { profileName, classes, classLinks } = stateProps;
     dispatchProps.saveGraphSchema(profileName, classes, classLinks);
+  },
+  cancelEdit() {
+    ownProps.loadGraphSchemaContent();
   }
 });
 

@@ -3,28 +3,33 @@ import React from 'react';
 const graphSchemaPrimitiveTypes = ['string', 'boolean', 'integer', 'float'];
 
 export default class ClassEditor extends React.Component {
-  updateClassName = e => this.props.updateClassName(e.target.textContent);
+  updateClassName = e =>
+    this.props.updateClassName(e.target.textContent, this.props.selectedClass);
 
   updateAttributeName = e =>
     this.props.updateAttributeName(
       this.props.selectedClass.getIn(['props', e.target.dataset.globalIndex]),
-      e.target.textContent.trim()
+      e.target.textContent.trim(),
+      this.props.selectedClass
     );
 
   updateAttributeType = e =>
     this.props.updateAttributeType(
       this.props.selectedClass.getIn(['props', e.target.dataset.globalIndex]),
-      e.target.value.trim()
+      e.target.value.trim(),
+      this.props.selectedClass
     );
 
   deleteAttribute = e =>
     this.props.deleteAttribute(
-      this.props.selectedClass.getIn(['props', e.target.dataset.globalIndex])
+      this.props.selectedClass.getIn(['props', e.target.dataset.globalIndex]),
+      this.props.select
     );
 
   editAttribute = e =>
     this.props.editAttribute(
-      this.props.selectedClass.getIn(['props', e.target.dataset.globalIndex])
+      this.props.selectedClass.getIn(['props', e.target.dataset.globalIndex]),
+      this.props.selectedClass
     );
 
   editClassLink = e =>
@@ -57,6 +62,10 @@ export default class ClassEditor extends React.Component {
       this.props.stagedClassLinks.get(e.target.dataset.globalIndex)
     );
 
+  editClassName = () => this.props.editClassName(this.props.selectedClass);
+
+  addNewAttribute = () => this.props.addNewAttribute(this.props.selectedClass);
+
   render() {
     const {
       selectedClass,
@@ -65,8 +74,6 @@ export default class ClassEditor extends React.Component {
       isEditing,
       saveGraphSchema,
       closeEdit,
-      addNewAttribute,
-      editClassName,
       cancelEdit
     } = this.props;
 
@@ -84,7 +91,7 @@ export default class ClassEditor extends React.Component {
             ) &&
               'is-invisible') ||
               ''}`}
-            onClick={editClassName}
+            onClick={this.editClassName}
           />
           <a
             className={`close-editor button is-pulled-right is-medium ${
@@ -179,7 +186,7 @@ export default class ClassEditor extends React.Component {
                 <tr>
                   <td colSpan="4">
                     <a
-                      onClick={addNewAttribute}
+                      onClick={this.addNewAttribute}
                       className="button is-link is-outlined is-fullwidth"
                     >
                       <span className="panel-icon">

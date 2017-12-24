@@ -7,6 +7,11 @@ export const classPositionsSelector = state =>
 export const classesSelector = state =>
   state.getIn(['ui', 'splitView', 'graphSchemaClasses'], Map());
 
-export const selectedClassSelector = createSelector(classesSelector, classes =>
-  classes.find(c => c.get('selected'))
+export const selectedClassIndexSelector = state =>
+  state.getIn(['ui', 'splitView', 'selectedClassIndex'], Map());
+
+export const selectedClassSelector = createSelector(
+  classesSelector,
+  selectedClassIndexSelector,
+  (classes, selecedClassIndex) => classes.get(selecedClassIndex, null)
 );

@@ -123,6 +123,11 @@ export default function reduce(state = initialState, action) {
         .set('mapping', loadMapping(action.content && action.content.mapping))
         .set('status', CONFIG_STATUS_NORMAL);
 
+    case actions.GRAPH_SCHEMA_UPDATE_CONTENT:
+      return state
+        .setIn(['graphSchema', 'classes'], action.classes)
+        .setIn(['graphSchema', 'classLinks'], action.classLinks);
+
     case actions.INGESTION_PROFILE_SAVE:
       return state.set('status', CONFIG_STATUS_SAVING);
 

@@ -3,8 +3,6 @@ import { isNil, contains } from 'ramda';
 import actions from '../../../actions';
 import { generateClassLinkGlobalIndex } from '../../../ingestion-profile';
 
-let stagedClassLinksBackUp = Map();
-
 export function reduceClassLinks(state = Map(), action) {
   switch (action.type) {
     case actions.GRAPH_SCHEMA_UPDATE_CONTENT: {
@@ -16,7 +14,7 @@ export function reduceClassLinks(state = Map(), action) {
       if (isNil(selectedClass)) {
         return state;
       }
-      const next = state.map(l =>
+      return state.map(l =>
         l.set(
           'staged',
           contains(selectedClass.get('name'), [
@@ -25,14 +23,10 @@ export function reduceClassLinks(state = Map(), action) {
           ])
         )
       );
-      stagedClassLinksBackUp = next.filter(l => l.get('staged'));
-      return next;
     }
 
     case actions.CLASS_EDITOR_SAVE_EDIT: {
-      const next = state.map(l => l.set('isEditing', false));
-      stagedClassLinksBackUp = next.filter(l => l.get('staged'));
-      return next;
+      return state.map(l => l.set('isEditing', false));
     }
 
     case actions.CLASS_EDITOR_EDIT_CLASS_LINK:
@@ -42,13 +36,8 @@ export function reduceClassLinks(state = Map(), action) {
       );
 
     case actions.CLASS_LIST_ADD_NEW_CLASS:
-    case actions.CLASS_EDITOR_CLOSE_EDIT: {
-      stagedClassLinksBackUp = Map();
+    case actions.CLASS_EDITOR_CLOSE_EDIT:
       return state.map(l => l.set('staged', false));
-    }
-
-    case actions.CLASS_EDITOR_CANCEL_EDIT:
-      return state.merge(stagedClassLinksBackUp).filterNot(l => l.get('isNew'));
 
     case actions.CLASS_EDITOR_ADD_NEW_LINK: {
       const globalIndex = generateClassLinkGlobalIndex(),
@@ -65,8 +54,7 @@ export function reduceClassLinks(state = Map(), action) {
           targetIndex: selectedClassIndex,
           staged: true,
           globalIndex,
-          isEditing: true,
-          isNew: true
+          isEditing: true
         })
       );
     }

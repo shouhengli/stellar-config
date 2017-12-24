@@ -1,15 +1,21 @@
 import { compose } from 'ramda';
 import { connect } from 'react-redux';
-import { classesSelector } from '../selectors/ui/split-view/graph-schema-classes';
+import {
+  classesSelector,
+  selectedClassIndexSelector
+} from '../selectors/ui/split-view/graph-schema-classes';
 import { nameSelector } from '../selectors/ingestion-profile';
 import { classLinksSelector } from '../selectors/ui/split-view/graph-schema-class-links';
 import ClassList from '../components/class-list.jsx';
 import { classSelected, addNewClass } from '../action-creators/ui/split-view';
 import { isEditingSelector } from '../selectors/ui/split-view/graph-schema-staged-classes';
 import { saveGraphSchema } from '../action-creators/ingestion-profile';
+import { generateClassGlobalIndex } from '../ingestion-profile';
+import { fromJS } from 'immutable';
 
 function mapStateToProps(state) {
   return {
+    selectedClassIndex: selectedClassIndexSelector(state),
     classes: classesSelector(state),
     classLinks: classLinksSelector(state),
     profileName: nameSelector(state),
@@ -42,6 +48,17 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
           )
         )
       )
+    );
+  },
+  handleCreateNewClass() {
+    const globalIndex = generateClassGlobalIndex();
+    dispatchProps.handleCreateNewClass(
+      fromJS({
+        name: 'NewClass',
+        props: {},
+        globalIndex,
+        isEditingName: true
+      })
     );
   }
 });

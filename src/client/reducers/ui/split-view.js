@@ -2,7 +2,8 @@ import { combineReducers } from 'redux-immutable';
 import graphSchema from './split-view/graph-schema';
 import {
   reduceClasses as graphSchemaClasses,
-  reduceClassPositions as graphSchemaClassPositions
+  reduceClassPositions as graphSchemaClassPositions,
+  reduceSelectedClassIndex as selectedClassIndex
 } from './split-view/graph-schema-classes';
 import {
   reduceClassLinks as graphSchemaClassLinks,
@@ -14,5 +15,6 @@ export default combineReducers({
   graphSchemaClasses,
   graphSchemaClassPositions,
   graphSchemaClassLinks,
-  graphSchemaClassLinkPositions
+  graphSchemaClassLinkPositions,
+  selectedClassIndex
 });
