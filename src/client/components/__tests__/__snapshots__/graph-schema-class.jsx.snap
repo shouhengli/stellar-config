@@ -16,26 +16,26 @@ exports[`component graph-schema-class can be rendered 1`] = `
     transform="rotate(180)"
   >
     <div
-      className="Person"
       classPropName="name"
+      globalIndex="1"
       path="M4.592425496802574e-15,-75A75,75,0,1,1,-4.592425496802574e-15,75A75,75,0,1,1,4.592425496802574e-15,-75M-1.3777276490407723e-14,-75A75,75,0,1,0,1.3777276490407723e-14,75A75,75,0,1,0,-1.3777276490407723e-14,-75Z"
     />
     <div
-      className="Person"
       classPropName="name"
       classPropNameArcPath="M4.592425496802574e-15,-75A75,75,0,1,1,-4.592425496802574e-15,75A75,75,0,1,1,4.592425496802574e-15,-75Z"
       classPropNameRadius={75}
       classPropNameVisibility="hidden"
       clipPath="M4.592425496802574e-15,-75A75,75,0,1,1,-4.592425496802574e-15,75A75,75,0,1,1,4.592425496802574e-15,-75M-1.3777276490407723e-14,-75A75,75,0,1,0,1.3777276490407723e-14,75A75,75,0,1,0,-1.3777276490407723e-14,-75Z"
       fontSize={16}
-      id="0-0"
+      globalIndex="1"
+      id={undefined}
       rotation={0}
     />
     <div
       classPropName="name"
       classPropTooltipArcPath="M5.204748896376251e-15,-85A85,85,0,1,1,-5.204748896376251e-15,85A85,85,0,1,1,5.204748896376251e-15,-85Z"
       classPropTooltipRadius={85}
-      id="0-0"
+      id={undefined}
       rotation={0}
       visible={false}
     />

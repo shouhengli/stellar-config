@@ -9,3 +9,16 @@ global.requestAnimationFrame = callback => {
 const enzyme = require('enzyme');
 const Adapter = require('enzyme-adapter-react-16');
 enzyme.configure({ adapter: new Adapter() });
+
+class Worker {
+  constructor(stringUrl) {
+    this.url = stringUrl;
+    this.onmessage = () => {};
+  }
+
+  postMessage(msg) {
+    this.onmessage(msg);
+  }
+}
+
+global.Worker = Worker;

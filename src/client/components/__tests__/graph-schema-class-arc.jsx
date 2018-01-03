@@ -9,7 +9,7 @@ describe('component graph-schema-class-arc', () => {
   beforeEach(() => {
     props = {
       path: 'M0,1',
-      className: 'Person',
+      globalIndex: 1,
       classPropName: 'name',
       handleMouseOver: jest.fn(),
       handleMouseOut: jest.fn()
@@ -28,7 +28,7 @@ describe('component graph-schema-class-arc', () => {
 
     expect(props.handleMouseOver).toHaveBeenCalledTimes(1);
     expect(props.handleMouseOver).toHaveBeenCalledWith(
-      props.className,
+      props.globalIndex,
       props.classPropName
     );
   });
@@ -39,7 +39,7 @@ describe('component graph-schema-class-arc', () => {
 
     expect(props.handleMouseOut).toHaveBeenCalledTimes(1);
     expect(props.handleMouseOut).toHaveBeenCalledWith(
-      props.className,
+      props.globalIndex,
       props.classPropName
     );
   });

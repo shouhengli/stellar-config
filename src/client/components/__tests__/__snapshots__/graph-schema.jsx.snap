@@ -23,7 +23,7 @@ exports[`component graph-schema can be rendered 1`] = `
       >
         <div>
           <div
-            id={0}
+            id="1"
             markerId="graph-schema-arrow"
             x0={0}
             x1={0}
@@ -35,42 +35,46 @@ exports[`component graph-schema can be rendered 1`] = `
           <div
             classLink={
               Immutable.Map {
+                "targetIndex": "4",
+                "length": 2,
                 "name": "has-a",
-                "source": "Person",
+                "globalIndex": "1",
                 "target": "Mac",
+                "sourceIndex": "3",
                 "x": 0,
                 "y": 0,
-                "length": 0,
-                "globalIndex": 0,
+                "source": "Person",
               }
             }
-            id={0}
+            id="1"
           />
         </div>
         <div>
           <div
-            id={1}
+            id="2"
             markerId="graph-schema-arrow"
             x0={0}
-            x1={0}
+            x1={1}
             x2={0}
             y0={0}
-            y1={0}
+            y1={1}
             y2={0}
           />
           <div
             classLink={
               Immutable.Map {
+                "targetIndex": "5",
+                "length": 2,
                 "name": "is-a",
-                "source": "Person",
+                "globalIndex": "2",
                 "target": "Engineer",
-                "x": 0,
-                "y": 0,
-                "length": 0,
-                "globalIndex": 1,
+                "sourceIndex": "4",
+                "x": 1,
+                "y": 1,
+                "source": "Person",
               }
             }
-            id={1}
+            id="2"
           />
         </div>
       </g>
@@ -81,12 +85,12 @@ exports[`component graph-schema can be rendered 1`] = `
           cls={
             Immutable.Map {
               "name": "Person",
-              "props": undefined,
+              "globalIndex": "3",
+              "props": Immutable.Map {},
               "x": 0,
               "y": 0,
-              "tooltipVisibleProp": null,
+              "length": 2,
               "outerRadius": 75,
-              "globalIndex": 0,
             }
           }
         />
@@ -94,12 +98,12 @@ exports[`component graph-schema can be rendered 1`] = `
           cls={
             Immutable.Map {
               "name": "Mac",
-              "props": undefined,
+              "globalIndex": "4",
+              "props": Immutable.Map {},
               "x": 0,
               "y": 0,
-              "tooltipVisibleProp": null,
+              "length": 2,
               "outerRadius": 75,
-              "globalIndex": 1,
             }
           }
         />
@@ -107,12 +111,12 @@ exports[`component graph-schema can be rendered 1`] = `
           cls={
             Immutable.Map {
               "name": "Engineer",
-              "props": undefined,
+              "globalIndex": "5",
+              "props": Immutable.Map {},
               "x": 0,
               "y": 0,
-              "tooltipVisibleProp": null,
+              "length": 2,
               "outerRadius": 75,
-              "globalIndex": 2,
             }
           }
         />

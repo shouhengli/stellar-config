@@ -1,6 +1,5 @@
 import { fromJS } from 'immutable';
 import {
-  editorContentSelector,
   shouldUpdateClassLinkLengthsSelector,
   dimensionsSelector,
   coordinatesSelector,
@@ -10,32 +9,24 @@ import {
 } from '../graph-schema';
 
 describe('graph schema selectors', () => {
-  describe('#editorContentSelector', () => {
-    it('select the editContent value from ui graph schema', () => {
-      const state = fromJS({
-        ui: {
-          graphSchema: {
-            editorContent: jest.fn()
-          }
-        }
-      });
-      expect(editorContentSelector(state)).toEqual(
-        state.getIn(['ui', 'graphSchema', 'editorContent'])
-      );
-    });
-  });
-
   describe('#shouldUpdateClassLinkLengthsSelector', () => {
     it('select shouldUpdateClassLinkLengths value from ui graph schema', () => {
       const state = fromJS({
         ui: {
-          graphSchema: {
-            shouldUpdateClassLinkLengths: jest.fn()
+          splitView: {
+            graphSchema: {
+              shouldUpdateClassLinkLengths: jest.fn()
+            }
           }
         }
       });
       expect(shouldUpdateClassLinkLengthsSelector(state)).toEqual(
-        state.getIn(['ui', 'graphSchema', 'shouldUpdateClassLinkLengths'])
+        state.getIn([
+          'ui',
+          'splitView',
+          'graphSchema',
+          'shouldUpdateClassLinkLengths'
+        ])
       );
     });
   });
@@ -44,13 +35,15 @@ describe('graph schema selectors', () => {
     it('select dimensions value from ui graph schema', () => {
       const state = fromJS({
         ui: {
-          graphSchema: {
-            dimensions: jest.fn()
+          splitView: {
+            graphSchema: {
+              dimensions: jest.fn()
+            }
           }
         }
       });
       expect(dimensionsSelector(state)).toEqual(
-        state.getIn(['ui', 'graphSchema', 'dimensions'])
+        state.getIn(['ui', 'splitView', 'graphSchema', 'dimensions'])
       );
     });
   });
@@ -59,13 +52,15 @@ describe('graph schema selectors', () => {
     it('select coordinates value from ui graph schema', () => {
       const state = fromJS({
         ui: {
-          graphSchema: {
-            coordinates: jest.fn()
+          splitView: {
+            graphSchema: {
+              coordinates: jest.fn()
+            }
           }
         }
       });
       expect(coordinatesSelector(state)).toEqual(
-        state.getIn(['ui', 'graphSchema', 'coordinates'])
+        state.getIn(['ui', 'splitView', 'graphSchema', 'coordinates'])
       );
     });
   });
@@ -74,13 +69,15 @@ describe('graph schema selectors', () => {
     it('select pan value from ui graph schema', () => {
       const state = fromJS({
         ui: {
-          graphSchema: {
-            pan: jest.fn()
+          splitView: {
+            graphSchema: {
+              pan: jest.fn()
+            }
           }
         }
       });
       expect(panSelector(state)).toEqual(
-        state.getIn(['ui', 'graphSchema', 'pan'])
+        state.getIn(['ui', 'splitView', 'graphSchema', 'pan'])
       );
     });
   });
@@ -89,13 +86,15 @@ describe('graph schema selectors', () => {
     it('select zoom value from ui graph schema', () => {
       const state = fromJS({
         ui: {
-          graphSchema: {
-            zoom: jest.fn()
+          splitView: {
+            graphSchema: {
+              zoom: jest.fn()
+            }
           }
         }
       });
       expect(zoomSelector(state)).toEqual(
-        state.getIn(['ui', 'graphSchema', 'zoom'])
+        state.getIn(['ui', 'splitView', 'graphSchema', 'zoom'])
       );
     });
   });
@@ -104,13 +103,15 @@ describe('graph schema selectors', () => {
     it('select drag value from ui graph schema', () => {
       const state = fromJS({
         ui: {
-          graphSchema: {
-            drag: jest.fn()
+          splitView: {
+            graphSchema: {
+              drag: jest.fn()
+            }
           }
         }
       });
       expect(dragSelector(state)).toEqual(
-        state.getIn(['ui', 'graphSchema', 'drag'])
+        state.getIn(['ui', 'splitView', 'graphSchema', 'drag'])
       );
     });
   });

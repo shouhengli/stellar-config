@@ -2,7 +2,6 @@ const React = require('react');
 const renderer = require('react-test-renderer');
 const { shallow } = require('enzyme');
 const { fromJS } = require('immutable');
-const { createClassLink } = require('../../ingestion-profile');
 const Label = require('../graph-schema-class-link-label.jsx');
 
 describe('component graph-schema-class-link-label', () => {
@@ -11,7 +10,14 @@ describe('component graph-schema-class-link-label', () => {
   beforeEach(() => {
     props = {
       id: 1,
-      classLink: fromJS(createClassLink('is-a', 'Person', 'Engineer')),
+      classLink: fromJS({
+        name: 'is-a',
+        source: 'Person',
+        target: 'Engineer',
+        x: 0,
+        y: 0,
+        length: 0
+      }),
       zoom: 2,
       handleMouseDown: jest.fn()
     };

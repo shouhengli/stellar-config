@@ -32,7 +32,9 @@ const initialState = fromJS({
 });
 
 const findClassIndexByName = (name, classes) =>
-  classes.find(c => c.get('name') === name).get('globalIndex', null);
+  classes
+    .find(c => c.get('name') === name, this, Map())
+    .get('globalIndex', null);
 
 const insertSourceAndTargetIndex = graphSchema =>
   graphSchema.update('classLinks', Map(), links =>
@@ -59,13 +61,13 @@ function loadGraphSchema(graphSchema) {
             R.map(cls => ({
               ...cls,
               props: R.reduce(
-                (a, e) => {
+                (s, p) => {
                   const globalIndex = generateClassPropGlobalIndex();
-                  a[globalIndex] = { globalIndex, ...e };
-                  return a;
+                  s[globalIndex] = { globalIndex, ...p };
+                  return s;
                 },
                 {},
-                cls.props
+                cls.props || []
               )
             })),
             R.map(cls => ({ ...cls, globalIndex: generateClassGlobalIndex() })),

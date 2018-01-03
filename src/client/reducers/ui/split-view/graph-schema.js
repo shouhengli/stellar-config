@@ -46,10 +46,9 @@ export default function reduce(state = initialState, action) {
       return state.setIn(
         ['drag', 'classLink'],
         Map({
-          source: action.classLink.get('source'),
-          name: action.classLink.get('name'),
-          target: action.classLink.get('target'),
-          glboalIndex: action.classLink.get('globalIndex'),
+          sourceIndex: action.classLink.get('sourceIndex'),
+          targetIndex: action.classLink.get('targetIndex'),
+          globalIndex: action.classLink.get('globalIndex'),
           fromX: action.fromX,
           fromY: action.fromY
         })

@@ -4,7 +4,6 @@ import {
   sourcesSelector,
   statusSelector,
   classNamesSelector,
-  classLinkKeysSelector,
   persistentIngestionProfileSelector,
   mappingNodesSelector,
   mappingLinksSelector,
@@ -57,13 +56,11 @@ describe('ingestion profile selectors', () => {
       const state = fromJS({
         ingestionProfile: {
           graphSchema: {
-            classes: { a: jest.fn(), b: jest.fn() }
+            classes: { 1: { name: 'name1' }, 2: { name: 'name2' } }
           }
         }
       });
-      expect(classNamesSelector(state).toJSON()).toEqual(
-        Seq(['a', 'b']).toJSON()
-      );
+      expect(classNamesSelector(state)).toEqual(List(['name1', 'name2']));
     });
 
     it('returns empty sequence if no classes in graphSchema', () => {
@@ -76,30 +73,6 @@ describe('ingestion profile selectors', () => {
     });
   });
 
-  describe('#classLinkKeysSelector', () => {
-    it('selects keys of classLinks from ingestionProfile', () => {
-      const state = fromJS({
-        ingestionProfile: {
-          graphSchema: {
-            classLinks: { a: jest.fn(), b: jest.fn() }
-          }
-        }
-      });
-      expect(classLinkKeysSelector(state).toJSON()).toEqual(
-        Seq(['a', 'b']).toJSON()
-      );
-    });
-
-    it('returns empty sequence if no classes in graphSchema', () => {
-      const state = fromJS({
-        ingestionProfile: {
-          graphSchema: {}
-        }
-      });
-      expect(classLinkKeysSelector(state).toJSON()).toEqual(Seq().toJSON());
-    });
-  });
-
   describe('#persistentIngestionProfileSelector', () => {
     it('returns a ingestion profile ready for persistencce', () => {
       const state = fromJS({
@@ -107,28 +80,36 @@ describe('ingestion profile selectors', () => {
           sources: ['abc.csv', 'edf.csv'],
           graphSchema: {
             classes: {
-              person: { name: 'person' }
+              1: {
+                name: 'person',
+                globalIndex: '1',
+                props: { 10: { name: 'prop' } }
+              }
             },
             classLinks: {
-              isEnemyOf: { src: 'person', dest: 'person', name: 'isEnemyOf' }
+              3: {
+                name: 'isEnemyOf',
+                source: 'person',
+                target: 'person',
+                globalIndex: '3'
+              }
             }
           },
           mapping: { a: 'b' }
         },
         ui: {
-          graphSchema: {
-            editorContent: 'editorContent'
-          }
+          graphSchema: {}
         }
       });
       expect(persistentIngestionProfileSelector(state)).toEqual({
         sources: ['abc.csv', 'edf.csv'],
         graphSchema: {
-          classes: [{ name: 'person' }],
-          classLinks: [{ src: 'person', dest: 'person', name: 'isEnemyOf' }]
+          classes: [{ name: 'person', props: [{ name: 'prop' }] }],
+          classLinks: [
+            { source: 'person', target: 'person', name: 'isEnemyOf' }
+          ]
         },
-        mapping: { a: 'b' },
-        editorContent: 'editorContent'
+        mapping: { a: 'b' }
       });
     });
 
@@ -140,9 +121,7 @@ describe('ingestion profile selectors', () => {
           mapping: { a: 'b' }
         },
         ui: {
-          graphSchema: {
-            editorContent: 'editorContent'
-          }
+          graphSchema: {}
         }
       });
       expect(persistentIngestionProfileSelector(state)).toEqual({
@@ -151,8 +130,7 @@ describe('ingestion profile selectors', () => {
           classes: [],
           classLinks: []
         },
-        mapping: { a: 'b' },
-        editorContent: 'editorContent'
+        mapping: { a: 'b' }
       });
     });
   });

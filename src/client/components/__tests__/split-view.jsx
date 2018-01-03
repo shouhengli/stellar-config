@@ -1,17 +1,31 @@
-const React = require('react');
-const SplitView = require('../split-view.jsx');
-const renderer = require('react-test-renderer');
+import React from 'react';
+import SplitView from '../split-view.jsx';
+import { shallow } from 'enzyme';
+import toJSON from 'enzyme-to-json';
 
 describe('component split-view', () => {
-  test('wraps two children', () => {
-    const component = renderer.create(
-      <SplitView>
-        <div>Child 1</div>
-        <div>Child 2</div>
-      </SplitView>
+  it('renders correctly when no selectedClass', () => {
+    const component = shallow(
+      <SplitView selectedClass={null} loadGraphSchemaContent={jest.fn()} />
     );
+    expect(toJSON(component)).toMatchSnapshot();
+  });
 
-    const tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
+  it('renders correctly when selectedClass is given', () => {
+    const component = shallow(
+      <SplitView selectedClass={jest.fn()} loadGraphSchemaContent={jest.fn()} />
+    );
+    expect(toJSON(component)).toMatchSnapshot();
+  });
+
+  it('loadGraphSchemaContent is called on mount', () => {
+    const mockLoadGraphSchemaContent = jest.fn();
+    shallow(
+      <SplitView
+        selectedClass={null}
+        loadGraphSchemaContent={mockLoadGraphSchemaContent}
+      />
+    );
+    expect(mockLoadGraphSchemaContent).toHaveBeenCalled();
   });
 });

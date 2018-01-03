@@ -2,7 +2,7 @@ const P = require('bluebird');
 import actions from '../../../actions';
 const layout = require('../../../force-layout');
 const layoutWorker = new Worker('/force-layout-worker.js');
-import { fromJS, Map } from 'immutable';
+import { fromJS } from 'immutable';
 
 function startClassDrag(globalIndex, fromX, fromY) {
   return {

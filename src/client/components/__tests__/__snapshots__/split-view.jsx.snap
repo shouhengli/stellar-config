@@ -1,20 +1,47 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`component split-view wraps two children 1`] = `
-<div>
+exports[`component split-view renders correctly when no selectedClass 1`] = `
+<div
+  className="split-view columns"
+>
   <div
-    className="view is-half is-pulled-left"
+    className="view column is-one-fifth"
+    key="leftChild"
   >
-    <div>
-      Child 1
-    </div>
+    <Connect(ClassList) />
   </div>
   <div
-    className="view is-half is-pulled-right"
+    className="view column"
+    key="rightChild"
   >
-    <div>
-      Child 2
-    </div>
+    <Connect(Component) />
+  </div>
+</div>
+`;
+
+exports[`component split-view renders correctly when selectedClass is given 1`] = `
+<div
+  className="split-view columns"
+>
+  <div
+    className="view column is-one-fifth"
+    key="leftChild"
+  >
+    <Connect(ClassList) />
+  </div>
+  <div
+    className="view column is-two-fifths"
+    key="midChild"
+  >
+    <Connect(ClassEditor)
+      loadGraphSchemaContent={[Function]}
+    />
+  </div>
+  <div
+    className="view column"
+    key="rightChild"
+  >
+    <Connect(Component) />
   </div>
 </div>
 `;

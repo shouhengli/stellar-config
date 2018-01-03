@@ -1,29 +1,67 @@
-const React = require('react');
-const renderer = require('react-test-renderer');
-const { mount } = require('enzyme');
-const { Map, fromJS } = require('immutable');
-const GraphSchema = require('../graph-schema.jsx');
-
-const {
-  getClassLinkKey,
-  createClassLink,
-  createClass
-} = require('../../ingestion-profile');
+import React from 'react';
+import { mount } from 'enzyme';
+import renderer from 'react-test-renderer';
+import { fromJS } from 'immutable';
+import GraphSchema from '../graph-schema.jsx';
 
 describe('component graph-schema', () => {
   let props;
 
   beforeEach(() => {
-    const classLinks = [
-      createClassLink('has-a', 'Person', 'Mac'),
-      createClassLink('is-a', 'Person', 'Engineer')
-    ];
+    const positionedClassLinks = fromJS({
+      1: {
+        name: 'has-a',
+        globalIndex: '1',
+        sourceIndex: '3',
+        targetIndex: '4',
+        source: 'Person',
+        target: 'Mac',
+        x: 0,
+        y: 0,
+        length: 2
+      },
+      2: {
+        name: 'is-a',
+        globalIndex: '2',
+        sourceIndex: '4',
+        targetIndex: '5',
+        source: 'Person',
+        target: 'Engineer',
+        x: 1,
+        y: 1,
+        length: 2
+      }
+    });
 
-    const classes = [
-      createClass('Person'),
-      createClass('Mac'),
-      createClass('Engineer')
-    ];
+    const positionedClasses = fromJS({
+      3: {
+        name: 'Person',
+        globalIndex: '3',
+        props: {},
+        x: 0,
+        y: 0,
+        length: 2,
+        outerRadius: 75
+      },
+      4: {
+        name: 'Mac',
+        globalIndex: '4',
+        props: {},
+        x: 0,
+        y: 0,
+        length: 2,
+        outerRadius: 75
+      },
+      5: {
+        name: 'Engineer',
+        globalIndex: '5',
+        props: {},
+        x: 0,
+        y: 0,
+        length: 2,
+        outerRadius: 75
+      }
+    });
 
     props = {
       Arrow: 'div',
@@ -31,8 +69,8 @@ describe('component graph-schema', () => {
       ClassLinkPath: 'div',
       ClassLinkLabel: 'div',
       Class: 'div',
-      classLinks: Map(classLinks.map(l => [getClassLinkKey(l), fromJS(l)])),
-      classes: Map(classes.map(c => [c.name, fromJS(c)])),
+      positionedClassLinks,
+      positionedClasses,
       drag: fromJS({
         class: {
           name: 'Person',
@@ -54,13 +92,12 @@ describe('component graph-schema', () => {
       handleMouseDown: jest.fn(),
       handleWheel: jest.fn(),
       init: jest.fn(),
-      handleEditorContentChange: jest.fn(),
       updateClassLinkLengths: jest.fn(),
       stopLayout: jest.fn()
     };
   });
 
-  test('can be rendered', () => {
+  it('can be rendered', () => {
     const boundingClientRect = {
       left: 15,
       top: 25
@@ -79,7 +116,6 @@ describe('component graph-schema', () => {
 
       return null;
     };
-
     const tree = renderer
       .create(<GraphSchema {...props} />, { createNodeMock })
       .toJSON();
@@ -87,34 +123,8 @@ describe('component graph-schema', () => {
     expect(tree).toMatchSnapshot();
     expect(props.init).toHaveBeenCalledTimes(1);
     expect(props.init).toHaveBeenCalledWith(
-      [svg.clientWidth, svg.clientHeight],
-      [boundingClientRect.left, boundingClientRect.top],
-      props.editorContent
-    );
-  });
-
-  test('can handle editor content change', () => {
-    const wrapper = mount(<GraphSchema {...props} />);
-    props.editorContent = props.editorContent + '\nDog: {name: string}';
-    wrapper.setProps(props);
-
-    expect(props.handleEditorContentChange).toHaveBeenCalledTimes(1);
-    expect(props.handleEditorContentChange).toHaveBeenCalledWith(
-      props.editorContent,
-      props.dimensions.toJS(),
-      props.classes,
-      props.classLinks
-    );
-  });
-
-  test('can update class link lengths', () => {
-    const wrapper = mount(<GraphSchema {...props} />);
-    props.shouldUpdateClassLinkLengths = true;
-    wrapper.setProps(props);
-
-    expect(props.updateClassLinkLengths).toHaveBeenCalledTimes(1);
-    expect(props.updateClassLinkLengths).toHaveBeenCalledWith(
-      wrapper.instance().classLinkPaths
+      fromJS([svg.clientWidth, svg.clientHeight]),
+      fromJS([boundingClientRect.left, boundingClientRect.top])
     );
   });
 

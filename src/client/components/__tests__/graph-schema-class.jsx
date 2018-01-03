@@ -4,8 +4,6 @@ const { mount, shallow } = require('enzyme');
 const { fromJS } = require('immutable');
 const Class = require('../graph-schema-class.jsx');
 
-const { createClass } = require('../../ingestion-profile');
-
 describe('component graph-schema-class', () => {
   let props;
 
@@ -15,7 +13,15 @@ describe('component graph-schema-class', () => {
       ClassArc: 'div',
       ClassPropName: 'div',
       ClassPropTooltip: 'div',
-      cls: fromJS(createClass('Person', { name: 'string' })),
+      cls: fromJS({
+        name: 'Person',
+        globalIndex: '1',
+        props: { 10: { name: 'name' } },
+        x: 0,
+        y: 0,
+        tooltipVisibleProp: null,
+        outerRadius: 75
+      }),
       handleMouseEnter: jest.fn(),
       handleMouseLeave: jest.fn(),
       handleComponentWillUnmount: jest.fn()

@@ -1,13 +1,12 @@
-import { Map, is, fromJS, List } from 'immutable';
+import { Map, fromJS, List } from 'immutable';
 import reduceState from '../graph-schema';
-import actions from '../../../actions';
+import actions from '../../../../actions';
 
-describe('reducer ui/graph-schema', () => {
+describe('reducer ui/split-view/graph-schema', () => {
   let initialState;
 
   beforeEach(() => {
     initialState = fromJS({
-      editorContent: '',
       drag: {},
       shouldUpdateClassLinkLengths: false,
       dimensions: [0, 0],
@@ -17,48 +16,6 @@ describe('reducer ui/graph-schema', () => {
         y: 0
       },
       zoom: 1
-    });
-  });
-
-  describe('when INGESTION_PROFILE_LOAD', () => {
-    it('updates "edtiorContent" with data provided by action', () => {
-      const action = {
-        type: actions.INGESTION_PROFILE_LOAD,
-        content: {
-          editorContent: jest.fn()
-        }
-      };
-      const next = reduceState(initialState, action);
-      expect(next).toEqual(
-        initialState.set('editorContent', action.content.editorContent)
-      );
-    });
-
-    it('resets "edtiorContent" if no content provided by action', () => {
-      const action = {
-        type: actions.INGESTION_PROFILE_LOAD
-      };
-      const next = reduceState(initialState, action);
-      expect(next.get('editorContent')).toEqual('');
-    });
-  });
-
-  describe('when GRAPH_SCHEMA_SET_EDITOR_CONTENT', () => {
-    it('updates "edtiorContent" with content provided by action', () => {
-      const action = {
-        type: actions.GRAPH_SCHEMA_SET_EDITOR_CONTENT,
-        content: jest.fn()
-      };
-      const next = reduceState(initialState, action);
-      expect(next).toEqual(initialState.set('editorContent', action.content));
-    });
-
-    it('resets "edtiorContent" if no content provided by action', () => {
-      const action = {
-        type: actions.GRAPH_SCHEMA_SET_EDITOR_CONTENT
-      };
-      const next = reduceState(initialState, action);
-      expect(next.get('editorContent')).toEqual('');
     });
   });
 
@@ -73,7 +30,7 @@ describe('reducer ui/graph-schema', () => {
 
       const next = reduceState(state, action);
 
-      expect(is(next, initialState)).toBe(true);
+      expect(next).toEqual(initialState);
     });
   });
 
@@ -81,15 +38,15 @@ describe('reducer ui/graph-schema', () => {
     it('remembers the class being dragged', () => {
       const action = {
         type: actions.GRAPH_SCHEMA_START_CLASS_DRAG,
-        name: 'Person',
         fromX: 100,
-        fromY: 200
+        fromY: 200,
+        globalIndex: 1
       };
       const next = reduceState(initialState, action);
       const expected = initialState.setIn(
         ['drag', 'class'],
         Map({
-          name: action.name,
+          globalIndex: 1,
           fromX: action.fromX,
           fromY: action.fromY
         })
@@ -103,11 +60,11 @@ describe('reducer ui/graph-schema', () => {
     it('remembers the class link being dragged', () => {
       const action = {
         type: actions.GRAPH_SCHEMA_START_CLASS_LINK_DRAG,
-        classLink: {
-          name: 'has',
-          source: 'Person',
-          target: 'Car'
-        },
+        classLink: Map({
+          sourceIndex: 1,
+          targetIndex: 2,
+          globalIndex: 3
+        }),
         fromX: 100,
         fromY: 200
       };
@@ -117,15 +74,15 @@ describe('reducer ui/graph-schema', () => {
       const expected = initialState.setIn(
         ['drag', 'classLink'],
         Map({
-          name: 'has',
-          source: 'Person',
-          target: 'Car',
+          sourceIndex: 1,
+          targetIndex: 2,
+          globalIndex: 3,
           fromX: action.fromX,
           fromY: action.fromY
         })
       );
 
-      expect(next.equals(expected)).toBeTruthy();
+      expect(next).toEqual(expected);
     });
   });
 
@@ -154,7 +111,7 @@ describe('reducer ui/graph-schema', () => {
       const state = initialState.setIn(
         ['drag', 'class'],
         Map({
-          name: 'Person',
+          globalIndex: 3,
           fromX: 10,
           fromY: 20
         })
@@ -182,7 +139,7 @@ describe('reducer ui/graph-schema', () => {
       const state = initialState.setIn(
         ['drag', 'class'],
         Map({
-          name: 'Person',
+          globalIndex: 3,
           fromX: 10,
           fromY: 20
         })
@@ -211,9 +168,9 @@ describe('reducer ui/graph-schema', () => {
       const state = initialState.setIn(
         ['drag', 'classLink'],
         Map({
-          name: 'has',
-          source: 'Person',
-          target: 'Car',
+          globalIndex: 3,
+          sourceIndex: 1,
+          targetIndex: 2,
           fromX: 10,
           fromY: 20
         })
@@ -277,8 +234,8 @@ describe('reducer ui/graph-schema', () => {
     it('sets dimensions and coordinates', () => {
       const action = {
         type: actions.GRAPH_SCHEMA_SET_DIMENSIONS_AND_COORDINATES,
-        dimensions: [1000, 2000],
-        coordinates: [100, 200]
+        dimensions: List([1000, 2000]),
+        coordinates: List([100, 200])
       };
       const next = reduceState(initialState, action);
       const expected = initialState

@@ -117,14 +117,8 @@ export const reduceClassLinkPositions = (state = Map(), action) => {
     case actions.GRAPH_SCHEMA_UPDATE_CLASS_LINK_POSITION: {
       if (state.has(action.globalIndex)) {
         return state
-          .setIn(
-            [action.globalIndex, 'x'],
-            state.getIn([action.globalIndex, 'x']) + action.dx
-          )
-          .setIn(
-            [action.globalIndex, 'y'],
-            state.getIn([action.globalIndex, 'y']) + action.dy
-          );
+          .updateIn([action.globalIndex, 'x'], val => val + action.dx)
+          .updateIn([action.globalIndex, 'y'], val => val + action.dy);
       }
       return state;
     }

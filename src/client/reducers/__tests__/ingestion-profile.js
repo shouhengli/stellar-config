@@ -64,24 +64,42 @@ describe('reducer ingestion-profile', () => {
         content: {
           graphSchema: {
             classes: [{ name: 'class1' }],
-            classLinks: [{ name: 'name1', source: 'source1' }]
+            classLinks: [
+              { name: 'name1', source: 'source1' },
+              { name: 'name2', source: 'class1', target: 'class1' }
+            ]
           }
         }
       };
-
       const next = reduceState(initialState, action);
 
-      expect(
-        next.get('graphSchema').equals(
-          fromJS({
-            classes: { class1: action.content.graphSchema.classes[0] },
-            classLinks: Map().set(
-              fromJS(action.content.graphSchema.classLinks[0]),
-              fromJS(action.content.graphSchema.classLinks[0])
-            )
-          })
-        )
-      ).toBeTruthy();
+      expect(next.get('graphSchema')).toEqual(
+        fromJS({
+          classes: {
+            0: {
+              ...action.content.graphSchema.classes[0],
+              props: {},
+              globalIndex: '0'
+            }
+          },
+          classLinks: {
+            0: {
+              ...action.content.graphSchema.classLinks[0],
+              globalIndex: '0',
+              sourceIndex: null,
+              targetIndex: null
+            },
+            1: {
+              ...action.content.graphSchema.classLinks[1],
+              globalIndex: '1',
+              sourceIndex: '0',
+              targetIndex: '0',
+              source: 'class1',
+              target: 'class1'
+            }
+          }
+        })
+      );
     });
 
     it('set graphSchema to an empty map in new state if not provided in action', () => {
@@ -208,83 +226,26 @@ describe('reducer ingestion-profile', () => {
   });
 
   describe('when GRAPH_SCHEMA_UPDATE_CONTENT', () => {
-    it('updates classes in graphSchema', () => {
+    it('updates classes in graphSchema with provided data', () => {
       const action = {
         type: actions.GRAPH_SCHEMA_UPDATE_CONTENT,
-        classes: [
-          {
-            name: 'class1',
-            props: { a: 'a', b: 'b' }
-          }
-        ],
-        classLinks: [{ name: 'name1', source: 'source1', target: 'target1' }]
+        classes: jest.fn(),
+        classLinks: jest.fn()
       };
       const next = reduceState(initialState, action);
-      expect(next.getIn(['graphSchema', 'classes'])).toEqual(
-        fromJS({
-          class1: action.classes[0]
-        })
+      expect(next.getIn(['graphSchema', 'classes'])).toEqual(action.classes);
+    });
+
+    it('updates class links in graphSchema with provided data', () => {
+      const action = {
+        type: actions.GRAPH_SCHEMA_UPDATE_CONTENT,
+        classes: jest.fn(),
+        classLinks: jest.fn()
+      };
+      const next = reduceState(initialState, action);
+      expect(next.getIn(['graphSchema', 'classLinks'])).toEqual(
+        action.classLinks
       );
-    });
-
-    it('updates classes in graphSchema', () => {
-      const action = {
-        type: actions.GRAPH_SCHEMA_UPDATE_CONTENT,
-        classes: [
-          {
-            name: 'class1',
-            props: { a: 'a', b: 'b' }
-          }
-        ],
-        classLinks: [{ name: 'name1', source: 'source1', target: 'target1' }]
-      };
-      const next = reduceState(initialState, action);
-      expect(
-        next
-          .getIn(['graphSchema', 'classLinks'])
-          .equals(
-            Map().set(
-              fromJS({ name: 'name1', source: 'source1' }),
-              fromJS(action.classLinks[0])
-            )
-          )
-      ).toBeTruthy();
-    });
-
-    it('sets classes to empty object if action.classes is null', () => {
-      const action = {
-        type: actions.GRAPH_SCHEMA_UPDATE_CONTENT,
-        classes: null,
-        classLinks: [{ name: 'name1', source: 'source1', target: 'target1' }]
-      };
-      const next = reduceState(initialState, action);
-      expect(next.getIn(['graphSchema', 'classes'])).toEqual(Map());
-    });
-
-    it('sets classLinks to empty object if action.classes is null', () => {
-      const action = {
-        type: actions.GRAPH_SCHEMA_UPDATE_CONTENT,
-        classes: [
-          {
-            name: 'class1',
-            props: { a: 'a', b: 'b' }
-          }
-        ],
-        classLinks: null
-      };
-      const next = reduceState(initialState, action);
-      expect(next.getIn(['graphSchema', 'classLinks'])).toEqual(Map());
-    });
-  });
-
-  describe('when GRAPH_SCHEMA_SET_EDITOR_CONTENT', () => {
-    it('updates status to "CONFIG_STATUS_CHANGED" in new state', () => {
-      const action = {
-        type: actions.GRAPH_SCHEMA_SET_EDITOR_CONTENT
-      };
-      const next = reduceState(initialState, action);
-
-      expect(next.get('status')).toEqual('CONFIG_STATUS_CHANGED');
     });
   });
 

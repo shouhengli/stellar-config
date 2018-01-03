@@ -37,6 +37,16 @@ export const classesSelector = createSelector(
   graphSchema => graphSchema.get('classes', Map())
 );
 
+export const classNamesSelector = createSelector(
+  graphSchemaSelector,
+  graphSchema =>
+    graphSchema
+      .get('classes', Map())
+      .valueSeq()
+      .map(c => c.get('name'))
+      .toList()
+);
+
 export const classLinksSelector = createSelector(
   graphSchemaSelector,
   graphSchema => graphSchema.get('classLinks', Map())

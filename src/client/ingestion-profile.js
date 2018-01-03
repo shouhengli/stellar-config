@@ -1,5 +1,4 @@
 const R = require('ramda');
-const { Map, fromJS } = require('immutable');
 const ClientError = require('./error');
 
 export const FONT_SIZE = 16;
@@ -24,42 +23,6 @@ export const generateClassLinkGlobalIndex = createGlobalIndexGenerator();
 export const generateClassPropGlobalIndex = createGlobalIndexGenerator();
 
 /**
- * Creates a class.
- * @param {string} name - Unique identifier.
- * @param {object} props - The name-to-type mapping of class properties.
- * @param {number} [x=0]
- * @param {number} [y=0]
- * @param {string} [tooltipVisibleProp=false]
- * @param {number} [outerRadius=75]
- * @param {boolean} [shouldGenerateGlobalIndex=true]
- * @return {object}
- */
-export function createClass(
-  name,
-  props,
-  x = 0,
-  y = 0,
-  tooltipVisibleProp = null,
-  outerRadius = CLASS_INNER_RADIUS,
-  shouldGenerateGlobalIndex = true
-) {
-  let cls = {
-    name,
-    props,
-    x,
-    y,
-    tooltipVisibleProp,
-    outerRadius
-  };
-
-  if (shouldGenerateGlobalIndex) {
-    cls.globalIndex = generateClassGlobalIndex();
-  }
-
-  return fromJS(cls);
-}
-
-/**
  * Extracts properties of a class for persistence.
  * @param {object} cls
  * @return {object}
@@ -78,45 +41,6 @@ export const createPersistentClass = cls => ({
 });
 
 /**
- * Creates a class link.
- *
- * Name, source and target together form a unique identifier for a class link.
- *
- * @param {string} name - This is NOT an unique identifier.
- * @param {string} source - The name of source class.
- * @param {string} target - The name of target class.
- * @param {number} [x=0] - The x-coordinate of the link's control node.
- * @param {number} [y=0] - The y-coordinate of the link's control node.
- * @param {number} [length=0]
- * @param {boolean} [shouldGenerateGlobalIndex=true]
- * @return {object}
- */
-export function createClassLink(
-  name,
-  source,
-  target,
-  x = 0,
-  y = 0,
-  length = 0,
-  shouldGenerateGlobalIndex = true
-) {
-  let classLink = {
-    name,
-    source,
-    target,
-    x,
-    y,
-    length
-  };
-
-  if (shouldGenerateGlobalIndex) {
-    classLink.globalIndex = generateClassLinkGlobalIndex();
-  }
-
-  return fromJS(classLink);
-}
-
-/**
  * Extracts properties of a class link for persistence.
  * @param {object} classLink
  * @return {object}
@@ -126,32 +50,6 @@ export const createPersistentClassLink = classLink => ({
   source: classLink.get('source'),
   target: classLink.get('target')
 });
-/**
- * Extracts name, source and target from a class link to form an ID.
- * @param {object | Map} classLink
- * @return {string[]} The ID of the class link.
- */
-export function getClassLinkId(classLink) {
-  if (Map.isMap(classLink)) {
-    return {
-      source: classLink.get('source'),
-      name: classLink.get('name')
-    };
-  }
-
-  return {
-    source: classLink.source,
-    name: classLink.name
-  };
-}
-
-/**
- * Extracts name, source and target from a class link to form an key.
- * @func
- * @param {object} classLink
- * @return {List<string>} The key of the class link.
- */
-export const getClassLinkKey = R.compose(Map, getClassLinkId);
 
 export class GraphSchemaFormatError extends ClientError {
   constructor(cause) {
