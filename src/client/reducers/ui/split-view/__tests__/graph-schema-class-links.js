@@ -17,18 +17,30 @@ describe('reducer ui/class-links', () => {
 
       beforeEach(() => {
         state = initialState.set(
-          1,
-          fromJS({ name: 'lives-at', source: 'Person', target: 'Street' })
+          '1',
+          fromJS({
+            name: 'lives-at',
+            source: 'Person',
+            target: 'Street',
+            isStaged: true
+          })
         );
       });
 
       it('updates class links with data provided in action', () => {
         const action = {
           type: actions.GRAPH_SCHEMA_UPDATE_CONTENT,
-          classLinks: jest.fn()
+          classLinks: fromJS({
+            1: { globalIndex: '1' },
+            2: { globalIndex: '2' }
+          })
         };
         const next = reduceClassLinks(state, action);
-        expect(next).toEqual(action.classLinks);
+        expect(next).toEqual(
+          action.classLinks
+            .setIn(['1', 'isStaged'], true)
+            .setIn(['2', 'isStaged'], false)
+        );
       });
     });
 

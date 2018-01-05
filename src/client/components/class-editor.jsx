@@ -122,7 +122,7 @@ export default class ClassEditor extends React.Component {
           </div>
         </div>
         <div className="panel-block is-size-7">
-          <form className="column is-half">
+          <form className="column is-two-fifths">
             <div className="subtitle">Attributes</div>
             <table className="table">
               <thead>
@@ -199,7 +199,7 @@ export default class ClassEditor extends React.Component {
               </tbody>
             </table>
           </form>
-          <form className="column is-half">
+          <form className="column is-three-fifths">
             <div className="subtitle">Links</div>
             <table className="table">
               <thead>

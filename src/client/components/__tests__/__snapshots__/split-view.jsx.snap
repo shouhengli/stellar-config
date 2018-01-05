@@ -5,7 +5,7 @@ exports[`component split-view renders correctly when no selectedClass 1`] = `
   className="split-view columns"
 >
   <div
-    className="view column is-one-fifth"
+    className="view column is-2"
     key="leftChild"
   >
     <Connect(ClassList) />
@@ -24,13 +24,13 @@ exports[`component split-view renders correctly when selectedClass is given 1`] 
   className="split-view columns"
 >
   <div
-    className="view column is-one-fifth"
+    className="view column is-2"
     key="leftChild"
   >
     <Connect(ClassList) />
   </div>
   <div
-    className="view column is-two-fifths"
+    className="view column is-half"
     key="midChild"
   >
     <Connect(ClassEditor)

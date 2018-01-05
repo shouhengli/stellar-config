@@ -6,7 +6,13 @@ import { generateClassLinkGlobalIndex } from '../../../ingestion-profile';
 export function reduceClassLinks(state = Map(), action) {
   switch (action.type) {
     case actions.GRAPH_SCHEMA_UPDATE_CONTENT: {
-      return action.classLinks;
+      // update class links but retain isStaged status
+      return action.classLinks.map(l =>
+        l.set(
+          'isStaged',
+          state.getIn([l.get('globalIndex'), 'isStaged'], false)
+        )
+      );
     }
 
     case actions.CLASS_LIST_CLASS_SELECTED: {

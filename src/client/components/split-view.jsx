@@ -10,13 +10,13 @@ export default class SplitView extends React.Component {
 
     return (
       <div className="split-view columns">
-        <div key="leftChild" className="view column is-one-fifth">
+        <div key="leftChild" className="view column is-2">
           <ClassList />
         </div>
         {R.isNil(selectedClass) ? (
           ''
         ) : (
-          <div key="midChild" className="view column is-two-fifths">
+          <div key="midChild" className="view column is-half">
             <ClassEditor loadGraphSchemaContent={loadGraphSchemaContent} />
           </div>
         )}

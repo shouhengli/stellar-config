@@ -40,7 +40,7 @@ export function saveGraphSchema(profileName, classes, classLinks) {
   );
   const classLinksToSave = classLinks
     .filterNot(l => l.get('isDeleted'))
-    .map(l => l.delete('isEditing').delete('isStaged'));
+    .map(l => l.delete('isEditing'));
 
   return dispatch =>
     postGraphSchema(INGESTION_PROFILE_CONFIG_TYPE, profileName, {
