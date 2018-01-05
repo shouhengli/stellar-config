@@ -76,6 +76,8 @@ const startGraphSchemaSimulation = (classes, classLinks, dimensions) => {
       })
     )
     .alpha(1)
+    .velocityDecay(0.5)
+    .alphaDecay(0.4)
     .restart();
 };
 
