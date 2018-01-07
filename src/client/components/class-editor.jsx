@@ -23,7 +23,7 @@ export default class ClassEditor extends React.Component {
   deleteAttribute = e =>
     this.props.deleteAttribute(
       this.props.selectedClass.getIn(['props', e.target.dataset.globalIndex]),
-      this.props.select
+      this.props.selectedClass
     );
 
   editAttribute = e =>

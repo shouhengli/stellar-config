@@ -94,11 +94,16 @@ export const mappingNodePropOptionsSelector = createSelector(
   mappingNodeSelector,
   (graphSchema, mappingNode) =>
     graphSchema
-      .getIn(
-        ['classes', mappingNode.get(MAPPING_NODE_TYPE_KEY), 'props'],
+      .get('classes')
+      .valueSeq()
+      .find(
+        cls => cls.get('name') === mappingNode.get(MAPPING_NODE_TYPE_KEY),
+        this,
         Map()
       )
-      .keySeq()
+      .get('props', Map())
+      .valueSeq()
+      .map(p => p.get('name'))
       .toSet()
       .subtract(mappingNode.keySeq())
 );

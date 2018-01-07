@@ -53,6 +53,7 @@ const MenuItemList = ({
 }) =>
   itemLists
     .get(0, List())
+    .valueSeq()
     .map(
       R.ifElse(
         R.equals(activeItems.get(0)),

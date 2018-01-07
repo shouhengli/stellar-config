@@ -9,6 +9,7 @@ exports[`component graph-schema-class can be rendered 1`] = `
 >
   <div
     fontSize={16}
+    globalIndex="1"
     name="Person"
     radius={75}
   />

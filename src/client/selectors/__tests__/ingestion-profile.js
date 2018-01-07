@@ -180,16 +180,15 @@ describe('ingestion profile selectors', () => {
   });
 
   describe('#mappingNodePropOptionsSelector', () => {
-    it("selects a mapping node's  properties from ingestionProfile", () => {
+    it("selects a mapping node's properties from ingestionProfile", () => {
       const state = fromJS({
         ingestionProfile: {
           graphSchema: {
             classes: {
-              person: {
-                props: { '@id': 'id', name: 'name' }
-              },
-              '@type': jest.fn(),
-              '@id': jest.fn()
+              1: {
+                name: 'person',
+                props: { 3: { '@id': 'id', name: 'name' } }
+              }
             }
           }
         },
@@ -210,9 +209,7 @@ describe('ingestion profile selectors', () => {
         ingestionProfile: {
           graphSchema: {
             classes: {
-              person: {},
-              '@type': jest.fn(),
-              '@id': jest.fn()
+              1: {}
             }
           }
         },
