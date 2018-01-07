@@ -77,7 +77,7 @@ function mapDispatchToProps(dispatch) {
 
         dispatch(
           updateClassPosition(
-            draggedClass.get('name'),
+            draggedClass.get('globalIndex'),
             event.pageX / zoom - draggedClass.get('fromX'),
             event.pageY / zoom - draggedClass.get('fromY')
           )
@@ -88,7 +88,7 @@ function mapDispatchToProps(dispatch) {
 
         dispatch(
           updateClassLinkPosition(
-            draggedClassLink.get('name'),
+            draggedClassLink.get('globalIndex'),
             draggedClassLink.get('source'),
             draggedClassLink.get('target'),
             event.pageX / zoom - draggedClassLink.get('fromX'),

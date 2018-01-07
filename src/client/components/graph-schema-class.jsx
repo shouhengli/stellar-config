@@ -128,6 +128,7 @@ class Class extends React.Component {
       >
         <ClassName
           name={cls.get('name')}
+          globalIndex={cls.get('globalIndex')}
           radius={CLASS_INNER_RADIUS}
           fontSize={FONT_SIZE}
         />

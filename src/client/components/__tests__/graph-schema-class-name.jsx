@@ -9,6 +9,7 @@ describe('component graph-schema-class-name', () => {
   beforeEach(() => {
     props = {
       name: 'Person',
+      globalIndex: '1',
       radius: 100,
       fontSize: 16,
       zoom: 2,
@@ -30,7 +31,7 @@ describe('component graph-schema-class-name', () => {
     expect(props.handleMouseDown).toHaveBeenCalledTimes(1);
     expect(props.handleMouseDown).toHaveBeenCalledWith(
       event,
-      props.name,
+      props.globalIndex,
       props.zoom
     );
   });
