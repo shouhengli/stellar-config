@@ -2,6 +2,9 @@ import R from 'ramda';
 import { loadYamlSync } from './util';
 import P from 'bluebird';
 import redis from 'redis';
+import { redis as redisConifg } from '../server.json';
+
+const { host, port } = redisConifg;
 
 const config = loadYamlSync(__dirname, 'config-store.yaml');
 
@@ -55,7 +58,7 @@ export function connect() {
   // status is bad.
 
   if (redisClient === null) {
-    redisClient = redis.createClient();
+    redisClient = redis.createClient({ host, port });
 
     redisClient
       .on('connect', () => {

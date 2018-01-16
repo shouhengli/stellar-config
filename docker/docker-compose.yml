@@ -1,0 +1,16 @@
+version: '3'
+services:
+  coordinator:
+    image: stellar-config:latest
+    container_name: config-ui
+    ports:
+      - "6161:6161"
+    networks:
+      - stellar
+  redis:
+    image: redis:4.0.6-alpine
+    container_name: redis
+    networks:
+      - stellar
+networks:
+  stellar:
